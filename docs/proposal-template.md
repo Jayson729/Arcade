@@ -21,11 +21,17 @@ First we have to learn more python and the pygame library. To do this we’ll wa
 # Estimated Timeline
  
 Week 1 – Introduce ourselves to pygame and python
+
 Week 2 – Make pong
+
 Week 3 – Make pacman engine
+
 Week 4 – Testing and AI for ghosts
+
 Weeks 5 + 6 – Donkey kong
+
 Weeks 7 + 8 – Frogger
+
 Extra weeks – fixing bugs, polishing games, home screen, settings page, sound/music, graphics, etc.
  
 # Anticipated Problems
