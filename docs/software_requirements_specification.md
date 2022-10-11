@@ -19,9 +19,9 @@ The purpose of this document is to list and explain functions and their requirem
     2. The interface shall have a record of hi-scores and current game score displayed for the user to see. 
     3. The interface shall have images displayed for the games in the ‘list’ of ames. 
 2. Pac-man
-    3. The pacman AI shall be convincing to play against
-4. Pong
-5. Frogger
+    1. The pacman AI shall be convincing to play against
+3. Pong
+4. Frogger
     1. Frogger shall always have an available path
-7. General
+5. General
     1. The system shall work on any computer
