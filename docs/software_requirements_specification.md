@@ -30,11 +30,11 @@ The purpose of this document is to list and explain functions and their requirem
     1. The pacman AI shall be convincing to play against
     2. The ghosts shall be visually distinguishable from each other.
 3. Pong
-    1.The pong AI shall be reasonably skilled.
-    2.The paddles shall move at a speed that is able to return the ball most of the time
-    3.The ball shall travel at a speed that is difficult yet fun.
-5. Frogger
+    1. The pong AI shall be reasonably skilled.
+    2. The paddles shall move at a speed that is able to return the ball most of the time
+    3. The ball shall travel at a speed that is difficult yet fun.
+4. Frogger
     1. Frogger shall always have an available path
-6. General
+5. General
     1. The system shall work on any computer
     2. The volume feature shall add sound to the games.
