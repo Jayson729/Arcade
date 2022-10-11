@@ -9,7 +9,7 @@ The purpose of this document is to list and explain functions and their requirem
 2. Pac-man
     1. The Pacman character shall be able to move up, down, left, and right by a specific number of units
 4. Pong
-    1. The ball in pong shall bounce off walls and the player at the angle it came in
+    1. After scoring a point the score board shall increase by 1.
     2. The “paddles” shall only move vertically up and down.
     3. The ball shall bounce off the top and bottom at the same angle at which it met the wall.
     4. After scoring a point, the ball shall be respawned in the middle horizontally and at the same vertical height          at which the ball contacted the “goal”.
