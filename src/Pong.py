@@ -2,8 +2,8 @@ import cProfile
 import pygame, sys, random
 import time
 
-_WINDOW_WIDTH = 500
-_WINDOW_HEIGHT = 360
+_WINDOW_WIDTH = 1280
+_WINDOW_HEIGHT = 960
 
 class Ball:
     """
@@ -164,12 +164,16 @@ def main():
 
         if state == RUNNING:
             #move and draw ball
+            ball.move_ball(players)
+            pygame.draw.ellipse(screen, grey, ball)
+
+            #multiple balls
             # for ball in balls:
             #     ball.move_ball(players)
             #     pygame.draw.ellipse(screen, grey, ball)
 
-            ball.move_ball(players)
-            pygame.draw.ellipse(screen, grey, ball)
+            #draw middle line
+            pygame.draw.aaline(screen, grey, (_WINDOW_WIDTH//2, 0), (_WINDOW_WIDTH//2, _WINDOW_HEIGHT))
 
             #draw players and scores
             for p in players.values():
