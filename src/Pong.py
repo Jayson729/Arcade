@@ -2,8 +2,8 @@ import cProfile
 import pygame, sys, random
 import time
 
-_WINDOW_WIDTH = 1280
-_WINDOW_HEIGHT = 960
+_WINDOW_WIDTH = 500
+_WINDOW_HEIGHT = 360
 
 class Ball:
     """
@@ -88,15 +88,13 @@ AI for pong
 """
 class Opponent(Player):
     """
-    changes move_player to take where the ball is and decide a move
+    returns either 'up' or 'down'
     """
-    def move_player(self, ball):
+    def move_opponent(self, ball):
         if self.rect.top < ball.rect.y:
-            self.rect.y += self.player_speed
-        elif self.rect.bottom > ball.rect.y:
-            self.rect.y -= self.player_speed
-
-        self.check_collision()
+            self.move_player('down')
+        else:
+            self.move_player('up')
 
 """
 main function
@@ -125,8 +123,8 @@ def main():
 
     left_player = Opponent('left', left_inputs)
     # left_player = Player('left', left_inputs)
-    right_player = Opponent('right', right_inputs)
-    # right_player = Player('right', right_inputs)
+    # right_player = Opponent('right', right_inputs)
+    right_player = Player('right', right_inputs)
 
     #creates dict of players
     players = {'left': left_player, 'right': right_player}
@@ -155,7 +153,7 @@ def main():
                 if e.type == pygame.KEYDOWN:
                     if e.key == p.keybindings['pause']: state = (state + 1) % 2
             # if isinstance(p, Opponent): p.move_player(ball1); continue
-            if isinstance(p, Opponent): p.move_player(ball); continue
+            if isinstance(p, Opponent): p.move_opponent(ball); continue
             if state == RUNNING:
                 if pressed[p.keybindings['up']]: p.move_player('up')
                 elif pressed[p.keybindings['down']]: p.move_player('down')
@@ -193,8 +191,6 @@ def main():
         
         clock.tick(60)
         print(f"fps: {clock.get_fps()}")
-
-        
 
 if __name__ == "__main__":
     main()
