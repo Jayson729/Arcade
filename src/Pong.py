@@ -1,4 +1,6 @@
+import cProfile
 import pygame, sys, random
+import time
 
 _WINDOW_WIDTH = 1280
 _WINDOW_HEIGHT = 960
@@ -102,12 +104,14 @@ main function
 def main():
     #initialize pygame
     pygame.init()
-
-    #make window
     screen = pygame.display.set_mode((_WINDOW_WIDTH, _WINDOW_HEIGHT))
     pygame.display.set_caption('Pong')
 
-    clock = pygame.time.Clock()
+    #fill background
+    background = pygame.Surface(screen.get_size())
+    background = background.convert()
+    background_color = pygame.Color('turquoise4')
+    background.fill(background_color)
 
     #sets keybindings
     left_inputs = {'up': pygame.K_w, 'down': pygame.K_s, 'pause': pygame.K_ESCAPE}
@@ -115,15 +119,19 @@ def main():
 
     #creates ball, player, and opponent
     ball = Ball()
-    # left_player = Opponent('left', left_inputs)
-    left_player = Player('left', left_inputs)
-    right_player = Player('right', right_inputs)
+    # ball1 = Ball()
+    # ball2 = Ball()
+    # balls = [ball1, ball2]
+
+    left_player = Opponent('left', left_inputs)
+    # left_player = Player('left', left_inputs)
+    right_player = Opponent('right', right_inputs)
+    # right_player = Player('right', right_inputs)
 
     #creates dict of players
     players = {'left': left_player, 'right': right_player}
     
     #sets colors and fonts
-    background_color = pygame.Color('turquoise4')
     grey = (200, 200, 200)
     score_font = pygame.font.Font(None, 50)
     pause_font = pygame.font.Font(None, 150)
@@ -131,33 +139,39 @@ def main():
     #used for pausing game
     RUNNING, PAUSE = 0, 1
     state = RUNNING
-
+    clock = pygame.time.Clock()
+    
     #game loop
     while True:
-
+        # start_time = time.perf_counter()
         #move players
         pressed = pygame.key.get_pressed()
         for p in players.values():
             if not isinstance(p, Player): print(f"{p} is not a player"); break
-            if isinstance(p, Opponent): p.move_player(ball); continue
-
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 if e.type == pygame.KEYDOWN:
                     if e.key == p.keybindings['pause']: state = (state + 1) % 2
-            
+            # if isinstance(p, Opponent): p.move_player(ball1); continue
+            if isinstance(p, Opponent): p.move_player(ball); continue
             if state == RUNNING:
                 if pressed[p.keybindings['up']]: p.move_player('up')
                 elif pressed[p.keybindings['down']]: p.move_player('down')
+        
 
         #fill background
         screen.fill(background_color)
 
         if state == RUNNING:
-            #move ball
+            #move and draw ball
+            # for ball in balls:
+            #     ball.move_ball(players)
+            #     pygame.draw.ellipse(screen, grey, ball)
+
             ball.move_ball(players)
+            pygame.draw.ellipse(screen, grey, ball)
 
             #draw players and scores
             for p in players.values():
@@ -167,16 +181,20 @@ def main():
                     screen.blit(score_text, (_WINDOW_WIDTH//2 - 120, 50))
                 elif p.side == 'right':
                     screen.blit(score_text, (_WINDOW_WIDTH//2 + 120, 50))
-        
-            #draw ball
-            pygame.draw.ellipse(screen, grey, ball)
             
         elif state == PAUSE:
             pause_text = pause_font.render("Game is paused", False, 'grey67')
             screen.blit(pause_text, (0, _WINDOW_HEIGHT//2))
         
+        # end_time = time.perf_counter()
+        # print(f"Execution Time: {end_time - start_time:0.6f}")
+    
         pygame.display.flip()
+        
         clock.tick(60)
+        print(f"fps: {clock.get_fps()}")
+
+        
 
 if __name__ == "__main__":
     main()
