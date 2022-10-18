@@ -18,21 +18,27 @@ class StartMenu(BaseState):
         self.menu_sound.set_volume(0.3)
         pygame.mixer.music.load('runescape_dream.wav')
         pygame.mixer.music.play(-1)
-        self.count = 0
-        self.index = 0
         self.curr_index = 0
-        self.change = .025
+        # Cloud movement items
+        self.move_1 = 0
+        self.move_2 = 0
+        self.move_3 = 0
+        self.move_4 = 0
+        self.move_5 = 0
+        self.move_6 = 0
+        self.change = [0.025, - 0.025]
         self.menu_items = ["ENTER ARCADE", "SETTINGS", "CREDITS"]
         self.font = pygame.font.Font('Stardew_Valley.ttf', 10)
-        self.large_cloud = pygame.image.load("large_cloud.png")
-        self.small_right = pygame.image.load("small_right.png")
-        self.small_left = pygame.image.load("small_left.png")
+        self.large_cloud = pygame.image.load("large_cloud.png").convert_alpha()
+        self.small_right = pygame.image.load("small_right.png").convert_alpha()
+        self.small_left = pygame.image.load("small_left.png").convert_alpha()
         self.background_img = pygame.transform.scale(pygame.image.load("backgroundMain.png"), (800, 600))
         # Cloud y values from cloud_1 to small_cloud_2
-        self.cloud_1 = self.transform_image(self.large_cloud, 700, 650)
+        self.list = [140, 190, 145, 190, 30, 50]
+        self.cloud_1 = self.transform_image(self.large_cloud, 650, 650)
         self.cloud_2 = self.transform_image(self.large_cloud, 500, 450)
         self.cloud_3 = self.transform_image(self.large_cloud, 800, 760)
-        self.cloud_4 = self.transform_image(self.large_cloud, 800, 760)
+        self.cloud_4 = self.transform_image(self.large_cloud, 760, 760)
         self.small_cloud_1 = self.transform_image(self.small_left, 150, 100)
         self.small_cloud_2 = self.transform_image(self.small_right, 200, 170)
         self.index = 0
@@ -119,25 +125,56 @@ class StartMenu(BaseState):
     def transform_image(self, image, scalex, scaley):
         return pygame.transform.scale(image, (scalex, scaley))
 
-    def image_move(self, screen, image, x, y, low_y, high_y, change):
-        if y <= low_y:
-            y += change
-        elif y >= high_y:
-            y -= change
-
-        screen.blit(image, (x, y))
-
+    def update_count(self, count):
+        if count <= 0:
+            count += 0.25
 
     def draw(self, screen):
         screen.blit(self.background_img, (0, 0))
-        # Small right facing cloud movement
+
+        self.list[0] += self.move_1
+        if self.list[0] <= 137:
+            self.move_1 = self.change[0]
+        elif self.list[0] >= 140:
+            self.move_1 = self.change[1]
+
+        self.list[1] += self.move_2
+        if self.list[1] <= 187:
+            self.move_2 = self.change[0]
+        elif self.list[1] >= 190:
+            self.move_2 = self.change[1]
+
+        self.list[2] += self.move_3
+        if self.list[2] <= 142:
+            self.move_3 = self.change[0]
+        elif self.list[2] >= 145:
+            self.move_3 = self.change[1]
+
+        self.list[3] += self.move_4
+        if self.list[3] <= 187:
+            self.move_4 = self.change[0]
+        elif self.list[3] >= 190:
+            self.move_4 = self.change[1]
+
+        self.list[4] += self.move_5
+        if self.list[4] <= 27:
+            self.move_5 = self.change[0]
+        elif self.list[4] >= 30:
+            self.move_5 = self.change[1]
+
+        self.list[5] += self.move_5
+        if self.list[5] <= 47:
+            self.move_5 = self.change[0]
+        elif self.list[5] >= 50:
+            self.move_5 = self.change[1]
+
         self.sprites.draw(screen)
-        self.image_move(screen, self.cloud_1, -210, 150, 146, 150, 0.025)
-        self.image_move(screen, self.cloud_2, 500, 200, 196, 200, 0.025)
-        self.image_move(screen, self.cloud_3, 380, 175, 171, 175, 0.025)
-        self.image_move(screen, self.cloud_4, -375, 260, 256, 260, 0.025)
-        self.image_move(screen, self.small_cloud_1, 525, 30, 26, 30, 0.025)
-        self.image_move(screen, self.small_cloud_2, 60, 50, 46, 50, 0.025)
+        screen.blit(self.cloud_1, (-170, self.list[0]))
+        screen.blit(self.cloud_2, (500, self.list[1]))
+        screen.blit(self.cloud_3, (380, self.list[2]))
+        screen.blit(self.cloud_4, (-290, self.list[3]))
+        screen.blit(self.small_cloud_1, (525, self.list[4]))
+        screen.blit(self.small_cloud_2, (60, self.list[5]))
         self.sprites.update()
         for index, option in enumerate(self.menu_items):
             text_render = self.render_text(index)
