@@ -3,12 +3,12 @@ import pygame
 class Waterfall(pygame.sprite.Sprite):
     def __init__(self, x, y):
         # This could be more efficient, resizing all images of sprite to same size
-        waterfall_0 = pygame.transform.scale(pygame.image.load('sprites/waterfall_0.png'), (60, 415))
-        waterfall_1 = pygame.transform.scale(pygame.image.load('sprites/waterfall_1.png'), (60, 415))
-        waterfall_2 = pygame.transform.scale(pygame.image.load('sprites/waterfall_2.png'), (60, 415))
-        waterfall_3 = pygame.transform.scale(pygame.image.load('sprites/waterfall_3.png'), (60, 415))
-        waterfall_4 = pygame.transform.scale(pygame.image.load('sprites/waterfall_4.png'), (60, 415))
-        waterfall_5 = pygame.transform.scale(pygame.image.load('sprites/waterfall_5.png'), (60, 415))
+        waterfall_0 = pygame.transform.scale(pygame.image.load('images/waterfall_0.png'), (60, 415))
+        waterfall_1 = pygame.transform.scale(pygame.image.load('images/waterfall_1.png'), (60, 415))
+        waterfall_2 = pygame.transform.scale(pygame.image.load('images/waterfall_2.png'), (60, 415))
+        waterfall_3 = pygame.transform.scale(pygame.image.load('images/waterfall_3.png'), (60, 415))
+        waterfall_4 = pygame.transform.scale(pygame.image.load('images/waterfall_4.png'), (60, 415))
+        waterfall_5 = pygame.transform.scale(pygame.image.load('images/waterfall_5.png'), (60, 415))
 
         super().__init__()
         # Creating array with all images for the sprite
