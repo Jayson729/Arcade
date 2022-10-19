@@ -4,23 +4,25 @@ Hold a team meeting at least once a week in some format.  Copy the following tem
 
 ## Meeting minutes template
 
-Team name:
+Team name: Team Arcade
 
-Members present:
+Members present: Everyone
 
-Date:
+Date: 10/18/2022
 
-Time:
+Time: 9:30PM - 12AM
 
 Discussion points: 
 
-*
-*
-*
+* Re-evaluated our code created so far, ensuring it works for everyone.
+* Verified the completion of our base Pong game.
+* Created and worked on the Gantt chart.
+* Created and worked on our presentation for Wednesday.
 
 Goals for next week (include responsibilities)
 
-*
-*
-*
+* Brendan: Potentially complete the game choosing menu.
+* Everyone: If the above can get done, we can link the menus and games together.
+* Everyone: Make all final touches needed for Pong.
+* Everyone: Start the basis of our Pac-Man game.
 
