@@ -162,11 +162,11 @@ class StartMenu(BaseState):
         elif self.list[4] >= 30:
             self.move_5 = self.change[1]
 
-        self.list[5] += self.move_5
+        self.list[5] += self.move_6
         if self.list[5] <= 47:
-            self.move_5 = self.change[0]
+            self.move_6 = self.change[0]
         elif self.list[5] >= 50:
-            self.move_5 = self.change[1]
+            self.move_6 = self.change[1]
 
         self.sprites.draw(screen)
         screen.blit(self.cloud_1, (-170, self.list[0]))
