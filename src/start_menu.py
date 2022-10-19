@@ -12,6 +12,9 @@ from sprites import Waterfall
 class StartMenu(BaseState):
     def __init__(self):
         super(StartMenu, self).__init__()
+        self.clock = pygame.time.Clock()
+        self.fps = 60
+        self.clock.tick(self.fps)
         pygame.display.set_caption("Arcade Games")
         pygame.display.set_icon(pygame.image.load('main.png'))
         self.menu_sound = pygame.mixer.Sound('click.wav')
