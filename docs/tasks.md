@@ -1,2 +1,30 @@
-tasks
+# Tasks
 
+- Requirements:
+    - Description: Create a list of 15 functional and 15 non-functional requirements.
+    - Expected time to complete: 4 weeks
+    - Responsible: Everyone
+- Start menu design:
+    - Description: Create a start menu that allows users to select arcade menu, settings, and credits.
+    - Expected tiem to complete: 2 weeks
+    - Responsible: Travis
+- Arcade menu design:
+    - Description: Create an arcade menu that allows users to switch between arcade games and track high scores for pac-man and frogger.
+    - Expected time to complete: 2 weeks
+    - Responsible: Brendan
+- Pong design and development:
+    - Description: Develop a working pong game with a 2 player and an AI setting.
+    - Expected time to complete: 2 weeks
+    - Responsible: Jayson, Ben
+- Pac-man design and development:
+    - Description: Create a working Pac-man game that has a player and 4 ghosts with AI.
+    - Expected time to complete: 4 weeks
+    - Responsible: Everyone
+- Frogger design and development:
+    - Description: Create a functioning Frogger game that keeps track of score and changes to a new map every time the player reaches the end.
+    - Expected time to complete: 3 weeks
+    - Responsible: Everyone
+- Finishing touches:
+    - Description: Test everything and make sure all functional and non-functional requirements are implemented.
+    - Expected time to complete: 1 week
+    - Responsible: Everyone
