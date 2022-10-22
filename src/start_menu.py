@@ -3,7 +3,7 @@ import pygame.display
 import pygame.freetype
 import pygame.mixer
 import sprites
-from states.base import BaseState
+from base import BaseState
 from sprites import Waterfall
 
 
@@ -16,10 +16,10 @@ class StartMenu(BaseState):
         self.fps = 60
         self.clock.tick(self.fps)
         pygame.display.set_caption("Arcade Games")
-        pygame.display.set_icon(pygame.image.load('main.png'))
-        self.menu_sound = pygame.mixer.Sound('click.wav')
+        pygame.display.set_icon(pygame.image.load('images/main.png'))
+        self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
         self.menu_sound.set_volume(0.3)
-        pygame.mixer.music.load('runescape_dream.wav')
+        pygame.mixer.music.load('music/runescape_dream.wav')
         pygame.mixer.music.play(-1)
         self.curr_index = 0
         # Cloud movement items
@@ -31,11 +31,11 @@ class StartMenu(BaseState):
         self.move_6 = 0
         self.change = [0.025, - 0.025]
         self.menu_items = ["ENTER ARCADE", "SETTINGS", "CREDITS"]
-        self.font = pygame.font.Font('Stardew_Valley.ttf', 10)
-        self.large_cloud = pygame.image.load("large_cloud.png").convert_alpha()
-        self.small_right = pygame.image.load("small_right.png").convert_alpha()
-        self.small_left = pygame.image.load("small_left.png").convert_alpha()
-        self.background_img = pygame.transform.scale(pygame.image.load("backgroundMain.png"), (800, 600))
+        self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 10)
+        self.large_cloud = pygame.image.load("images/large_cloud.png").convert_alpha()
+        self.small_right = pygame.image.load("images/small_right.png").convert_alpha()
+        self.small_left = pygame.image.load("images/small_left.png").convert_alpha()
+        self.background_img = pygame.transform.scale(pygame.image.load("images/backgroundMain.png"), (800, 600))
         # Cloud y values from cloud_1 to small_cloud_2
         self.list = [140, 190, 145, 190, 30, 50]
         self.cloud_1 = self.transform_image(self.large_cloud, 650, 650)
@@ -62,11 +62,11 @@ class StartMenu(BaseState):
 
     def render_text(self, index):
         if index == 0:
-            self.font = pygame.font.Font('Stardew_Valley.ttf', 50)
+            self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 50)
         elif index == 1:
-            self.font = pygame.font.Font('Stardew_Valley.ttf', 40)
+            self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 40)
         elif index == 2:
-            self.font = pygame.font.Font('Stardew_Valley.ttf', 30)
+            self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 30)
 
         color = '#FFD921' if index == self.curr_index else '#DDA059'
         return self.font.render(self.menu_items[index], True, color)
@@ -77,7 +77,7 @@ class StartMenu(BaseState):
 
     def handle_action(self):
         if self.curr_index == 0:
-            pygame.mixer.Channel(0).play(pygame.mixer.Sound('arcade_door.wav'))
+            pygame.mixer.Channel(0).play(pygame.mixer.Sound('sounds/arcade_door.wav'))
         elif self.curr_index == 1:
             self.done = True
         elif self.curr_index == 2:
