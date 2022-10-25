@@ -5,68 +5,91 @@ import time
 _WINDOW_WIDTH = 1280
 _WINDOW_HEIGHT = 960
 
-class Ball:
+class Block(pygame.sprite.Sprite):
+    def __init__(self, img_path: str, x_pos: int, y_pos: int):
+        super().__init__()
+        self.image = pygame.image.load(img_path)
+        self.rect = self.image.get_rect(center = (x_pos, y_pos))
+
+class Ball(Block):
     """
     Initializes Ball
     """
-    def __init__(self, ball_speed_x = 10, ball_speed_y = 10, ball_width = 30, ball_height = 30):
-        self.rect = pygame.Rect(_WINDOW_WIDTH//2 - ball_width//2, _WINDOW_HEIGHT//2 - ball_height//2, ball_width, ball_height)
+    def __init__(self, img_path: str, x_pos: int, y_pos: int, players: pygame.sprite.Group = None, ball_speed_x: int = 15, ball_speed_y: int = 15):
+        super().__init__(img_path, x_pos, y_pos)
         self.ball_speed_x = ball_speed_x * random.choice((1, -1))
         self.ball_speed_y = ball_speed_y * random.choice((1, -1))
-
-    """
-    Moves ball back to center and sends to random side
-    """
-    def restart(self):
-        self.rect.center = _WINDOW_WIDTH//2, _WINDOW_HEIGHT//2
-        self.ball_speed_y *= random.choice((1, -1))
-        self.ball_speed_x *= random.choice((1, -1))
+        self.players = players
 
     """
     Handles ball movements/collisions
     """
-    def move_ball(self, players):
+    def update(self):
         self.rect.x += self.ball_speed_x
         self.rect.y += self.ball_speed_y
+        self.check_collisions()
+        self.update_score()
 
+    """
+    Moves ball back to center and sends to random side
+    """
+    def reset_ball(self):
+        self.rect.center = _WINDOW_WIDTH//2, _WINDOW_HEIGHT//2
+        self.ball_speed_y *= random.choice((1, -1))
+        self.ball_speed_x *= random.choice((1, -1))
+
+    def check_collisions(self):
         #checks for bouncing off ceiling/bottom
         if self.rect.top <= 0 or self.rect.bottom >= _WINDOW_HEIGHT:
             self.ball_speed_y *= -1
 
-        for p in players.values():
-            #checks for collisions with players
-            if self.rect.colliderect(p):
-                self.ball_speed_x *= -1
-                break
+        players_hit = pygame.sprite.spritecollide(self, self.players, False)
 
-            elif self.rect.left <= 0 and p.side == 'right':
-                self.restart()
+        #checks for collisions with players
+        """
+        really players_hit should have exactly one element for normal pong, 
+        but if we ever decide to change anything this might be needed
+        """
+        for p in players_hit:
+            #hit side of player
+            if p.side == 'left' and self.ball_speed_x > 0:
+                self.ball_speed_x *= -1
+            elif p.side == 'right' and self.ball_speed_x < 0:
+                self.ball_speed_x *= -1
+            
+            #hit top or bottom of player
+            #bottom
+            if self.rect.bottom >= p.rect.top and self.rect.bottom <= p.rect.bottom and self.ball_speed_y < 0:
+                self.ball_speed_y *= -1
+            #top
+            elif self.rect.top <= p.rect.bottom and self.rect.top >= p.rect.top and self.ball_speed_y > 0:
+                self.ball_speed_y *= -1
+    
+    def update_score(self):
+        #scoring
+        for p in self.players:
+            if self.rect.left <= 0 and p.side == 'right':
+                self.reset_ball()
                 p.player_score += 1
             
             elif self.rect.right >= _WINDOW_WIDTH and p.side == 'left':
-                self.restart()
+                self.reset_ball()
                 p.player_score += 1
 
-class Player:
+class Player(Block):
     """
     Initializes Player
     """
-    def __init__(self, side, keybindings, player_speed = 10, player_score = 0, player_width = 10, player_height = 140):
-        PLAYER_BUFFER = 10
-        rect_left = PLAYER_BUFFER
-        if side == 'right':
-            rect_left = _WINDOW_WIDTH - PLAYER_BUFFER - player_width
-        self.rect = pygame.Rect(rect_left, _WINDOW_HEIGHT//2 - player_height//2, player_width, player_height)
-
+    def __init__(self, img_path: str, x_pos: int, y_pos: int, keybindings: dict, player_speed: int = 10, player_score: int = 0):
+        super().__init__(img_path, x_pos, y_pos)
         self.keybindings = keybindings
         self.player_speed = player_speed
         self.player_score = player_score
-        self.side = side
 
     """
     Moves the player
     """
-    def move_player(self, dir):
+    def move_player(self, dir: str):
         if dir == 'up':
             self.rect.y -= self.player_speed
         else:
@@ -88,13 +111,27 @@ AI for pong
 """
 class Opponent(Player):
     """
-    returns either 'up' or 'down'
+    moves player up or down
     """
-    def move_opponent(self, ball):
+    def move_opponent(self, ball: Ball):
         if self.rect.top < ball.rect.y:
             self.move_player('down')
         else:
             self.move_player('up')
+
+class GameManager:
+    grey = (200, 200, 200)
+
+    def __init__(self, balls: pygame.sprite.Group, players: pygame.sprite.Group, screen: pygame.display):
+        self.balls = balls
+        self.players = players
+        self.screen = screen
+    
+    def run_game(self):
+        
+    
+    def reset_ball(self):
+        i
 
 """
 main function
@@ -102,49 +139,50 @@ main function
 def main():
     #initialize pygame
     pygame.init()
-    screen = pygame.display.set_mode((_WINDOW_WIDTH, _WINDOW_HEIGHT))
-    pygame.display.set_caption('Pong')
+    clock = pygame.time.Clock()
 
-    #fill background
-    background = pygame.Surface(screen.get_size())
-    background = background.convert()
-    background_color = pygame.Color('turquoise4')
-    background.fill(background_color)
+    #main window
+    screen = pygame.display.set_mode((_WINDOW_WIDTH, _WINDOW_HEIGHT), pygame.RESIZABLE)
+    pygame.display.set_caption('Pong')
 
     #sets keybindings
     left_inputs = {'up': pygame.K_w, 'down': pygame.K_s, 'pause': pygame.K_ESCAPE}
     right_inputs = {'up': pygame.K_UP, 'down': pygame.K_DOWN, 'pause': pygame.K_ESCAPE}
 
-    #creates ball, player, and opponent
+    #creates ball
     ball = Ball()
-    # ball1 = Ball()
-    # ball2 = Ball()
-    # balls = [ball1, ball2]
 
+    #creates sprite group of ball(s)
+    balls = pygame.sprite.Group()
+    balls.add(ball)
+
+    #creates players
     left_player = Opponent('left', left_inputs)
     # left_player = Player('left', left_inputs)
     # right_player = Opponent('right', right_inputs)
     right_player = Player('right', right_inputs)
 
-    #creates dict of players
-    players = {'left': left_player, 'right': right_player}
+    #creates sprite group of players
+    players = pygame.sprite.Group()
+    players.add(left_player)
+    players.add(right_player)
     
     #sets colors and fonts
     grey = (200, 200, 200)
     score_font = pygame.font.Font(None, 50)
     pause_font = pygame.font.Font(None, 150)
+    background_color = pygame.Color('turquoise4')
     
     #used for pausing game
     RUNNING, PAUSE = 0, 1
     state = RUNNING
-    clock = pygame.time.Clock()
     
     #game loop
     while True:
         # start_time = time.perf_counter()
         #move players
         pressed = pygame.key.get_pressed()
-        for p in players.values():
+        for p in players:
             if not isinstance(p, Player): print(f"{p} is not a player"); break
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
@@ -157,12 +195,20 @@ def main():
             if state == RUNNING:
                 if pressed[p.keybindings['up']]: p.move_player('up')
                 elif pressed[p.keybindings['down']]: p.move_player('down')
-        
 
         #fill background
         screen.fill(background_color)
 
+        #run the game
         if state == RUNNING:
+            #draw game objects
+            players.draw(screen)
+            balls.draw(screen)
+            pygame.draw.aaline(screen, GameManager.grey, (_WINDOW_WIDTH//2, 0), (_WINDOW_WIDTH//2, _WINDOW_HEIGHT))
+
+            #update balls
+            balls.update()
+
             #move and draw ball
             ball.move_ball(players)
             pygame.draw.ellipse(screen, grey, ball)
@@ -173,7 +219,7 @@ def main():
             #     pygame.draw.ellipse(screen, grey, ball)
 
             #draw middle line
-            pygame.draw.aaline(screen, grey, (_WINDOW_WIDTH//2, 0), (_WINDOW_WIDTH//2, _WINDOW_HEIGHT))
+            
 
             #draw players and scores
             for p in players.values():
@@ -183,8 +229,7 @@ def main():
                     screen.blit(score_text, (_WINDOW_WIDTH//2 - 120, 50))
                 elif p.side == 'right':
                     screen.blit(score_text, (_WINDOW_WIDTH//2 + 120, 50))
-            
-        elif state == PAUSE:
+        else:
             pause_text = pause_font.render("Game is paused", False, 'grey67')
             screen.blit(pause_text, (0, _WINDOW_HEIGHT//2))
         
