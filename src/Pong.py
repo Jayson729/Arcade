@@ -85,16 +85,13 @@ class Player(Block):
         self.keybindings = keybindings
         self.player_speed = player_speed
         self.player_score = player_score
+        self.movement = 0
 
     """
     Moves the player
     """
-    def move_player(self, dir: str):
-        if dir == 'up':
-            self.rect.y -= self.player_speed
-        else:
-            self.rect.y += self.player_speed
-        
+    def update(self):
+        self.rect.y += self.movement
         self.check_collision()
     
     """
@@ -113,25 +110,27 @@ class Opponent(Player):
     """
     moves player up or down
     """
-    def move_opponent(self, ball: Ball):
-        if self.rect.top < ball.rect.y:
-            self.move_player('down')
+    def move_opponent(self, balls: pygame.sprite.GroupSingle):
+        if self.rect.top < balls.sprite.rect.y:
+            self.movement = -self.player_speed
+        elif self.rect.bottom > balls.sprite.rect.y:
+            self.movement = self.player_speed
         else:
-            self.move_player('up')
+            self.movement = 0
 
-class GameManager:
-    grey = (200, 200, 200)
+# class GameManager:
+#     grey = (200, 200, 200)
 
-    def __init__(self, balls: pygame.sprite.Group, players: pygame.sprite.Group, screen: pygame.display):
-        self.balls = balls
-        self.players = players
-        self.screen = screen
+#     def __init__(self, balls: pygame.sprite.Group, players: pygame.sprite.Group, screen: pygame.display):
+#         self.balls = balls
+#         self.players = players
+#         self.screen = screen
     
-    def run_game(self):
+#     def run_game(self):
         
     
-    def reset_ball(self):
-        i
+#     def reset_ball(self):
+#         i
 
 """
 main function
@@ -153,7 +152,7 @@ def main():
     ball = Ball()
 
     #creates sprite group of ball(s)
-    balls = pygame.sprite.Group()
+    balls = pygame.sprite.GroupSingle()
     balls.add(ball)
 
     #creates players
@@ -179,22 +178,38 @@ def main():
     
     #game loop
     while True:
-        # start_time = time.perf_counter()
-        #move players
-        pressed = pygame.key.get_pressed()
-        for p in players:
-            if not isinstance(p, Player): print(f"{p} is not a player"); break
-            for e in pygame.event.get():
-                if e.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            for p in players:
+                if not isinstance(p, Player): print(f"{p} is not a player"); break
                 if e.type == pygame.KEYDOWN:
                     if e.key == p.keybindings['pause']: state = (state + 1) % 2
-            # if isinstance(p, Opponent): p.move_player(ball1); continue
-            if isinstance(p, Opponent): p.move_opponent(ball); continue
-            if state == RUNNING:
-                if pressed[p.keybindings['up']]: p.move_player('up')
-                elif pressed[p.keybindings['down']]: p.move_player('down')
+                    if state is PAUSE: continue
+                    if isinstance(p, Opponent): p.move_opponent(balls); continue
+                    if e.key == p.keybindings['up']: p.movement -= p.player_speed
+                    if e.key == p.keybindings['down']: p.movement += p.player_speed
+                if e.type == pygame.KEYUP:
+                    if e.key == p.keybindings['up']: p.movement += p.player_speed
+                    if e.key == p.keybindings['down']: p.movement -= p.player_speed
+
+        # start_time = time.perf_counter()
+        #move players
+        # pressed = pygame.key.get_pressed()
+        # for p in players:
+        #     if not isinstance(p, Player): print(f"{p} is not a player"); break
+        #     for e in pygame.event.get():
+        #         if e.type == pygame.QUIT:
+        #             pygame.quit()
+        #             sys.exit()
+        #         if e.type == pygame.KEYDOWN:
+        #             if e.key == p.keybindings['pause']: state = (state + 1) % 2
+        #     # if isinstance(p, Opponent): p.move_player(ball1); continue
+        #     if isinstance(p, Opponent): p.move_opponent(ball); continue
+        #     if state == RUNNING:
+        #         if pressed[p.keybindings['up']]: p.move_player('up')
+        #         elif pressed[p.keybindings['down']]: p.move_player('down')
 
         #fill background
         screen.fill(background_color)
@@ -204,7 +219,7 @@ def main():
             #draw game objects
             players.draw(screen)
             balls.draw(screen)
-            pygame.draw.aaline(screen, GameManager.grey, (_WINDOW_WIDTH//2, 0), (_WINDOW_WIDTH//2, _WINDOW_HEIGHT))
+            pygame.draw.aaline(screen, grey, (_WINDOW_WIDTH//2, 0), (_WINDOW_WIDTH//2, _WINDOW_HEIGHT))
 
             #update balls
             balls.update()
@@ -222,7 +237,7 @@ def main():
             
 
             #draw players and scores
-            for p in players.values():
+            for p in players:
                 pygame.draw.rect(screen, grey, p.rect)
                 score_text = score_font.render(f"{p.player_score}", False, 'grey67')
                 if p.side == 'left':
