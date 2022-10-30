@@ -3,20 +3,25 @@ import pygame, sys, random
 import time
 
 _WINDOW_WIDTH = 1280
-_WINDOW_HEIGHT = 960
+_WINDOW_HEIGHT = 700
+_PLAYER_BUFFER = 20
 
 class Block(pygame.sprite.Sprite):
-    def __init__(self, img_path: str, x_pos: int, y_pos: int):
+    def __init__(self, img_path: str, color: pygame.Color, x_pos: int, y_pos: int):
         super().__init__()
         self.image = pygame.image.load(img_path)
         self.rect = self.image.get_rect(center = (x_pos, y_pos))
+
+        color_image = pygame.Surface(self.image.get_size()).convert_alpha()
+        color_image.fill(color)
+        self.image.blit(color_image, (0,0), special_flags = pygame.BLEND_RGBA_MULT)
 
 class Ball(Block):
     """
     Initializes Ball
     """
-    def __init__(self, img_path: str, x_pos: int, y_pos: int, players: pygame.sprite.Group = None, ball_speed_x: int = 15, ball_speed_y: int = 15):
-        super().__init__(img_path, x_pos, y_pos)
+    def __init__(self, img_path: str, x_pos: int, y_pos: int, players: pygame.sprite.Group = None, ball_speed_x: int = 15, ball_speed_y: int = 15, color: pygame.Color = pygame.Color(0, 0, 0)):
+        super().__init__(img_path, color, x_pos, y_pos)
         self.ball_speed_x = ball_speed_x * random.choice((1, -1))
         self.ball_speed_y = ball_speed_y * random.choice((1, -1))
         self.players = players
@@ -52,17 +57,17 @@ class Ball(Block):
         """
         for p in players_hit:
             #hit side of player
-            if p.side == 'left' and self.ball_speed_x > 0:
+            if p.side == 'left' and self.ball_speed_x < 0:
                 self.ball_speed_x *= -1
-            elif p.side == 'right' and self.ball_speed_x < 0:
+            elif p.side == 'right' and self.ball_speed_x > 0:
                 self.ball_speed_x *= -1
             
             #hit top or bottom of player
             #bottom
-            if self.rect.bottom >= p.rect.top and self.rect.bottom <= p.rect.bottom and self.ball_speed_y < 0:
+            if self.rect.bottom >= p.rect.top and self.rect.bottom <= p.rect.bottom and self.ball_speed_y > 0:
                 self.ball_speed_y *= -1
             #top
-            elif self.rect.top <= p.rect.bottom and self.rect.top >= p.rect.top and self.ball_speed_y > 0:
+            elif self.rect.top <= p.rect.bottom and self.rect.top >= p.rect.top and self.ball_speed_y < 0:
                 self.ball_speed_y *= -1
     
     def update_score(self):
@@ -80,17 +85,18 @@ class Player(Block):
     """
     Initializes Player
     """
-    def __init__(self, img_path: str, x_pos: int, y_pos: int, keybindings: dict, player_speed: int = 10, player_score: int = 0):
-        super().__init__(img_path, x_pos, y_pos)
+    def __init__(self, img_path: str, x_pos: int, y_pos: int, keybindings: dict, side: str, player_speed: int = 10, player_score: int = 0, color: pygame.Color = pygame.Color(0, 0, 0)):
+        super().__init__(img_path, color, x_pos, y_pos)
         self.keybindings = keybindings
         self.player_speed = player_speed
         self.player_score = player_score
         self.movement = 0
+        self.side = side
 
     """
     Moves the player
     """
-    def update(self):
+    def update(self, balls):
         self.rect.y += self.movement
         self.check_collision()
     
@@ -112,9 +118,9 @@ class Opponent(Player):
     """
     def move_opponent(self, balls: pygame.sprite.GroupSingle):
         if self.rect.top < balls.sprite.rect.y:
-            self.movement = -self.player_speed
-        elif self.rect.bottom > balls.sprite.rect.y:
             self.movement = self.player_speed
+        elif self.rect.bottom > balls.sprite.rect.y:
+            self.movement = -self.player_speed
         else:
             self.movement = 0
 
@@ -148,24 +154,26 @@ def main():
     left_inputs = {'up': pygame.K_w, 'down': pygame.K_s, 'pause': pygame.K_ESCAPE}
     right_inputs = {'up': pygame.K_UP, 'down': pygame.K_DOWN, 'pause': pygame.K_ESCAPE}
 
-    #creates ball
-    ball = Ball()
-
-    #creates sprite group of ball(s)
-    balls = pygame.sprite.GroupSingle()
-    balls.add(ball)
-
     #creates players
-    left_player = Opponent('left', left_inputs)
+    paddle_img_path = 'images/paddle.png'
+    left_player = Opponent(paddle_img_path, _PLAYER_BUFFER, _WINDOW_HEIGHT//2, left_inputs, 'left', color=pygame.Color(255, 0, 0))
     # left_player = Player('left', left_inputs)
     # right_player = Opponent('right', right_inputs)
-    right_player = Player('right', right_inputs)
+    right_player = Player(paddle_img_path, _WINDOW_WIDTH - _PLAYER_BUFFER, _WINDOW_HEIGHT//2, right_inputs, 'right', color=pygame.Color(0, 0, 255))
 
     #creates sprite group of players
     players = pygame.sprite.Group()
     players.add(left_player)
     players.add(right_player)
-    
+
+    #creates ball
+    ball_img_path = 'images/ball1.png'
+    ball = Ball(ball_img_path, _WINDOW_WIDTH//2, _WINDOW_HEIGHT//2, players)
+
+    #creates sprite group of ball(s)
+    balls = pygame.sprite.GroupSingle()
+    balls.add(ball)
+
     #sets colors and fonts
     grey = (200, 200, 200)
     score_font = pygame.font.Font(None, 50)
@@ -178,16 +186,16 @@ def main():
     
     #game loop
     while True:
-        for e in pygame.event.get():
-            if e.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            for p in players:
-                if not isinstance(p, Player): print(f"{p} is not a player"); break
+        for p in players:
+            if not isinstance(p, Player): print(f"{p} is not a player"); break
+            if isinstance(p, Opponent): p.move_opponent(balls); continue
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
                 if e.type == pygame.KEYDOWN:
                     if e.key == p.keybindings['pause']: state = (state + 1) % 2
                     if state is PAUSE: continue
-                    if isinstance(p, Opponent): p.move_opponent(balls); continue
                     if e.key == p.keybindings['up']: p.movement -= p.player_speed
                     if e.key == p.keybindings['down']: p.movement += p.player_speed
                 if e.type == pygame.KEYUP:
@@ -217,16 +225,17 @@ def main():
         #run the game
         if state == RUNNING:
             #draw game objects
+            pygame.draw.aaline(screen, grey, (_WINDOW_WIDTH//2, 0), (_WINDOW_WIDTH//2, _WINDOW_HEIGHT))
             players.draw(screen)
             balls.draw(screen)
-            pygame.draw.aaline(screen, grey, (_WINDOW_WIDTH//2, 0), (_WINDOW_WIDTH//2, _WINDOW_HEIGHT))
 
             #update balls
+            players.update(balls)
             balls.update()
 
             #move and draw ball
-            ball.move_ball(players)
-            pygame.draw.ellipse(screen, grey, ball)
+            # ball.move_ball(players)
+            # pygame.draw.ellipse(screen, grey, ball)
 
             #multiple balls
             # for ball in balls:
@@ -236,9 +245,8 @@ def main():
             #draw middle line
             
 
-            #draw players and scores
+            #draw scores
             for p in players:
-                pygame.draw.rect(screen, grey, p.rect)
                 score_text = score_font.render(f"{p.player_score}", False, 'grey67')
                 if p.side == 'left':
                     screen.blit(score_text, (_WINDOW_WIDTH//2 - 120, 50))
