@@ -3,8 +3,8 @@ import pygame, sys, random
 import time
 
 _WINDOW_WIDTH = 1280
-_WINDOW_HEIGHT = 700
-_PLAYER_BUFFER = 20
+_WINDOW_HEIGHT = 960
+_PLAYER_BUFFER = 50
 
 class Block(pygame.sprite.Sprite):
     def __init__(self, img_path: str, color: pygame.Color, x_pos: int, y_pos: int):
@@ -63,12 +63,13 @@ class Ball(Block):
                 self.ball_speed_x *= -1
             
             #hit top or bottom of player
+            #these don't work
             #bottom
-            if self.rect.bottom >= p.rect.top and self.rect.bottom <= p.rect.bottom and self.ball_speed_y > 0:
-                self.ball_speed_y *= -1
+            # if self.rect.bottom >= p.rect.top and self.rect.bottom <= p.rect.bottom and self.ball_speed_y < 0:
+            #     self.ball_speed_y *= -1
             #top
-            elif self.rect.top <= p.rect.bottom and self.rect.top >= p.rect.top and self.ball_speed_y < 0:
-                self.ball_speed_y *= -1
+            # elif self.rect.top <= p.rect.bottom and self.rect.top >= p.rect.top and self.ball_speed_y > 0:
+            #     self.ball_speed_y *= -1
     
     def update_score(self):
         #scoring
@@ -125,18 +126,18 @@ class Opponent(Player):
             self.movement = 0
 
 # class GameManager:
-#     grey = (200, 200, 200)
-
 #     def __init__(self, balls: pygame.sprite.Group, players: pygame.sprite.Group, screen: pygame.display):
 #         self.balls = balls
 #         self.players = players
-#         self.screen = screen
+#         self.screen = screen 
     
+#     def check_input(self):
+#         pass
+
 #     def run_game(self):
+#         pass
         
     
-#     def reset_ball(self):
-#         i
 
 """
 main function
@@ -168,18 +169,20 @@ def main():
 
     #creates ball
     ball_img_path = 'images/ball1.png'
-    ball = Ball(ball_img_path, _WINDOW_WIDTH//2, _WINDOW_HEIGHT//2, players)
+    ball = Ball(ball_img_path, _WINDOW_WIDTH//2, _WINDOW_HEIGHT//2, players, color=pygame.Color(255, 255, 255))
 
     #creates sprite group of ball(s)
     balls = pygame.sprite.GroupSingle()
     balls.add(ball)
 
-    #sets colors and fonts
-    grey = (200, 200, 200)
+    #sets fonts
     score_font = pygame.font.Font(None, 50)
     pause_font = pygame.font.Font(None, 150)
-    background_color = pygame.Color('turquoise4')
     
+    #sets colors
+    background_color = pygame.Color('turquoise4')
+    light_grey = (200, 200, 200)
+
     #used for pausing game
     RUNNING, PAUSE = 0, 1
     state = RUNNING
@@ -202,49 +205,20 @@ def main():
                     if e.key == p.keybindings['up']: p.movement += p.player_speed
                     if e.key == p.keybindings['down']: p.movement -= p.player_speed
 
-        # start_time = time.perf_counter()
-        #move players
-        # pressed = pygame.key.get_pressed()
-        # for p in players:
-        #     if not isinstance(p, Player): print(f"{p} is not a player"); break
-        #     for e in pygame.event.get():
-        #         if e.type == pygame.QUIT:
-        #             pygame.quit()
-        #             sys.exit()
-        #         if e.type == pygame.KEYDOWN:
-        #             if e.key == p.keybindings['pause']: state = (state + 1) % 2
-        #     # if isinstance(p, Opponent): p.move_player(ball1); continue
-        #     if isinstance(p, Opponent): p.move_opponent(ball); continue
-        #     if state == RUNNING:
-        #         if pressed[p.keybindings['up']]: p.move_player('up')
-        #         elif pressed[p.keybindings['down']]: p.move_player('down')
-
         #fill background
         screen.fill(background_color)
 
         #run the game
         if state == RUNNING:
             #draw game objects
-            pygame.draw.aaline(screen, grey, (_WINDOW_WIDTH//2, 0), (_WINDOW_WIDTH//2, _WINDOW_HEIGHT))
+            pygame.draw.aaline(screen, light_grey, (_WINDOW_WIDTH//2, 0), (_WINDOW_WIDTH//2, _WINDOW_HEIGHT))
             players.draw(screen)
             balls.draw(screen)
 
             #update balls
             players.update(balls)
             balls.update()
-
-            #move and draw ball
-            # ball.move_ball(players)
-            # pygame.draw.ellipse(screen, grey, ball)
-
-            #multiple balls
-            # for ball in balls:
-            #     ball.move_ball(players)
-            #     pygame.draw.ellipse(screen, grey, ball)
-
-            #draw middle line
             
-
             #draw scores
             for p in players:
                 score_text = score_font.render(f"{p.player_score}", False, 'grey67')
