@@ -50,7 +50,7 @@ class Ball(Block):
     """
     Initializes Ball
     """
-    def __init__(self, img_path: str, x_pos: int, y_pos: int, players: pygame.sprite.Group = None, ball_speed_x: int = 5, ball_speed_y: int = 5, color: pygame.Color = pygame.Color(0, 0, 0)):
+    def __init__(self, img_path: str, x_pos: int, y_pos: int, players: pygame.sprite.Group = None, ball_speed_x: int = 15, ball_speed_y: int = 15, color: pygame.Color = pygame.Color(0, 0, 0)):
         super().__init__(img_path, color, x_pos, y_pos)
         self.ball_speed_x = ball_speed_x * random.choice((1, -1))
         self.ball_speed_y = ball_speed_y * random.choice((1, -1))
@@ -174,10 +174,11 @@ class Game_Manager:
     #used for pausing game
     RUNNING, PAUSE = 0, 1
 
-    def __init__(self, balls: pygame.sprite.Group, players: pygame.sprite.Group, screen: pygame.display):
+    def __init__(self, balls: pygame.sprite.Group, players: pygame.sprite.Group, screen: pygame.display, goal_score: int = 10):
         self.balls = balls
         self.players = players
         self.screen = screen
+        self.goal_score = goal_score
         self.state = Game_Manager.RUNNING
 
     def do_input(self):
@@ -198,6 +199,9 @@ class Game_Manager:
                 elif pressed[p.keybindings['down']]: p.move_player('down')
                 else: p.move_player('stop')
 
+    """
+    TODO: timer after scoring
+    """
     def run_game(self):
         #fill background
         self.screen.fill(colors.background_color)
@@ -211,10 +215,6 @@ class Game_Manager:
         self.players.draw(self.screen)
         self.balls.draw(self.screen)
 
-        #update game objects
-        self.players.update(self.balls)
-        self.balls.update()
-        
         #draw scores
         for p in self.players:
             score_text = fonts.score_font.render(f"{p.player_score}", False, 'grey67')
@@ -223,10 +223,47 @@ class Game_Manager:
             elif p.side == 'right':
                 self.screen.blit(score_text, (settings.window_width//2 + 120, 50))
 
+        #check for wins
+        #I like the look of the game objects still being on screen so this is after drawing
+        for p in self.players:
+            if p.player_score >= self.goal_score:
+                self.win_game(p)
+                #if there's a win, don't update game objects
+                return
+
+        #update game objects
+        self.players.update(self.balls)
+        self.balls.update()
+
+    """
+    TODO: Make a better pause screen
+          quit to main menu, play again, change keybinds, etc.
+    """
     def pause_game(self):
         pause_text = fonts.pause_font.render("Game is paused", False, 'grey67')
         self.screen.blit(pause_text, (0, settings.window_height//2))
 
+    """
+    TODO: Make a better win screen
+          ability to play again or quit after game is done
+          play again should take allow you to choose between player and AI
+    """
+    def win_game(self, player: Player):
+        p_num = 1 if player.side == 'left' else 2
+        win_text = fonts.pause_font.render(f'Player {p_num} wins!', False, 'grey67')
+        self.screen.blit(win_text, (0, settings.window_height//2))
+        # self.end_game()
+
+    # def end_game(self):
+    #     pass
+
+    """
+    TODO: paddles don't scale completely right
+          ball/player speed doesn't scale completely right
+          add black bars to the side so that window isn't restricted to 4:3 (also fullscreen later)
+          scale font size/location
+          
+    """
     def resize_game(self, event: pygame.event):
         if event.type != pygame.VIDEORESIZE:
             return
