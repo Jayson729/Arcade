@@ -142,11 +142,11 @@ class Opponent(Player):
     """
     def move_opponent(self, balls: pygame.sprite.GroupSingle):
         if self.rect.top < balls.sprite.rect.y:
-            self.movement = self.player_speed
+            self.move_player('down')
         elif self.rect.bottom > balls.sprite.rect.y:
-            self.movement = -self.player_speed
+            self.move_player('up')
         else:
-            self.movement = 0
+            self.move_player('stop')
 
 class Game_Manager:
     #used for pausing game
@@ -170,7 +170,6 @@ class Game_Manager:
                     self.resize_game(e)
                 if e.type == pygame.KEYDOWN:
                     if e.key == p.keybindings['pause']: self.state = (self.state + 1) % 2
-            # if isinstance(p, Opponent): p.move_player(ball1); continue
             if isinstance(p, Opponent): p.move_opponent(self.balls); continue
             if self.state == Game_Manager.RUNNING:
                 if pressed[p.keybindings['up']]: p.move_player('up')
