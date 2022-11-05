@@ -23,9 +23,22 @@ class Block(pygame.sprite.Sprite):
         # super().__init__()
         self.image = pygame.image.load(img_path)
         self.rect = self.image.get_rect(center = (x_pos, y_pos))
+        self.color = color
 
         color_image = pygame.Surface(self.image.get_size()).convert_alpha()
         color_image.fill(color)
+        self.image.blit(color_image, (0,0), special_flags = pygame.BLEND_RGBA_MULT)
+    
+    def resize(self, new_width: int, new_height: int):
+        #scales image
+        self.image = pygame.transform.scale(self.image, (new_width, new_height))
+
+        #scales rect with center at old rect center
+        self.rect = self.image.get_rect(center = self.rect.center)
+
+        #honestly not sure if this is needed
+        color_image = pygame.Surface(self.image.get_size()).convert_alpha()
+        color_image.fill(self.color)
         self.image.blit(color_image, (0,0), special_flags = pygame.BLEND_RGBA_MULT)
 
 class Ball(Block):
@@ -208,13 +221,12 @@ class Game_Manager:
     def resize_game(self, event: pygame.event):
         if event.type != pygame.VIDEORESIZE:
             return
-
+        
         #resize game objects
         for p in self.players.sprites() + self.balls.sprites():
-            p_width = p.image.get_width()
-            p_height = p.image.get_height()
-            p.image = pygame.transform.scale(p.image, (int(p_width * (event.w / settings.window_width)), int(p_height * (event.h / settings.window_height))))
-            p.rect = p.image.get_rect(center=p.rect.center)
+            width = p.image.get_width()
+            height = p.image.get_height()
+            p.resize(int(width * (event.w / settings.window_width)), int(height * (event.h / settings.window_height)))
 
         #resize screen
         settings.window_width = event.w
@@ -251,9 +263,14 @@ def main():
     players.add(left_player)
     players.add(right_player)
 
+    #resize players
+    for p in players:
+        p.resize(20, 160)
+
     #creates ball
     ball_img_path = 'images/ball1.png'
     ball = Ball(ball_img_path, settings.window_width//2, settings.window_height//2, players, color=pygame.Color(255, 255, 255))
+    ball.resize(40, 40)
 
     #creates sprite group of ball(s)
     balls = pygame.sprite.GroupSingle()
@@ -270,7 +287,7 @@ def main():
         pygame.display.flip()
         
         clock.tick(settings.fps)
-        print(f"fps: {clock.get_fps()}")
+        # print(f"fps: {clock.get_fps()}")
 
 if __name__ == "__main__":
     main()
