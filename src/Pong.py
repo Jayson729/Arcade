@@ -9,6 +9,7 @@ class settings:
     player_buffer = 50
 
 class fonts:
+    pygame.font.init()
     score_font = pygame.font.Font(None, 50)
     pause_font = pygame.font.Font(None, 150)
 
@@ -72,14 +73,14 @@ class Ball(Block):
             elif p.side == 'right' and self.ball_speed_x > 0:
                 self.ball_speed_x *= -1
             
-            #hit top or bottom of player
-            #these don't work
-            #bottom
-            # if self.rect.bottom >= p.rect.top and self.rect.bottom <= p.rect.bottom and self.ball_speed_y < 0:
-            #     self.ball_speed_y *= -1
-            #top
-            # elif self.rect.top <= p.rect.bottom and self.rect.top >= p.rect.top and self.ball_speed_y > 0:
-            #     self.ball_speed_y *= -1
+            # hit top or bottom of player
+            # these don't work
+            # bottom
+            elif self.rect.bottom >= p.rect.top and self.rect.bottom <= p.rect.bottom and self.ball_speed_y > 0:
+                self.ball_speed_y *= -1
+            # top
+            elif self.rect.top <= p.rect.bottom and self.rect.top >= p.rect.top and self.ball_speed_y < 0:
+                self.ball_speed_y *= -1
     
     def update_score(self):
         #scoring
@@ -135,52 +136,59 @@ class Opponent(Player):
         else:
             self.movement = 0
 
-# class GameManager:
-#     def __init__(self, balls: pygame.sprite.Group, players: pygame.sprite.Group, screen: pygame.display):
-#         self.balls = balls
-#         self.players = players
-#         self.screen = screen
-#         self.state = 1
+class Game_Manager:
+    #used for pausing game
+    RUNNING, PAUSE = 0, 1
 
-#     def do_input(self):
-#         for p in self.players:
-#             if not isinstance(p, Player): print(f"{p} is not a player"); break
-#             if isinstance(p, Opponent): p.move_opponent(self.balls); continue
-#             for e in pygame.event.get():
-#                 if e.type == pygame.QUIT:
-#                     pygame.quit()
-#                     sys.exit()
-#                 if e.type == pygame.KEYDOWN:
-#                     if e.key == p.keybindings['pause']: state = (state + 1) % 2
-#                     if state is PAUSE: continue
-#                     if e.key == p.keybindings['up']: p.movement -= p.player_speed
-#                     if e.key == p.keybindings['down']: p.movement += p.player_speed
-#                 if e.type == pygame.KEYUP:
-#                     if state is PAUSE: continue
-#                     if e.key == p.keybindings['up']: p.movement += p.player_speed
-#                     if e.key == p.keybindings['down']: p.movement -= p.player_speed
+    def __init__(self, balls: pygame.sprite.Group, players: pygame.sprite.Group, screen: pygame.display):
+        self.balls = balls
+        self.players = players
+        self.screen = screen
+        self.state = Game_Manager.RUNNING
 
-#     def run_game(self):
-#         #draw game objects
-#         pygame.draw.aaline(self.screen, light_grey, (_WINDOW_WIDTH//2, 0), (_WINDOW_WIDTH//2, _WINDOW_HEIGHT))
-#         self.players.draw(self.screen)
-#         self.balls.draw(self.screen)
+    def do_input(self):
+        for p in self.players:
+            if not isinstance(p, Player): print(f"{p} is not a player"); break
+            if isinstance(p, Opponent): p.move_opponent(self.balls); continue
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if e.type == pygame.KEYDOWN:
+                    if e.key == p.keybindings['pause']: self.state = (self.state + 1) % 2
+                    if self.state is Game_Manager.PAUSE: continue
+                    if e.key == p.keybindings['up']: p.movement -= p.player_speed
+                    if e.key == p.keybindings['down']: p.movement += p.player_speed
+                if e.type == pygame.KEYUP:
+                    if self.state is Game_Manager.PAUSE: continue
+                    if e.key == p.keybindings['up']: p.movement += p.player_speed
+                    if e.key == p.keybindings['down']: p.movement -= p.player_speed
 
-#         #update balls
-#         self.players.update(self.balls)
-#         self.balls.update()
+    def run_game(self):
+        if self.state is Game_Manager.PAUSE:
+            self.pause_game()
+            return
+
+        #draw game objects
+        pygame.draw.aaline(self.screen, colors.light_grey, (settings.window_width//2, 0), (settings.window_width//2, settings.window_height))
+        self.players.draw(self.screen)
+        self.balls.draw(self.screen)
+
+        #update balls
+        self.players.update(self.balls)
+        self.balls.update()
         
-#         #draw scores
-#         for p in self.players:
-#             score_text = score_font.render(f"{p.player_score}", False, 'grey67')
-#             if p.side == 'left':
-#                 self.screen.blit(score_text, (_WINDOW_WIDTH//2 - 120, 50))
-#             elif p.side == 'right':
-#                 self.screen.blit(score_text, (_WINDOW_WIDTH//2 + 120, 50))
+        #draw scores
+        for p in self.players:
+            score_text = fonts.score_font.render(f"{p.player_score}", False, 'grey67')
+            if p.side == 'left':
+                self.screen.blit(score_text, (settings.window_width//2 - 120, 50))
+            elif p.side == 'right':
+                self.screen.blit(score_text, (settings.window_width//2 + 120, 50))
 
-#     def pause_game(self):
-#         pause_text = pause_font.render("Game is paused", False, 'grey67')
-#         self.screen.blit(pause_text, (0, _WINDOW_HEIGHT//2))
+    def pause_game(self):
+        pause_text = fonts.pause_font.render("Game is paused", False, 'grey67')
+        self.screen.blit(pause_text, (0, settings.window_height//2))
         
     
 
@@ -219,69 +227,18 @@ def main():
     #creates sprite group of ball(s)
     balls = pygame.sprite.GroupSingle()
     balls.add(ball)
-
-    #used for pausing game
-    RUNNING, PAUSE = 0, 1
-    state = RUNNING
     
+    #creates game_manger
+    game_manager = Game_Manager(balls, players, screen)
+
     #game loop
     while True:
-        # game_manager.do_input()
-        # if state is PAUSE:
-        #     game_manager.pause_game()
-        # else:
-        #     game_manager.run_game()
-
-        # pygame.display.flip()
-        
-        # clock.tick(60)
-        # print(f"fps: {clock.get_fps()}")
-            
-        for p in players:
-            if not isinstance(p, Player): print(f"{p} is not a player"); break
-            if isinstance(p, Opponent): p.move_opponent(balls); continue
-            for e in pygame.event.get():
-                if e.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if e.type == pygame.KEYDOWN:
-                    if e.key == p.keybindings['pause']: state = (state + 1) % 2
-                    if state is PAUSE: continue
-                    if e.key == p.keybindings['up']: p.movement -= p.player_speed
-                    if e.key == p.keybindings['down']: p.movement += p.player_speed
-                if e.type == pygame.KEYUP:
-                    if state is PAUSE: continue
-                    if e.key == p.keybindings['up']: p.movement += p.player_speed
-                    if e.key == p.keybindings['down']: p.movement -= p.player_speed
-
         #fill background
-        screen.fill(background_color)
+        screen.fill(colors.background_color)
 
-        #run the game
-        if state == RUNNING:
-            #draw game objects
-            pygame.draw.aaline(screen, light_grey, (settings.window_width//2, 0), (settings.window_width//2, settings.window_height))
-            players.draw(screen)
-            balls.draw(screen)
+        game_manager.do_input()
+        game_manager.run_game()
 
-            #update balls
-            players.update(balls)
-            balls.update()
-            
-            #draw scores
-            for p in players:
-                score_text = score_font.render(f"{p.player_score}", False, 'grey67')
-                if p.side == 'left':
-                    screen.blit(score_text, (settings.window_width//2 - 120, 50))
-                elif p.side == 'right':
-                    screen.blit(score_text, (settings.window_width//2 + 120, 50))
-        else:
-            pause_text = pause_font.render("Game is paused", False, 'grey67')
-            screen.blit(pause_text, (0, settings.window_height//2))
-        
-        # end_time = time.perf_counter()
-        # print(f"Execution Time: {end_time - start_time:0.6f}")
-    
         pygame.display.flip()
         
         clock.tick(settings.fps)
