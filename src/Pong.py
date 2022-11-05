@@ -19,7 +19,8 @@ class colors:
 
 class Block(pygame.sprite.Sprite):
     def __init__(self, img_path: str, color: pygame.Color, x_pos: int, y_pos: int):
-        super().__init__()
+        pygame.sprite.Sprite.__init__(self)
+        # super().__init__()
         self.image = pygame.image.load(img_path)
         self.rect = self.image.get_rect(center = (x_pos, y_pos))
 
@@ -106,6 +107,17 @@ class Player(Block):
         self.side = side
 
     """
+    Sets movement value of player
+    """
+    def move_player(self, dir: str):
+        if dir == 'stop':
+            self.movement = 0
+        elif dir == 'up':
+            self.movement = -self.player_speed
+        else:
+            self.movement = self.player_speed
+
+    """
     Moves the player
     """
     def update(self, balls):
@@ -147,24 +159,28 @@ class Game_Manager:
         self.state = Game_Manager.RUNNING
 
     def do_input(self):
+        pressed = pygame.key.get_pressed()
         for p in self.players:
             if not isinstance(p, Player): print(f"{p} is not a player"); break
-            if isinstance(p, Opponent): p.move_opponent(self.balls); continue
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if e.type == pygame.VIDEORESIZE:
+                    self.resize_game(e)
                 if e.type == pygame.KEYDOWN:
                     if e.key == p.keybindings['pause']: self.state = (self.state + 1) % 2
-                    if self.state is Game_Manager.PAUSE: continue
-                    if e.key == p.keybindings['up']: p.movement -= p.player_speed
-                    if e.key == p.keybindings['down']: p.movement += p.player_speed
-                if e.type == pygame.KEYUP:
-                    if self.state is Game_Manager.PAUSE: continue
-                    if e.key == p.keybindings['up']: p.movement += p.player_speed
-                    if e.key == p.keybindings['down']: p.movement -= p.player_speed
+            # if isinstance(p, Opponent): p.move_player(ball1); continue
+            if isinstance(p, Opponent): p.move_opponent(self.balls); continue
+            if self.state == Game_Manager.RUNNING:
+                if pressed[p.keybindings['up']]: p.move_player('up')
+                elif pressed[p.keybindings['down']]: p.move_player('down')
+                else: p.move_player('stop')
 
     def run_game(self):
+        #fill background
+        self.screen.fill(colors.background_color)
+
         if self.state is Game_Manager.PAUSE:
             self.pause_game()
             return
@@ -174,7 +190,7 @@ class Game_Manager:
         self.players.draw(self.screen)
         self.balls.draw(self.screen)
 
-        #update balls
+        #update game objects
         self.players.update(self.balls)
         self.balls.update()
         
@@ -189,6 +205,22 @@ class Game_Manager:
     def pause_game(self):
         pause_text = fonts.pause_font.render("Game is paused", False, 'grey67')
         self.screen.blit(pause_text, (0, settings.window_height//2))
+
+    def resize_game(self, event: pygame.event):
+        if event.type != pygame.VIDEORESIZE:
+            return
+
+        #resize game objects
+        for p in self.players.sprites() + self.balls.sprites():
+            p_width = p.image.get_width()
+            p_height = p.image.get_height()
+            p.image = pygame.transform.scale(p.image, (int(p_width * (event.w / settings.window_width)), int(p_height * (event.h / settings.window_height))))
+            p.rect = p.image.get_rect(center=p.rect.center)
+
+        #resize screen
+        settings.window_width = event.w
+        settings.window_height = event.h
+        self.screen = pygame.display.set_mode(event.size, pygame.RESIZABLE)
         
     
 
@@ -233,9 +265,6 @@ def main():
 
     #game loop
     while True:
-        #fill background
-        screen.fill(colors.background_color)
-
         game_manager.do_input()
         game_manager.run_game()
 
