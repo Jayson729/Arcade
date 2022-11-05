@@ -2,9 +2,19 @@ import cProfile
 import pygame, sys, random
 import time
 
-_WINDOW_WIDTH = 1280
-_WINDOW_HEIGHT = 960
-_PLAYER_BUFFER = 50
+class settings:
+    fps = 60
+    window_width = 1280
+    window_height = 960
+    player_buffer = 50
+
+class fonts:
+    score_font = pygame.font.Font(None, 50)
+    pause_font = pygame.font.Font(None, 150)
+
+class colors:
+    background_color = pygame.Color('turquoise4')
+    light_grey = (200, 200, 200)
 
 class Block(pygame.sprite.Sprite):
     def __init__(self, img_path: str, color: pygame.Color, x_pos: int, y_pos: int):
@@ -39,13 +49,13 @@ class Ball(Block):
     Moves ball back to center and sends to random side
     """
     def reset_ball(self):
-        self.rect.center = _WINDOW_WIDTH//2, _WINDOW_HEIGHT//2
+        self.rect.center = settings.window_width//2, settings.window_height//2
         self.ball_speed_y *= random.choice((1, -1))
         self.ball_speed_x *= random.choice((1, -1))
 
     def check_collisions(self):
         #checks for bouncing off ceiling/bottom
-        if self.rect.top <= 0 or self.rect.bottom >= _WINDOW_HEIGHT:
+        if self.rect.top <= 0 or self.rect.bottom >= settings.window_height:
             self.ball_speed_y *= -1
 
         players_hit = pygame.sprite.spritecollide(self, self.players, False)
@@ -78,7 +88,7 @@ class Ball(Block):
                 self.reset_ball()
                 p.player_score += 1
             
-            elif self.rect.right >= _WINDOW_WIDTH and p.side == 'left':
+            elif self.rect.right >= settings.window_width and p.side == 'left':
                 self.reset_ball()
                 p.player_score += 1
 
@@ -107,8 +117,8 @@ class Player(Block):
     def check_collision(self):
         if self.rect.top <= 0:
             self.rect.top = 0
-        elif self.rect.bottom >= _WINDOW_HEIGHT:
-            self.rect.bottom = _WINDOW_HEIGHT
+        elif self.rect.bottom >= settings.window_height:
+            self.rect.bottom = settings.window_height
 
 """
 AI for pong
@@ -148,7 +158,7 @@ def main():
     clock = pygame.time.Clock()
 
     #main window
-    screen = pygame.display.set_mode((_WINDOW_WIDTH, _WINDOW_HEIGHT), pygame.RESIZABLE)
+    screen = pygame.display.set_mode((settings.window_width, settings.window_height), pygame.RESIZABLE)
     pygame.display.set_caption('Pong')
 
     #sets keybindings
@@ -157,10 +167,10 @@ def main():
 
     #creates players
     paddle_img_path = 'images/paddle.png'
-    left_player = Opponent(paddle_img_path, _PLAYER_BUFFER, _WINDOW_HEIGHT//2, left_inputs, 'left', color=pygame.Color(255, 0, 0))
+    left_player = Opponent(paddle_img_path, settings.player_buffer, settings.window_height//2, left_inputs, 'left', color=pygame.Color(255, 0, 0))
     # left_player = Player('left', left_inputs)
     # right_player = Opponent('right', right_inputs)
-    right_player = Player(paddle_img_path, _WINDOW_WIDTH - _PLAYER_BUFFER, _WINDOW_HEIGHT//2, right_inputs, 'right', color=pygame.Color(0, 0, 255))
+    right_player = Player(paddle_img_path, settings.window_width - settings.player_buffer, settings.window_height//2, right_inputs, 'right', color=pygame.Color(0, 0, 255))
 
     #creates sprite group of players
     players = pygame.sprite.Group()
@@ -169,19 +179,11 @@ def main():
 
     #creates ball
     ball_img_path = 'images/ball1.png'
-    ball = Ball(ball_img_path, _WINDOW_WIDTH//2, _WINDOW_HEIGHT//2, players, color=pygame.Color(255, 255, 255))
+    ball = Ball(ball_img_path, settings.window_width//2, settings.window_height//2, players, color=pygame.Color(255, 255, 255))
 
     #creates sprite group of ball(s)
     balls = pygame.sprite.GroupSingle()
     balls.add(ball)
-
-    #sets fonts
-    score_font = pygame.font.Font(None, 50)
-    pause_font = pygame.font.Font(None, 150)
-    
-    #sets colors
-    background_color = pygame.Color('turquoise4')
-    light_grey = (200, 200, 200)
 
     #used for pausing game
     RUNNING, PAUSE = 0, 1
@@ -211,7 +213,7 @@ def main():
         #run the game
         if state == RUNNING:
             #draw game objects
-            pygame.draw.aaline(screen, light_grey, (_WINDOW_WIDTH//2, 0), (_WINDOW_WIDTH//2, _WINDOW_HEIGHT))
+            pygame.draw.aaline(screen, light_grey, (settings.window_width//2, 0), (settings.window_width//2, settings.window_height))
             players.draw(screen)
             balls.draw(screen)
 
@@ -223,19 +225,19 @@ def main():
             for p in players:
                 score_text = score_font.render(f"{p.player_score}", False, 'grey67')
                 if p.side == 'left':
-                    screen.blit(score_text, (_WINDOW_WIDTH//2 - 120, 50))
+                    screen.blit(score_text, (settings.window_width//2 - 120, 50))
                 elif p.side == 'right':
-                    screen.blit(score_text, (_WINDOW_WIDTH//2 + 120, 50))
+                    screen.blit(score_text, (settings.window_width//2 + 120, 50))
         else:
             pause_text = pause_font.render("Game is paused", False, 'grey67')
-            screen.blit(pause_text, (0, _WINDOW_HEIGHT//2))
+            screen.blit(pause_text, (0, settings.window_height//2))
         
         # end_time = time.perf_counter()
         # print(f"Execution Time: {end_time - start_time:0.6f}")
     
         pygame.display.flip()
         
-        clock.tick(60)
+        clock.tick(settings.fps)
         print(f"fps: {clock.get_fps()}")
 
 if __name__ == "__main__":
