@@ -4,9 +4,10 @@ import time
 
 class settings:
     fps = 60
-    window_width = 1280
-    window_height = 960
-    player_buffer = 50
+    aspect_ratio = 4/3
+    window_width = 800
+    window_height = 600
+    player_buffer = 40
 
 class fonts:
     pygame.font.init()
@@ -21,7 +22,11 @@ class Block(pygame.sprite.Sprite):
     def __init__(self, img_path: str, color: pygame.Color, x_pos: int, y_pos: int):
         pygame.sprite.Sprite.__init__(self)
         # super().__init__()
-        self.image = pygame.image.load(img_path)
+        self.orig_image = pygame.image.load(img_path)
+        self.orig_width = self.orig_image.get_width()
+        self.orig_height = self.orig_image.get_height()
+        
+        self.image = self.orig_image
         self.rect = self.image.get_rect(center = (x_pos, y_pos))
         self.color = color
 
@@ -31,7 +36,7 @@ class Block(pygame.sprite.Sprite):
     
     def resize(self, new_width: int, new_height: int):
         #scales image
-        self.image = pygame.transform.scale(self.image, (new_width, new_height))
+        self.image = pygame.transform.scale(self.orig_image, (new_width, new_height))
 
         #scales rect with center at old rect center
         self.rect = self.image.get_rect(center = self.rect.center)
@@ -45,7 +50,7 @@ class Ball(Block):
     """
     Initializes Ball
     """
-    def __init__(self, img_path: str, x_pos: int, y_pos: int, players: pygame.sprite.Group = None, ball_speed_x: int = 15, ball_speed_y: int = 15, color: pygame.Color = pygame.Color(0, 0, 0)):
+    def __init__(self, img_path: str, x_pos: int, y_pos: int, players: pygame.sprite.Group = None, ball_speed_x: int = 5, ball_speed_y: int = 5, color: pygame.Color = pygame.Color(0, 0, 0)):
         super().__init__(img_path, color, x_pos, y_pos)
         self.ball_speed_x = ball_speed_x * random.choice((1, -1))
         self.ball_speed_y = ball_speed_y * random.choice((1, -1))
@@ -153,10 +158,14 @@ class Opponent(Player):
     """
     moves player up or down
     """
-    def move_opponent(self, balls: pygame.sprite.GroupSingle):
-        if self.rect.top < balls.sprite.rect.y:
+    def move_opponent(self, balls: pygame.sprite.Group):
+        if len(balls) == 0:
+            print('Balls is empty')
+            return
+        first_ball = balls.sprites()[0]
+        if self.rect.top < first_ball.rect.y:
             self.move_player('down')
-        elif self.rect.bottom > balls.sprite.rect.y:
+        elif self.rect.bottom > first_ball.rect.y:
             self.move_player('up')
         else:
             self.move_player('stop')
@@ -222,16 +231,32 @@ class Game_Manager:
         if event.type != pygame.VIDEORESIZE:
             return
         
-        #resize game objects
+        #resize game objects and change player/ball speeds
+        #this mostly works, some imprecision after changing a lot
         for p in self.players.sprites() + self.balls.sprites():
             width = p.image.get_width()
             height = p.image.get_height()
-            p.resize(int(width * (event.w / settings.window_width)), int(height * (event.h / settings.window_height)))
+            p.resize(width * (event.w / settings.window_width), height * (event.w / settings.aspect_ratio / settings.window_height))
+            
+            #maybe
+            p.rect.center = (p.rect.center[0] * (event.w / settings.window_width), p.rect.center[1] * (event.w / settings.window_width))
+
+        # maybe
+        for p in self.players:
+            #maybe
+            p.player_speed = p.player_speed * (event.w / settings.window_width)
+        
+        for b in self.balls:
+            #maybe
+            b.ball_speed_x = b.ball_speed_x * (event.w / settings.window_width)
+            b.ball_speed_y = b.ball_speed_y * (event.w / settings.window_width)
 
         #resize screen
+        #this only works for adjusting horizontally
         settings.window_width = event.w
-        settings.window_height = event.h
-        self.screen = pygame.display.set_mode(event.size, pygame.RESIZABLE)
+        settings.window_height = event.w / settings.aspect_ratio
+        
+        self.screen = pygame.display.set_mode((settings.window_width, settings.window_height), pygame.RESIZABLE)
         
     
 
@@ -269,12 +294,17 @@ def main():
 
     #creates ball
     ball_img_path = 'images/ball1.png'
-    ball = Ball(ball_img_path, settings.window_width//2, settings.window_height//2, players, color=pygame.Color(255, 255, 255))
-    ball.resize(40, 40)
+    ball1 = Ball(ball_img_path, settings.window_width//2, settings.window_height//2 - 100, players, color=pygame.Color(255, 255, 255))
+    # ball2 = Ball(ball_img_path, settings.window_width//2, settings.window_height//2 + 100, players, color=pygame.Color(255, 255, 255))
 
     #creates sprite group of ball(s)
-    balls = pygame.sprite.GroupSingle()
-    balls.add(ball)
+    balls = pygame.sprite.Group()
+    balls.add(ball1)
+    # balls.add(ball2)
+
+    #resize balls
+    for b in balls:
+        b.resize(40, 40)
     
     #creates game_manger
     game_manager = Game_Manager(balls, players, screen)
