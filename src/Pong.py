@@ -199,6 +199,25 @@ class Game_Manager:
                 elif pressed[p.keybindings['down']]: p.move_player('down')
                 else: p.move_player('stop')
 
+    def draw_game_objects(self):
+        pygame.draw.aaline(self.screen, colors.light_grey, (settings.window_width//2, 0), (settings.window_width//2, settings.window_height))
+        self.players.draw(self.screen)
+        self.balls.draw(self.screen)
+
+    def draw_scores(self):
+        for p in self.players:
+            score_text = fonts.score_font.render(f"{p.player_score}", False, 'grey67')
+            if p.side == 'left':
+                self.screen.blit(score_text, (settings.window_width//2 - 120, 50))
+            elif p.side == 'right':
+                self.screen.blit(score_text, (settings.window_width//2 + 120, 50))
+
+    def check_win(self) -> Player:
+        for p in self.players:
+            if p.player_score >= self.goal_score:
+                return p
+        return None
+
     """
     TODO: timer after scoring
     """
@@ -210,26 +229,14 @@ class Game_Manager:
             self.pause_game()
             return
 
-        #draw game objects
-        pygame.draw.aaline(self.screen, colors.light_grey, (settings.window_width//2, 0), (settings.window_width//2, settings.window_height))
-        self.players.draw(self.screen)
-        self.balls.draw(self.screen)
+        self.draw_game_objects()
+        self.draw_scores()
 
-        #draw scores
-        for p in self.players:
-            score_text = fonts.score_font.render(f"{p.player_score}", False, 'grey67')
-            if p.side == 'left':
-                self.screen.blit(score_text, (settings.window_width//2 - 120, 50))
-            elif p.side == 'right':
-                self.screen.blit(score_text, (settings.window_width//2 + 120, 50))
-
-        #check for wins
         #I like the look of the game objects still being on screen so this is after drawing
-        for p in self.players:
-            if p.player_score >= self.goal_score:
-                self.win_game(p)
-                #if there's a win, don't update game objects
-                return
+        win = self.check_win()
+        if win is not None:
+            self.win_game(win)
+            return
 
         #update game objects
         self.players.update(self.balls)
@@ -258,35 +265,28 @@ class Game_Manager:
     #     pass
 
     """
-    TODO: paddles don't scale completely right
-          ball/player speed doesn't scale completely right
+    TODO: nothing scales completely right because of rounding errors (things get smaller over time)
+          maybe store original width?
           add black bars to the side so that window isn't restricted to 4:3 (also fullscreen later)
           scale font size/location
-          
     """
     def resize_game(self, event: pygame.event):
         if event.type != pygame.VIDEORESIZE:
             return
-        
-        #resize game objects and change player/ball speeds
-        #this mostly works, some imprecision after changing a lot
-        for p in self.players.sprites() + self.balls.sprites():
-            width = p.image.get_width()
-            height = p.image.get_height()
-            p.resize(width * (event.w / settings.window_width), height * (event.w / settings.aspect_ratio / settings.window_height))
-            
-            #maybe
-            p.rect.center = (p.rect.center[0] * (event.w / settings.window_width), p.rect.center[1] * (event.w / settings.window_width))
 
-        # maybe
+        ratio = event.w / settings.window_width
+        for o in self.players.sprites() + self.balls.sprites():
+            new_width = o.image.get_width() * ratio
+            new_height = o.image.get_height() * ratio
+            o.resize(new_width, new_height)
+            o.rect.center = tuple(x * ratio for x in o.rect.center)
+
         for p in self.players:
-            #maybe
-            p.player_speed = p.player_speed * (event.w / settings.window_width)
+            p.player_speed = p.player_speed * ratio
         
         for b in self.balls:
-            #maybe
-            b.ball_speed_x = b.ball_speed_x * (event.w / settings.window_width)
-            b.ball_speed_y = b.ball_speed_y * (event.w / settings.window_width)
+            b.ball_speed_x = b.ball_speed_x * ratio
+            b.ball_speed_y = b.ball_speed_y * ratio
 
         #resize screen
         #this only works for adjusting horizontally
@@ -295,8 +295,6 @@ class Game_Manager:
         
         self.screen = pygame.display.set_mode((settings.window_width, settings.window_height), pygame.RESIZABLE)
         
-    
-
 """
 main function
 """
