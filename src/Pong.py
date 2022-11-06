@@ -132,7 +132,9 @@ class Ball(Block):
                 p.player_score += 1
 
 
+"""Controls all player movements"""
 class Player(Block):
+
     """Initializes Player"""
     def __init__(self, img_path: str, x_pos: int, y_pos: int,
                  keybindings: dict, side: str, player_speed: int = 10,
@@ -169,6 +171,7 @@ class Player(Block):
 
 """AI for pong"""
 class Opponent(Player):
+
     """Moves player up or down"""
     def move_opponent(self, balls: pygame.sprite.Group) -> None:
         if len(balls) == 0:
