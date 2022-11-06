@@ -3,6 +3,9 @@ import pygame
 import sys
 import random
 import time
+import os
+import Block
+
 
 """Stores settings for Pong"""
 class Settings:
@@ -26,40 +29,6 @@ class Colors:
     light_grey = (200, 200, 200)
 
 
-"""Sprite class for Pong"""
-class Block(pygame.sprite.Sprite):
-
-    """Initializes Block"""
-    def __init__(self, img_path: str, color: pygame.Color,
-                 x_pos: int, y_pos: int) -> None:
-        pygame.sprite.Sprite.__init__(self)
-        self.orig_image = pygame.image.load(img_path)
-        self.orig_width = self.orig_image.get_width()
-        self.orig_height = self.orig_image.get_height()
-
-        self.image = self.orig_image
-        self.rect = self.image.get_rect(center=(x_pos, y_pos))
-
-        self.color = color
-        color_image = pygame.Surface(
-            self.image.get_size()
-        ).convert_alpha()
-        color_image.fill(color)
-        self.image.blit(
-            color_image,
-            (0, 0),
-            special_flags=pygame.BLEND_RGBA_MULT
-        )
-
-    """Resizes a block based on new width/height"""
-    def resize(self, new_width: int, new_height: int) -> None:
-        # scales image
-        self.image = pygame.transform.scale(
-            self.orig_image,
-            (new_width, new_height)
-        )
-        self.rect = self.image.get_rect(center=self.rect.center)
-
 """Handles all ball movements and scoring"""
 class Ball(Block):
 
@@ -68,7 +37,7 @@ class Ball(Block):
                  players: pygame.sprite.Group = None,
                  ball_speed_x: int = 15, ball_speed_y: int = 15,
                  color: pygame.Color = pygame.Color(0, 0, 0)) -> None:
-        super().__init__(img_path, color, x_pos, y_pos)
+        super().__init__(img_path, x_pos, y_pos, color)
         self.ball_speed_x = ball_speed_x * random.choice((1, -1))
         self.ball_speed_y = ball_speed_y * random.choice((1, -1))
         self.players = players
@@ -140,7 +109,7 @@ class Player(Block):
                  keybindings: dict, side: str, player_speed: int = 10,
                  player_score: int = 0,
                  color: pygame.Color = pygame.Color(0, 0, 0)) -> None:
-        super().__init__(img_path, color, x_pos, y_pos)
+        super().__init__(img_path, x_pos, y_pos, color)
         self.keybindings = keybindings
         self.player_speed = player_speed
         self.player_score = player_score
