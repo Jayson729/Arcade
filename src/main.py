@@ -4,7 +4,7 @@ from start_menu import StartMenu
 #from states.settings_menu import SettingsMenu
 #from states.credits import Credits
 #from states.arcade_menu import ArcadeMenu
-from Pong import main
+from pong import Pong
 from game import Game
 
 
@@ -16,7 +16,7 @@ states = {
     # "ARCADE" : ArcadeMenu(),
     # "SETTINGS" : SettingsMenu(),
     # "CREDITS" : Credits(),
-    # "PONG": main()
+    "PONG": Pong()
 
 }
 
