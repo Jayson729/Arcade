@@ -322,87 +322,93 @@ class GameManager:
 
 """main class that calls everything else"""
 class Pong:
-    def __init__(self):
+    def __init__(self, p1=None, p2=None):
         # initialize pygame
         pygame.init()
         self.clock = pygame.time.Clock()
+        screen = self.create_screen()
+        pygame.display.set_caption('Pong')
 
-        # main window
-        self.screen = pygame.display.set_mode(
+        players = self.create_players(p1, p2)
+        balls = self.create_balls(players)
+        
+        # creates game_manager
+        self.game_manager = GameManager(balls, players, screen)
+
+    def create_screen(self) -> pygame.Surface:
+        screen = pygame.display.set_mode(
             (Settings.window_width, Settings.window_height),
             pygame.RESIZABLE
         )
-        pygame.display.set_caption('Pong')
-
-        # sets keybindings
-        self.inputs = {
-            'left': {
+        return screen
+    
+    def create_players(self, p1=Player, 
+            p2=Player) -> pygame.sprite.Group:
+        p_sides = ['left', 'right']
+        inputs = {
+            p_sides[0]: {
                 'up': pygame.K_w,
                 'down': pygame.K_s,
                 'pause': pygame.K_ESCAPE
             },
-            'right': {
+            p_sides[1]: {
                 'up': pygame.K_UP,
                 'down': pygame.K_DOWN,
                 'pause': pygame.K_ESCAPE
             }
         }
-
-        # creates players
+        p_types = {p_sides[0]: p1, p_sides[1]: p2}
+        p_colors = {
+            p_sides[0]: (255, 0, 0), 
+            p_sides[1]: (0, 0, 255)
+        }
+        p_coords = {
+            p_sides[0]: (
+                Settings.player_buffer, 
+                Settings.window_height//2
+            ),
+            p_sides[1]: (
+                Settings.window_width - Settings.player_buffer, 
+                Settings.window_height//2
+            )
+        }
+        players = pygame.sprite.Group()
         paddle_img_path = 'images/paddle.png'
-        left_player = Opponent(
-            paddle_img_path,
-            Settings.player_buffer,
-            Settings.window_height//2,
-            self.inputs['left'], 'left',
-            color=pygame.Color(255, 0, 0)
-        )
+        for side in p_sides:
+            player = p_types[side](
+                paddle_img_path,
+                p_coords[side][0],
+                p_coords[side][1],
+                inputs[side], side,
+                color=p_colors[side]
+            )
+            player.resize(20, 160)
+            players.add(player)
+        return players
 
-        right_player = Player(
-            paddle_img_path,
-            Settings.window_width - Settings.player_buffer,
-            Settings.window_height//2,
-            self.inputs['right'], 'right',
-            color=pygame.Color(0, 0, 255)
-        )
+    def create_balls(self, players: pygame.sprite.Group, 
+            colors: list=None, coords: list=None, 
+            num_balls: int=1) -> pygame.sprite.Group:
+        colors = [(255, 255, 255)] if colors is None else colors
+        coords = [
+            (Settings.window_width//2, Settings.window_height//2)
+        ] if coords is None else coords
 
-        # creates sprite group of players
-        self.players = pygame.sprite.Group()
-        self.players.add(left_player)
-        self.players.add(right_player)
-
-        # resize players
-        for p in self.players:
-            p.resize(20, 160)
-
-        # creates ball
+        num_colors = len(colors)
+        num_coords = len(coords)
         ball_img_path = 'images/ball1.png'
-        ball1 = Ball(
-            ball_img_path,
-            Settings.window_width//2,
-            Settings.window_height//2,
-            self.players, color=pygame.Color(255, 255, 255)
-        )
+        balls = pygame.sprite.Group()
+        for b in range(num_balls):
+            ball = Ball(
+                ball_img_path,
+                coords[b % num_coords][0],
+                coords[b % num_coords][1],
+                players, color=colors[b % num_colors]
+            )
+            ball.resize(40, 40)
+            balls.add(ball)
+        return balls
 
-        # ball2 = Ball(ball_img_path,
-        # Settings.window_width//2,
-        # Settings.window_height//2 + 100,
-        # players,
-        # color=pygame.Color(255, 255, 255)
-        # )
-
-        # creates sprite group of ball(s)
-        self.balls = pygame.sprite.Group()
-        self.balls.add(ball1)
-        # balls.add(ball2)
-
-        # resize balls
-        for b in self.balls:
-            b.resize(40, 40)
-
-        # creates game_manger
-        self.game_manager = GameManager(self.balls, self.players, self.screen)
-    
     def startup(self):
         while True:
             self.game_manager.do_input()
@@ -416,7 +422,7 @@ class Pong:
 
 """main function"""
 def main():
-    pong = Pong()
+    pong = Pong(Opponent, Player)
     pong.startup()
 
 
