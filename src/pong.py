@@ -5,28 +5,7 @@ import random
 import time
 import os
 from block import Block
-
-
-"""Stores settings for Pong"""
-class Settings:
-    fps = 60
-    aspect_ratio = 4/3
-    window_width = 800
-    window_height = 600
-    player_buffer = 40
-
-
-"""Stores fonts for Pong"""
-class Fonts:
-    pygame.font.init()
-    score_font = pygame.font.Font(None, 50)
-    pause_font = pygame.font.Font(None, 150)
-
-
-"""Stores colors for Pong"""
-class Colors:
-    background_color = pygame.Color('turquoise4')
-    light_grey = (200, 200, 200)
+from settings import Settings, Colors, Fonts
 
 
 """Handles all ball movements and scoring"""
