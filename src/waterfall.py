@@ -27,3 +27,6 @@ class Waterfall(Sprite):
 
         # Sets image to the contents off the sprites array
         self.image = self.waterfall_images[int(self.current_sprite)]
+    
+    def draw(self, screen: pygame.Surface):
+        screen.blit(self.image, self.rect.center)

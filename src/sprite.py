@@ -3,11 +3,12 @@ import pygame
 class Sprite(pygame.sprite.Sprite):
 
     def __init__(self, img: pygame.Surface, x_pos, y_pos, color=None):
+        super().__init__()
         self.orig_image = img
         self.orig_size = img.get_size()
 
         self.image = img
-        self.rect = self.image.get_rect()
+        self.rect = self.image.get_rect(center=(x_pos, y_pos))
 
         if color is not None:
             self.color = color
