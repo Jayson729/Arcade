@@ -1,7 +1,7 @@
 import pygame
 from sprite import Sprite
 
-class Waterfall():
+class Waterfall(Sprite):
     def __init__(self, x, y):
 
         # load images
@@ -12,7 +12,7 @@ class Waterfall():
             img = pygame.transform.scale(img, (60, 415))
             self.waterfall_images.append(img)
 
-        self.waterfall = Sprite(self.waterfall_images[0], x, y)
+        super().__init__(self.waterfall_images[0], x, y)
 
         # Sets current sprite to the first image in the array
         self.current_sprite = 0
