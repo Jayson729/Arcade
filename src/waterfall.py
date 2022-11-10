@@ -2,13 +2,13 @@ import pygame
 from sprite import Sprite
 
 class Waterfall(Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, folder_path='images/waterfall'):
 
         # load images
         self.NUM_WATERFALLS = 6
         self.waterfall_images = []
         for num in range(self.NUM_WATERFALLS):
-            img = pygame.image.load(f'images/waterfall/waterfall_{num}.png')
+            img = pygame.image.load(f'{folder_path}/waterfall_{num}.png')
             img = pygame.transform.scale(img, (60, 415))
             self.waterfall_images.append(img)
 

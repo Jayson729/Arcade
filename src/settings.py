@@ -25,9 +25,20 @@ class Fonts:
     pygame.font.init()
     score_font = pygame.font.Font(None, 50)
     pause_font = pygame.font.Font(None, 150)
+    start_menu_font = pygame.font.Font('fonts/Stardew_Valley.ttf', 10)
 
 
 """Stores colors for Pong"""
 class Colors:
     background_color = pygame.Color('turquoise4')
     light_grey = (200, 200, 200)
+
+class Sounds:
+    pygame.mixer.init()
+    start_menu_sound = pygame.mixer.Sound('sounds/click.wav')
+    start_menu_sound.set_volume(0.3)
+
+class Music:
+    pygame.mixer.init()
+    start_menu_music = pygame.mixer.music.load('music/runescape_dream.wav')
+    

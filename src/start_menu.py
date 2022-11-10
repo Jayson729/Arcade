@@ -1,16 +1,145 @@
 import pygame
-import pygame.display
-import pygame.freetype
-import pygame.mixer
-import sprites
-from base import BaseState
-from sprites import Waterfall
-
+from state import State
+from waterfall import Waterfall
+from cloud import Cloud
+from settings import Settings, Fonts, Colors, Music, Sounds
 
 # Initializes the main menu
 # Creates a screen for main menu
-class StartMenu(BaseState):
+class StartMenu(State):
     def __init__(self):
+        # initialize pygame
+        pygame.init()
+        self.clock = pygame.time.Clock()
+        screen = self.create_screen()
+        clouds = self.create_clouds()
+        buttons = self.create_buttons()
+        waterfall = Waterfall(390, 350)
+
+        pygame.display.set_caption('Start Menu')
+        self.game_manager = GameManager(screen, clouds, waterfall, buttons)
+
+    def startup(self):
+        while not self.done:
+            self.game_manager.do_input()
+            self.game_manager.run_game()
+
+            pygame.display.flip()
+
+            self.clock.tick(Settings.fps)
+            print(f"fps: {self.clock.get_fps()}")
+
+    def create_screen(self) -> pygame.Surface:
+        screen = pygame.display.set_mode(
+            (Settings.window_width, Settings.window_height),
+            pygame.RESIZABLE
+        )
+        return screen
+
+    def create_clouds(self, large_clouds=None, small_clouds=None, 
+        sway_distance=1.5, sway_speed=0.25):
+        # load images
+        large_cloud_img = pygame.image.load('images/large_cloud.png')
+        small_cloud_img = pygame.image.load('images/small_cloud.png')
+
+        # set cloud locations
+        large_clouds = [
+            {'coords': (-170, 140), 'mirrored': False, 
+                'size': (650, 650)},
+            {'coords': (500, 190), 'mirrored': False, 
+                'size': (500, 450)},
+            {'coords': (380, 145), 'mirrored': False, 
+                'size': (800, 760)},
+            {'coords': (-290, 190), 'mirrored': False, 
+                'size': (760, 760)}
+        ] if large_clouds is None else large_clouds
+        small_clouds = [
+            {'coords': (525, 30), 'mirrored': False, 
+                'size': (150, 100)},
+            {'coords': (60, 50), 'mirrored': True, 
+                'size': (200, 170)}
+        ] if small_clouds is None else small_clouds
+
+        # add all clouds to a sprite group
+        clouds = pygame.sprite.Group()
+        for c in large_clouds:
+            cloud = Cloud(large_cloud_img, 
+                c['coords'][0], c['coords'][1], 
+                sway_distance, sway_speed
+            )
+            clouds.add(cloud)
+        
+        for c in small_clouds:
+            cloud = Cloud(small_cloud_img,
+                c['coords'][0], c['coords'][1], 
+                sway_distance, sway_speed
+            )
+            clouds.add(c)
+
+        return c
+
+    """I think I want buttons to be sprites
+    rendered fonts should count as images
+    """
+    def create_buttons(self):
+        pass
+
+class GameManager:
+    def __init__(self, screen, clouds, waterfall, buttons):
+        self.screen = screen
+        self.clouds = clouds
+        self.waterfall = waterfall
+
+        self.buttons = buttons
+        self.NUM_BUTTONS = len(buttons)
+
+        self.menu_sound = Sounds.menu_sound
+        self.menu_music = Music.start_menu_music
+        pygame.mixer.music.play(-1)
+
+        self.curr_index = 0
+    
+    def do_input(self):
+        pressed = pygame.key.get_pressed()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.quit = True
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                mouse = pygame.mouse.get_pos
+                for b in self.buttons:
+                    if b.rect.collidrect(mouse):
+                        b.do_action()
+        # this might end up going through the buttons too fast
+        if pressed[pygame.K_DOWN] or pressed[pygame.K_s]:
+            self.menu_sound.play()
+            self.curr_index = (self.curr_index + 1) % self.NUM_BUTTONS
+        if pressed[pygame.K_UP] or pressed[pygame.K_w]:
+            self.menu_sound.play()
+            self.curr_index = (self.curr_index - 1) % self.NUM_BUTTONS
+        
+        if pressed[pygame.K_RETURN]:
+            self.handle_action()
+
+    def draw_game_objects(self):
+        pass
+
+    def run_game(self):
+        pass
+
+    def handle_action(self):
+        pass
+
+
+def main():
+    start_menu = StartMenu()
+    start_menu.startup()
+
+if __name__ == '__main__':
+    main()
+
+class StartMenu(State):
+    def __init__(self):
+        # not gonna mess with it but what does this mean?
         super(StartMenu, self).__init__()
         self.clock = pygame.time.Clock()
         self.fps = 60
