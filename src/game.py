@@ -1,7 +1,7 @@
 import pygame
 
 
-class Game(object):
+class Game:
     def __init__(self, screen, states, start_state):
         self.done = False
         self.screen = screen

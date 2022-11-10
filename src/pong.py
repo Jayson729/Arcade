@@ -4,12 +4,12 @@ import sys
 import random
 import time
 import os
-from block import Block
+from sprite import Sprite
 from settings import Settings, Colors, Fonts
 
 
 """Handles all ball movements and scoring"""
-class Ball(Block):
+class Ball(Sprite):
 
     """Initializes Ball"""
     def __init__(self, img_path: str, x_pos: int, y_pos: int,
@@ -81,7 +81,7 @@ class Ball(Block):
 
 
 """Controls all player movements"""
-class Player(Block):
+class Player(Sprite):
 
     """Initializes Player"""
     def __init__(self, img_path: str, x_pos: int, y_pos: int,

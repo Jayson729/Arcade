@@ -1,5 +1,5 @@
 import pygame
-from block import Block
+from sprite import Sprite
 from settings import Settings, Colors, Fonts
 from spritesheet import SpriteSheet
 
