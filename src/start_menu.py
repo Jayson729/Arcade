@@ -5,28 +5,34 @@ from waterfall import Waterfall
 from cloud import Cloud
 from button import Button
 from sprite import Sprite
-from settings import Settings, Fonts, Colors#, Music, Sounds
+from settings import Settings, Fonts, Colors
 
-# Initializes the main menu
-# Creates a screen for main menu
+
+"""Main class that calls everything else"""
 class StartMenu(State):
-    def __init__(self):
+
+    """Initializes StartMenu"""
+    def __init__(self) -> None:
         # initialize pygame
         pygame.mixer.pre_init(44100, -16, 1, 512)
         pygame.mixer.init()
         pygame.init()
         
+        # create game objects
         self.clock = pygame.time.Clock()
         screen = self.create_screen()
         clouds = self.create_clouds()
         buttons = self.create_buttons()
         waterfall = Waterfall(390, 350)
         background = self.create_background()
-
         pygame.display.set_caption('Start Menu')
-        self.game_manager = GameManager(screen, clouds, waterfall, buttons, background)
 
-    def startup(self):
+        # call GameManager
+        self.game_manager = GameManager(screen, clouds, 
+            waterfall, buttons, background)
+
+    """Starts the game loop"""
+    def startup(self) -> None:
         while True:
             self.game_manager.do_input()
             self.game_manager.run_game()
@@ -36,6 +42,7 @@ class StartMenu(State):
             self.clock.tick(Settings.fps)
             # print(f"fps: {self.clock.get_fps()}")
 
+    """Returns a Surface to be used as a screen"""
     def create_screen(self) -> pygame.Surface:
         screen = pygame.display.set_mode(
             (Settings.window_width, Settings.window_height),
@@ -43,14 +50,17 @@ class StartMenu(State):
         )
         return screen
 
-    def create_background(self):
+    """Creates background as Sprite"""
+    def create_background(self) -> Sprite:
         bg_image = pygame.image.load("images/backgroundMain.png")
         background = Sprite(bg_image, 0, 0)
         background.resize(800, 600)
         return background
 
-    def create_clouds(self, large_clouds=None, small_clouds=None, 
-        sway_distance=1.5, sway_speed=0.025):
+    """Creates a group of clouds"""
+    def create_clouds(self, large_clouds: list=None, 
+            small_clouds: list=None, sway_distance: float=1.5, 
+            sway_speed: float=0.025) -> pygame.sprite.Group:
         # load images
         large_cloud_img = pygame.image.load('images/large_cloud.png')
         small_cloud_img = pygame.image.load('images/small_cloud.png')
@@ -81,7 +91,8 @@ class StartMenu(State):
             )
             cloud.resize(c['size'][0], c['size'][1])
             if c['mirrored']:
-                cloud.image = pygame.transform.flip(cloud.image, True, False)
+                cloud.image = pygame.transform.flip(
+                    cloud.image, True, False)
             clouds.add(cloud)
         
         for c in small_clouds:
@@ -91,18 +102,19 @@ class StartMenu(State):
             )
             cloud.resize(c['size'][0], c['size'][1])
             if c['mirrored']:
-                cloud.image = pygame.transform.flip(cloud.image, True, False)
+                cloud.image = pygame.transform.flip(
+                    cloud.image, True, False)
             clouds.add(cloud)
 
         return clouds
 
-    """I think I want buttons to be sprites
-    rendered fonts should count as images
-    """
+    """Creates a group of buttons"""
     def create_buttons(self) -> pygame.sprite.Group:
         def arcade_action():
             print('arcade')
-            pygame.mixer.Channel(0).play(pygame.mixer.Sound('sounds/arcade_door.wav'))
+            pygame.mixer.Channel(0).play(
+                pygame.mixer.Sound('sounds/arcade_door.wav')
+            )
         def settings_action():
             print('settings')
         def credits_action():
@@ -136,42 +148,58 @@ class StartMenu(State):
 
         return buttons
 
+
+"""Runs all parts of the menu, including
+handling buttons, drawing and updating objects
+"""
 class GameManager:
+
+    """Initializes a GameManager"""
     def __init__(self, screen: pygame.Surface, 
             clouds: pygame.sprite.Group, waterfall: Waterfall,
             buttons: pygame.sprite.Group, 
-            background: Sprite):
+            background: Sprite) -> None:
         self.screen = screen
         self.clouds = clouds
         self.waterfall = waterfall
         self.background = background
-        
-
         self.buttons = buttons
         self.NUM_BUTTONS = len(buttons)
-
-        # self.menu_sound = Sounds.start_menu_sound
-        # self.menu_music = Music.start_menu_music
 
         self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
         self.menu_sound.set_volume(0.3)
         
         pygame.mixer.music.load('music/runescape_dream.wav')
+        # loops music
         pygame.mixer.music.play(-1)
 
         self.curr_index = 0
-        self.buttons.sprites()[self.curr_index].set_keyboard_hover(True)
+
+        # starts first button as hovered
+        first_sprite = self.buttons.sprites()[self.curr_index]
+        first_sprite.set_keyboard_hover(True)
     
-    def change_button(self, dir: str):
+    """Changes the selected button and updates hover"""
+    def change_button(self, dir: str) -> None:
+        # plays click sound
         self.menu_sound.play()
-        self.buttons.sprites()[self.curr_index].set_keyboard_hover(False)
+
+        # sets current button to not hovered
+        cur_sprite = self.buttons.sprites()[self.curr_index]
+        cur_sprite.set_keyboard_hover(False)
+
+        # changes button
         if dir == 'up':
             self.curr_index = (self.curr_index - 1) % self.NUM_BUTTONS
         else:
             self.curr_index = (self.curr_index + 1) % self.NUM_BUTTONS
-        self.buttons.sprites()[self.curr_index].set_keyboard_hover(True)
         
-    def do_input(self):
+        # sets new button to hovered
+        cur_sprite = self.buttons.sprites()[self.curr_index]    
+        cur_sprite.set_keyboard_hover(True)
+
+    """Accepts and deals with inputs"""
+    def do_input(self) -> None:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -179,27 +207,30 @@ class GameManager:
             for b in self.buttons:
                 mouse = pygame.mouse.get_pos()
                 if b.check_mouse_hover(mouse):
-                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    if (event.type == pygame.MOUSEBUTTONDOWN 
+                            and event.button == 1):
                         b.do_action()
-                        # if clicking multiple buttons, only do one action
+                        # if clicking multiple buttons, 
+                        # only do one action
                         break
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP or event.key == pygame.K_w:
+                if (event.key == pygame.K_UP 
+                        or event.key == pygame.K_w):
                     self.change_button('up')
-                    # self.menu_sound.play()
-                if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                if (event.key == pygame.K_DOWN 
+                        or event.key == pygame.K_s):
                     self.change_button('down')
-                    # self.menu_sound.play()
                 if event.key == pygame.K_RETURN:
                     self.handle_action()
             
-
-    def draw_game_objects(self):
+    """Draws game objects"""
+    def draw_game_objects(self) -> None:
         self.clouds.draw(self.screen)
         self.waterfall.draw(self.screen)
         self.buttons.draw(self.screen)
 
-    def run_game(self):
+    """Runs the Game, draws/updates game objects"""
+    def run_game(self) -> None:
         self.screen.blit(self.background.image, (0, 0))
         self.draw_game_objects()
 
@@ -207,14 +238,18 @@ class GameManager:
         self.waterfall.update()
         self.buttons.update()
 
-    def handle_action(self):
-        # maybe?
-        self.buttons.sprites()[self.curr_index].do_action()
+    """Handles button actions for keyboard"""
+    def handle_action(self) -> None:
+        # does action for current button
+        cur_button = self.buttons.sprites()[self.curr_index]
+        cur_button.do_action()
 
 
-def main():
+"""Main function"""
+def main() -> None:
     start_menu = StartMenu()
     start_menu.startup()
+
 
 if __name__ == '__main__':
     main()

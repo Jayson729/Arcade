@@ -2,9 +2,15 @@ import pygame
 from sprite import Sprite
 from settings import Fonts, Colors
 
+
+"""Button class that works with keyboard and mouse"""
 class Button(Sprite):
-    def __init__(self, text, action, x, y, style=None, 
-            size=None, color=None, hover_color=None):
+
+    """Initializes Button"""
+    def __init__(self, text: str, action, 
+            x: int, y: int, style: pygame.font.Font=None, 
+            size: int=None, color: tuple=None, 
+            hover_color: tuple=None) -> None:
         # set defaults
         default_style = Fonts.start_menu_font
         default_size = 10
@@ -31,25 +37,34 @@ class Button(Sprite):
         # call super with rendered font
         super().__init__(self.font_render, x, y)
     
-    def check_mouse_hover(self, mouse) -> bool:
+    """Checks if the mouse is hovering
+    return True if colliding, False if not
+    """
+    def check_mouse_hover(self, mouse: tuple) -> bool:
         collision = self.rect.collidepoint(mouse[0], mouse[1])
         self.currently_mouse_hovered = collision
         return self.currently_mouse_hovered
     
-    def set_keyboard_hover(self, val: bool):
+    """Sets keyboard hover to val"""
+    def set_keyboard_hover(self, val: bool) -> None:
         self.currently_keyboard_hovered = val
 
-    def update(self):
-        self.currently_hovered = self.currently_keyboard_hovered or self.currently_mouse_hovered
+    """Updates button"""
+    def update(self) -> None:
+        self.currently_hovered = (self.currently_keyboard_hovered 
+            or self.currently_mouse_hovered)
         if self.currently_hovered:
             #re-render font to hover
-            self.font_render = self.font.render(self.text, True, self.hover_color)
+            self.font_render = self.font.render(
+                self.text, True, self.hover_color)
         elif not self.currently_hovered:
             #re-render font to not hovered
-            self.font_render = self.font.render(self.text, True, self.color)
+            self.font_render = self.font.render(
+                self.text, True, self.color)
         
         self.image = self.font_render
 
-    def do_action(self):
+    """Another way to call b.action()"""
+    def do_action(self) -> None:
         self.action()
         

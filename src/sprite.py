@@ -1,8 +1,14 @@
 import pygame
 
+
+"""General resizable sprite class"""
 class Sprite(pygame.sprite.Sprite):
 
-    def __init__(self, img: pygame.Surface, x_pos, y_pos, color=None):
+    """Initializes a Sprite, 
+    takes an actual image, not a path to the image
+    """
+    def __init__(self, img: pygame.Surface, x_pos: int, 
+            y_pos: int, color: tuple=None) -> None:
         super().__init__()
         self.orig_image = img
         self.orig_size = img.get_size()
