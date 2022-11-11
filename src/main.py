@@ -16,7 +16,7 @@ states = {
     # "ARCADE" : ArcadeMenu(),
     # "SETTINGS" : SettingsMenu(),
     # "CREDITS" : Credits(),
-    "PONG": Pong()
+    # "PONG": Pong()
 
 }
 
