@@ -13,6 +13,7 @@ class StartMenu(State):
     def __init__(self):
         # initialize pygame
         pygame.init()
+        pygame.mixer.init()
         self.clock = pygame.time.Clock()
         screen = self.create_screen()
         clouds = self.create_clouds()
@@ -99,7 +100,7 @@ class StartMenu(State):
     def create_buttons(self) -> pygame.sprite.Group:
         def arcade_action():
             print('arcade')
-            # pygame.mixer.Channel(0).play(pygame.mixer.Sound('sounds/arcade_door.wav'))
+            pygame.mixer.Channel(0).play(pygame.mixer.Sound('sounds/arcade_door.wav'))
         def settings_action():
             print('settings')
         def credits_action():
@@ -149,14 +150,18 @@ class GameManager:
 
         # self.menu_sound = Sounds.start_menu_sound
         # self.menu_music = Music.start_menu_music
+
+        self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
+        self.menu_sound.set_volume(0.3)
         
-        # pygame.mixer.music.load('music/runescape_dream.wav')
-        # pygame.mixer.music.play(-1)
+        pygame.mixer.music.load('music/runescape_dream.wav')
+        pygame.mixer.music.play(-1)
 
         self.curr_index = 0
         self.buttons.sprites()[self.curr_index].set_keyboard_hover(True)
     
     def change_button(self, dir: str):
+        self.menu_sound.play()
         self.buttons.sprites()[self.curr_index].set_keyboard_hover(False)
         if dir == 'up':
             self.curr_index = (self.curr_index - 1) % self.NUM_BUTTONS
