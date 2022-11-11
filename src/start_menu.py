@@ -12,8 +12,10 @@ from settings import Settings, Fonts, Colors#, Music, Sounds
 class StartMenu(State):
     def __init__(self):
         # initialize pygame
-        pygame.init()
+        pygame.mixer.pre_init(44100, -16, 1, 512)
         pygame.mixer.init()
+        pygame.init()
+        
         self.clock = pygame.time.Clock()
         screen = self.create_screen()
         clouds = self.create_clouds()
