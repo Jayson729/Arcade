@@ -142,6 +142,7 @@ class GameManager:
         self.clouds = clouds
         self.waterfall = waterfall
         self.background = background
+        
 
         self.buttons = buttons
         self.NUM_BUTTONS = len(buttons)
@@ -153,28 +154,38 @@ class GameManager:
         # pygame.mixer.music.play(-1)
 
         self.curr_index = 0
+        self.buttons.sprites()[self.curr_index].set_keyboard_hover(True)
     
+    def change_button(self, dir: str):
+        self.buttons.sprites()[self.curr_index].set_keyboard_hover(False)
+        if dir == 'up':
+            self.curr_index = (self.curr_index - 1) % self.NUM_BUTTONS
+        else:
+            self.curr_index = (self.curr_index + 1) % self.NUM_BUTTONS
+        self.buttons.sprites()[self.curr_index].set_keyboard_hover(True)
+        
     def do_input(self):
-        pressed = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             for b in self.buttons:
                 mouse = pygame.mouse.get_pos()
-                if b.check_hover(mouse):
+                if b.check_mouse_hover(mouse):
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                         b.do_action()
-        # this might end up going through the buttons too fast
-        if pressed[pygame.K_DOWN] or pressed[pygame.K_s]:
-            # self.menu_sound.play()
-            self.curr_index = (self.curr_index + 1) % self.NUM_BUTTONS
-        if pressed[pygame.K_UP] or pressed[pygame.K_w]:
-            # self.menu_sound.play()
-            self.curr_index = (self.curr_index - 1) % self.NUM_BUTTONS
-        
-        if pressed[pygame.K_RETURN]:
-            self.handle_action()
+                        # if clicking multiple buttons, only do one action
+                        break
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP or event.key == pygame.K_w:
+                    self.change_button('up')
+                    # self.menu_sound.play()
+                if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                    self.change_button('down')
+                    # self.menu_sound.play()
+                if event.key == pygame.K_RETURN:
+                    self.handle_action()
+            
 
     def draw_game_objects(self):
         self.clouds.draw(self.screen)
@@ -187,11 +198,11 @@ class GameManager:
 
         self.clouds.update()
         self.waterfall.update()
-        self.buttons.update(self.curr_index)
+        self.buttons.update()
 
     def handle_action(self):
         # maybe?
-        self.buttons[self.curr_index].do_action()
+        self.buttons.sprites()[self.curr_index].do_action()
 
 
 def main():

@@ -19,6 +19,8 @@ class Button(Sprite):
         self.color = default_color if color is None else color
         self.hover_color = default_hover_color if hover_color is None else hover_color
         self.currently_hovered = False
+        self.currently_keyboard_hovered = False
+        self.currently_mouse_hovered = False
 
         # set font
         self.font = pygame.font.Font(self.style, self.size)
@@ -29,31 +31,22 @@ class Button(Sprite):
         # call super with rendered font
         super().__init__(self.font_render, x, y)
     
-    def check_hover(self, mouse) -> bool:
+    def check_mouse_hover(self, mouse) -> bool:
         collision = self.rect.collidepoint(mouse[0], mouse[1])
-        self.currently_hovered = collision
-        return collision
-        # if collision and not self.currently_hovered:
-        #     #re-render font to hover
-        #     self.font_render = self.font.render(self.text, True, self.hover_color)
-        #     self.currently_hovered = True
-        # elif not collision and self.currently_hovered:
-        #     #re-render font to not hovered
-        #     self.font_render = self.font.render(self.text, True, self.color)
-        #     self.currently_hovered = False
-        
-        # self.image = self.font_render
-        # return collision
+        self.currently_mouse_hovered = collision
+        return self.currently_mouse_hovered
     
-    def update(self, index):
+    def set_keyboard_hover(self, val: bool):
+        self.currently_keyboard_hovered = val
+
+    def update(self):
+        self.currently_hovered = self.currently_keyboard_hovered or self.currently_mouse_hovered
         if self.currently_hovered:
             #re-render font to hover
             self.font_render = self.font.render(self.text, True, self.hover_color)
-            self.currently_hovered = True
         elif not self.currently_hovered:
             #re-render font to not hovered
             self.font_render = self.font.render(self.text, True, self.color)
-            self.currently_hovered = False
         
         self.image = self.font_render
 
