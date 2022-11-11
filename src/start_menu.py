@@ -31,7 +31,7 @@ class StartMenu(State):
             pygame.display.flip()
 
             self.clock.tick(Settings.fps)
-            print(f"fps: {self.clock.get_fps()}")
+            # print(f"fps: {self.clock.get_fps()}")
 
     def create_screen(self) -> pygame.Surface:
         screen = pygame.display.set_mode(
@@ -98,12 +98,12 @@ class StartMenu(State):
     """
     def create_buttons(self) -> pygame.sprite.Group:
         def arcade_action():
-            pass
+            print('arcade')
             # pygame.mixer.Channel(0).play(pygame.mixer.Sound('sounds/arcade_door.wav'))
         def settings_action():
-            pass
+            print('settings')
         def credits_action():
-            pass
+            print('credits')
 
         menu_items = {
             'ENTER ARCADE': {
