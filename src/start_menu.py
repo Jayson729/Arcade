@@ -52,21 +52,20 @@ class StartMenu(State):
         large_cloud_img = pygame.image.load('images/large_cloud.png')
         small_cloud_img = pygame.image.load('images/small_cloud.png')
 
-        # set cloud locations
         large_clouds = [
-            {'coords': (-170, 140), 'mirrored': False, 
+            {'coords': (155, 465), 'mirrored': False, 
                 'size': (650, 650)},
-            {'coords': (500, 190), 'mirrored': False, 
+            {'coords': (750, 415), 'mirrored': False, 
                 'size': (500, 450)},
-            {'coords': (380, 145), 'mirrored': False, 
+            {'coords': (780, 525), 'mirrored': False, 
                 'size': (800, 760)},
-            {'coords': (-290, 190), 'mirrored': False, 
+            {'coords': (90, 570), 'mirrored': False, 
                 'size': (760, 760)}
         ] if large_clouds is None else large_clouds
         small_clouds = [
-            {'coords': (525, 30), 'mirrored': False, 
+            {'coords': (600, 80), 'mirrored': False, 
                 'size': (150, 100)},
-            {'coords': (60, 50), 'mirrored': True, 
+            {'coords': (160, 135), 'mirrored': True, 
                 'size': (200, 170)}
         ] if small_clouds is None else small_clouds
 
@@ -109,22 +108,26 @@ class StartMenu(State):
         menu_items = {
             'ENTER ARCADE': {
                 'coords': (410, 125),
-                'action': arcade_action
+                'action': arcade_action,
+                'size': 50
             }, 
             'SETTINGS': {
                 'coords': (410, 165),
-                'action': settings_action
+                'action': settings_action,
+                'size': 40
             },
             'CREDITS': {
                 'coords': (410, 205),
-                'action': credits_action
+                'action': credits_action,
+                'size': 30
             } 
         }
 
         buttons = pygame.sprite.Group()
         for text, vals in menu_items.items():
             button = Button(text, vals['action'], 
-                vals['coords'][0], vals['coords'][1]
+                vals['coords'][0], vals['coords'][1],
+                size=vals['size']
             )
             buttons.add(button)
 
@@ -221,7 +224,7 @@ if __name__ == '__main__':
 #         self.move_6 = 0
 #         self.change = [0.025, - 0.025]
 #         self.menu_items = ["ENTER ARCADE", "SETTINGS", "CREDITS"]
-#         self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 10)
+        # self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 10)
 #         self.large_cloud = pygame.image.load("images/large_cloud.png").convert_alpha()
 #         self.small_right = pygame.image.load("images/small_right.png").convert_alpha()
 #         self.small_left = pygame.image.load("images/small_left.png").convert_alpha()
