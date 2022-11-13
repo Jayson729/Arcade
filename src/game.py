@@ -1,7 +1,7 @@
 import pygame
 
 
-class Game(object):
+class Game:
     def __init__(self, screen, states, start_state):
         self.done = False
         self.screen = screen
@@ -35,6 +35,7 @@ class Game(object):
         self.state.draw(self.screen)
 
     def run(self):
+        # self.state.startup()
         while not self.done:
             dt = self.clock.tick(self.fps)
             self.event_loop()

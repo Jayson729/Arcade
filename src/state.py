@@ -1,7 +1,6 @@
 import pygame
 
-
-class BaseState(object):
+class State:
     def __init__(self):
         self.done = False
         self.quit = False

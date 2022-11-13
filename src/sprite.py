@@ -1,24 +1,25 @@
 import pygame
 
 
-"""Resizable sprite class"""
-class Block(pygame.sprite.Sprite):
+"""General resizable sprite class"""
+class Sprite(pygame.sprite.Sprite):
 
-    """Initializes Block"""
-    def __init__(self, img_path: str, x_pos: int, 
-            y_pos: int, color: pygame.Color = None) -> None:
-        pygame.sprite.Sprite.__init__(self)
-        self.orig_image = pygame.image.load(img_path)
-        self.orig_width = self.orig_image.get_width()
-        self.orig_height = self.orig_image.get_height()
+    """Initializes a Sprite, 
+    takes an actual image, not a path to the image
+    """
+    def __init__(self, img: pygame.Surface, x_pos: int, 
+            y_pos: int, color: tuple=None) -> None:
+        super().__init__()
+        self.orig_image = img
+        self.orig_size = img.get_size()
 
-        self.image = self.orig_image
+        self.image = img
         self.rect = self.image.get_rect(center=(x_pos, y_pos))
 
         if color is not None:
             self.color = color
             color_image = pygame.Surface(
-                self.image.get_size()
+                self.orig_size
             ).convert_alpha()
             color_image.fill(color)
             self.image.blit(
@@ -26,8 +27,8 @@ class Block(pygame.sprite.Sprite):
                 (0, 0),
                 special_flags=pygame.BLEND_RGBA_MULT
             )
-
-    """Resizes a block based on new width/height"""
+        
+    """Resizes a sprite based on new width/height"""
     def resize(self, new_width: int, new_height: int) -> None:
         # scales image
         self.image = pygame.transform.scale(
