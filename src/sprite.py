@@ -10,10 +10,10 @@ class Sprite(pygame.sprite.Sprite):
     def __init__(self, img: pygame.Surface, x_pos: int, 
             y_pos: int, color: tuple=None) -> None:
         super().__init__()
-        self.orig_image = img
+        self.orig_image = img.copy()
         self.orig_size = img.get_size()
 
-        self.image = img
+        self.image = self.orig_image
         self.rect = self.image.get_rect(center=(x_pos, y_pos))
 
         if color is not None:

@@ -12,11 +12,11 @@ from settings import Settings, Colors, Fonts
 class Ball(Sprite):
 
     """Initializes Ball"""
-    def __init__(self, img_path: str, x_pos: int, y_pos: int,
+    def __init__(self, img: pygame.Surface, x_pos: int, y_pos: int,
                  players: pygame.sprite.Group = None,
                  ball_speed_x: int = 15, ball_speed_y: int = 15,
                  color: pygame.Color = pygame.Color(0, 0, 0)) -> None:
-        super().__init__(img_path, x_pos, y_pos, color)
+        super().__init__(img, x_pos, y_pos, color)
         self.ball_speed_x = ball_speed_x * random.choice((1, -1))
         self.ball_speed_y = ball_speed_y * random.choice((1, -1))
         self.players = players
@@ -305,6 +305,7 @@ class Pong:
         # initialize pygame
         pygame.init()
         self.clock = pygame.time.Clock()
+        self.img_path = 'images/pong/'
         screen = self.create_screen()
         pygame.display.set_caption('Pong')
 
@@ -352,10 +353,10 @@ class Pong:
             )
         }
         players = pygame.sprite.Group()
-        paddle_img_path = 'images/paddle.png'
+        paddle_img = pygame.image.load(f'{self.img_path}paddle.png')
         for side in p_sides:
             player = p_types[side](
-                paddle_img_path,
+                paddle_img,
                 p_coords[side][0],
                 p_coords[side][1],
                 inputs[side], side,
@@ -375,11 +376,11 @@ class Pong:
 
         num_colors = len(colors)
         num_coords = len(coords)
-        ball_img_path = 'images/ball1.png'
+        ball_img = pygame.image.load(f'{self.img_path}ball1.png')
         balls = pygame.sprite.Group()
         for b in range(num_balls):
             ball = Ball(
-                ball_img_path,
+                ball_img,
                 coords[b % num_coords][0],
                 coords[b % num_coords][1],
                 players, color=colors[b % num_colors]
