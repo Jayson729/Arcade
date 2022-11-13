@@ -28,11 +28,22 @@ class Sprite(pygame.sprite.Sprite):
                 special_flags=pygame.BLEND_RGBA_MULT
             )
         
-    """Resizes a sprite based on new width/height"""
-    def resize(self, new_width: int, new_height: int) -> None:
+    """Resizes a sprite based on new width/height
+    if original is True, resizes original image too
+    """
+    def resize(self, new_width: int, new_height: int, original=False) -> None:
+        if original:
+            self.orig_image = pygame.transform.scale(
+            self.orig_image,
+            (new_width, new_height)
+            )
+            self.orig_size = self.orig_image.get_size()
         # scales image
         self.image = pygame.transform.scale(
             self.orig_image,
             (new_width, new_height)
         )
         self.rect = self.image.get_rect(center=self.rect.center)
+    
+    def rotate(self, degrees):
+        self.image = pygame.transform.rotate(self.orig_image, degrees)
