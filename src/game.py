@@ -35,6 +35,7 @@ class Game:
         self.state.draw(self.screen)
 
     def run(self):
+        # self.state.startup()
         while not self.done:
             dt = self.clock.tick(self.fps)
             self.event_loop()
