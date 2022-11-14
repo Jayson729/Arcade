@@ -175,6 +175,7 @@ class GameManager:
         self.menu_sound.set_volume(0.3)
         
         pygame.mixer.music.load('music/runescape_dream.wav')
+        pygame.mixer.music.set_volume(0.2)
         # loops music
         pygame.mixer.music.play(-1)
 

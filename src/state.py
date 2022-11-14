@@ -1,3 +1,8 @@
+"""TODO: Actually implement this into the code
+Also, i'm not sure if the functions that do nothing
+are supposed to be finished
+"""
+
 import pygame
 
 class State:

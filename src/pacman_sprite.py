@@ -1,3 +1,9 @@
+"""TODO: Fix collision with window borders (hitbox is wonky)
+Make movements fixed to a grid (move like normal pacman)
+Switch to pacman death when you touch a ghost 
+(check for collisions with ghosts, switching animation done in animated_sprite.py)
+"""
+
 import pygame
 from animated_sprite import AnimatedSprite
 from settings import Settings

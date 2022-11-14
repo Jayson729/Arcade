@@ -1,3 +1,12 @@
+"""TODO: We probably want keybindings here, 
+then have them either be global (like now),
+or have them initialized in a class like the commented out code
+Also, I'm not sure if sounds/music should be here,
+maybe those should be game specific since they'll only be used in a singular game
+Also, if we want to do actual resizing just have a list of some 4:3 resolutions
+that you can select between
+"""
+
 import pygame
 # TODO: make these more general to be used in
 # all games

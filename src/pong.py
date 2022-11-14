@@ -1,3 +1,5 @@
+"""TODO: There's a bunch of TODO's already here if you wanna look"""
+
 import cProfile
 import pygame
 import sys

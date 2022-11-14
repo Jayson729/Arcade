@@ -1,3 +1,12 @@
+"""TODO: Ghosts need to move
+Ghosts need to interact with pacman
+Pacman hitbox is all messed up for some reason (probably in pacman_sprite.py)
+Add some sounds/music
+Maybe some buttons for settings/pausing? 
+or maybe those will be part of the eventual pause menu
+
+"""
+
 import sys
 import pygame
 from sprite import Sprite
@@ -78,7 +87,8 @@ class Pacman(State):
                 'pause': pygame.K_ESCAPE,
             }
         }
-        return PacmanSprite(600, 400, folder_path=f'{self.img_path}yellow_pacman/')
+        pacman = PacmanSprite(600, 400, folder_path=f'{self.img_path}yellow_pacman/', speed=.15)
+        return pacman
     
     def create_ghosts(self):
         ghosts = pygame.sprite.Group()

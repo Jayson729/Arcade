@@ -1,3 +1,7 @@
+"""TODO: Ability to switch between animations easily
+resize function looks gross, probably a better way to do this
+"""
+
 import pygame
 from sprite import Sprite
 import os

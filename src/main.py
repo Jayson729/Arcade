@@ -1,3 +1,5 @@
+"""TODO: Actually implement this into the menu"""
+
 import sys
 import pygame
 from start_menu import StartMenu
