@@ -8,6 +8,7 @@ import pygame.mixer
 import pygame.freetype
 import pygame.display
 from state import State
+from game import Game
 
 
 class PauseMenu(State):
@@ -114,3 +115,13 @@ class PauseMenu(State):
         for index, option in enumerate(self.menu_items):
             text_render = self.render_text(index)
             screen.blit(text_render, self.get_text_position(text_render, index))
+
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((800, 600))
+    game = Game(screen, {'PAUSE': PauseMenu()}, 'PAUSE')
+    game.run()
+    PauseMenu()
+
+if __name__ == '__main__':
+    main()

@@ -5,6 +5,8 @@ from animated_sprite import AnimatedSprite
 from cloud import Cloud
 from button import Button
 from sprite import Sprite
+from pacman import Pacman
+from pong import Pong
 from settings import Settings, Fonts, Colors
 
 
@@ -120,10 +122,16 @@ class StartMenu(State):
             pygame.mixer.Channel(0).play(
                 pygame.mixer.Sound('sounds/arcade_door.wav')
             )
+            # self.next_state = 'ARCADE'
+            # self.done = True
         def settings_action():
             print('settings')
+            self.next_state = 'SETTINGS'
+            self.done = True
         def credits_action():
             print('credits')
+            self.next_state = 'CREDITS'
+            self.done = True
 
         menu_items = {
             'ENTER ARCADE': {

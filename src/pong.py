@@ -326,6 +326,8 @@ class Pong:
     
     def create_players(self, p1=Player, 
             p2=Player) -> pygame.sprite.Group:
+        p1 = p1 if p1 is not None else Player
+        p2 = p2 if p2 is not None else Player
         p_sides = ['left', 'right']
         inputs = {
             p_sides[0]: {

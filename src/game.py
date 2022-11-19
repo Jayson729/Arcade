@@ -7,7 +7,7 @@ The self.screen here should be used for all games
 """
 
 import pygame
-
+from state import State
 
 class Game:
     def __init__(self, screen, states, start_state):
@@ -18,7 +18,7 @@ class Game:
         self.fps = 60
         self.states = states
         self.state_name = start_state
-        self.state = self.states[self.state_name]
+        self.state = self.states[self.state_name]()
 
     def event_loop(self):
         for event in pygame.event.get():
@@ -26,11 +26,11 @@ class Game:
 
     def flip_state(self):
         next_state = self.state.next_state
-        self.state.done = False
         self.state_name = next_state
-        persistent = self.state.persist
-        self.state = self.states[self.state_name]
-        self.state.startup(persistent)
+        # persistent = self.state.persist
+        self.state = self.states[self.state_name]()
+        self.state.done = False
+        # self.state.startup(persistent)
 
     def update(self, dt):
         if self.state.quit:
@@ -44,13 +44,20 @@ class Game:
 
     def run(self):
         # self.state.startup()
-        while not self.done:
-            dt = self.clock.tick(self.fps)
-            self.event_loop()
-            self.update(dt)
-            self.draw()
-            if self.count <= 0:
-                self.count += 0.025
-            elif self.count >= 4:
-                self.count -= 0.025
+        # while not self.done:
+        #     dt = self.clock.tick(self.fps)
+        #     self.event_loop()
+        #     self.update(dt)
+        #     self.draw()
+        #     if self.count <= 0:
+        #         self.count += 0.025
+        #     elif self.count >= 4:
+        #         self.count -= 0.025
+        #     pygame.display.update()
+        while not self.state.done:
+            self.state.game_manager.do_input()
+            self.state.game_manager.run_game()
             pygame.display.update()
+            self.clock.tick(self.fps)
+            if self.state.done:
+                self.flip_state()

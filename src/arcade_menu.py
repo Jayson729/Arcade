@@ -108,6 +108,10 @@ def game_loop():
         pygame.display.update()
         clock.tick(60)
 
-game_loop()
-pygame.quit()
-quit()
+def main():
+    game_loop()
+    pygame.quit()
+    quit()
+
+if __name__ == '__main__':
+    main()

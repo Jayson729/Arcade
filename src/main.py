@@ -9,18 +9,20 @@ from new_start_menu import StartMenu as StartMenu2
 #from states.arcade_menu import ArcadeMenu
 from pong import Pong
 from game import Game
+from pacman import Pacman
 
 
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
 
 states = {
-    "START": StartMenu(),
-    # "START": StartMenu2()
+    # "START": StartMenu(),
+    "START": StartMenu2,
     # "ARCADE" : ArcadeMenu(),
     # "SETTINGS" : SettingsMenu(),
     # "CREDITS" : Credits(),
-    # "PONG": Pong()
+    "SETTINGS": Pong,
+    'CREDITS': Pacman,
 
 }
 
