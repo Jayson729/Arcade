@@ -16,7 +16,7 @@ pygame.init()
 screen = pygame.display.set_mode((800, 600))
 
 states = {
-    # "START": StartMenu(),
+    # "START": StartMenu,
     "START": StartMenu2,
     # "ARCADE" : ArcadeMenu(),
     # "SETTINGS" : SettingsMenu(),

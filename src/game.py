@@ -1,5 +1,4 @@
-"""TODO: Actually implement this into the game
-Maybe have each menu extend Game and then have Game extend State
+"""TODO: Actually implement this into the game Maybe have each menu extend Game and then have Game extend State
 that way they'd all have the same screen/states and stuff like that
 This should also store the settings if we decide to
 have a class for settings instead
@@ -18,7 +17,7 @@ class Game:
         self.fps = 60
         self.states = states
         self.state_name = start_state
-        self.state = self.states[self.state_name]()
+        self.state = self.states[self.state_name]
 
     def event_loop(self):
         for event in pygame.event.get():
@@ -44,7 +43,6 @@ class Game:
         self.state.draw(self.screen)
 
     def run(self):
-        # self.state.startup()
         # while not self.done:
         #     dt = self.clock.tick(self.fps)
         #     self.event_loop()
@@ -55,6 +53,7 @@ class Game:
         #     elif self.count >= 4:
         #         self.count -= 0.025
         #     pygame.display.update()
+        self.state = self.state()
         while not self.state.done:
             self.state.game_manager.do_input()
             self.state.game_manager.run_game()

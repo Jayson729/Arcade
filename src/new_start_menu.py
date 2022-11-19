@@ -5,8 +5,6 @@ from animated_sprite import AnimatedSprite
 from cloud import Cloud
 from button import Button
 from sprite import Sprite
-from pacman import Pacman
-from pong import Pong
 from settings import Settings, Fonts, Colors
 
 
