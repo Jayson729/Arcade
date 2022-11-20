@@ -88,7 +88,10 @@ class Pacman(State):
                 'pause': pygame.K_ESCAPE,
             }
         }
-        pacman = PacmanSprite(600, 400, folder_path=f'{self.img_path}yellow_pacman/', speed=.15)
+        pacman = PacmanSprite(600, 400, f'{self.img_path}yellow_pacman/', 
+            f'{self.img_path}pacman_death/', 
+            move_speed=2.0, animation_speed=0.15
+        )
         return pacman
     
     def create_ghosts(self):

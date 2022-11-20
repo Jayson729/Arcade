@@ -18,7 +18,6 @@ class AnimatedSprite(Sprite):
         self.animations = {name: self.orig_animations[name]}
         self.images = self.animations[name]
         
-
         self.NUM_IMAGES = len(self.images)
 
         super().__init__(self.images[0], x, y, color)
