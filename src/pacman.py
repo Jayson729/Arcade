@@ -15,6 +15,7 @@ from state import State
 from settings import Settings, Colors, Fonts
 # from spritesheet import SpriteSheet
 from animated_sprite import AnimatedSprite
+from ghost import Ghost
 
 class Pacman(State):
 
@@ -46,7 +47,7 @@ class Pacman(State):
             self.game_manager.run_game()
             pygame.display.flip()
             self.clock.tick(Settings.fps)
-            print(f"fps: {self.clock.get_fps()}")
+            # print(f"fps: {self.clock.get_fps()}")
 
     # def load_sprite_sheet(self):
     #     filename = 'images/pacman_sprites.png'
@@ -92,10 +93,15 @@ class Pacman(State):
     
     def create_ghosts(self):
         ghosts = pygame.sprite.Group()
-        blue_ghost = AnimatedSprite(300, 100, f'{self.img_path}blue_ghost/', speed=0.05)
-        red_ghost = AnimatedSprite(400, 200, f'{self.img_path}red_ghost/', speed=0.05)
-        orange_ghost = AnimatedSprite(300, 300, f'{self.img_path}orange_ghost/', speed=0.05)
-        pink_ghost = AnimatedSprite(400, 400, f'{self.img_path}pink_ghost/', speed=0.05)
+        # blue_ghost = AnimatedSprite(300, 100, f'{self.img_path}blue_ghost/', speed=0.05)
+        # red_ghost = AnimatedSprite(400, 200, f'{self.img_path}red_ghost/', speed=0.05)
+        # orange_ghost = AnimatedSprite(300, 300, f'{self.img_path}orange_ghost/', speed=0.05)
+        # pink_ghost = AnimatedSprite(400, 400, f'{self.img_path}pink_ghost/', speed=0.05)
+        
+        blue_ghost = Ghost(300, 100, f'{self.img_path}blue_ghost/', animation_speed=0.15)
+        red_ghost = Ghost(400, 200, f'{self.img_path}red_ghost/', animation_speed=0.15)
+        orange_ghost = Ghost(300, 300, f'{self.img_path}orange_ghost/', animation_speed=0.15)
+        pink_ghost = Ghost(400, 400, f'{self.img_path}pink_ghost/', animation_speed=0.15)
 
         ghosts.add(blue_ghost)
         ghosts.add(red_ghost)

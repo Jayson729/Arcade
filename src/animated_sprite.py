@@ -102,6 +102,11 @@ class AnimatedSprite(Sprite):
         self.animations[name] = self.orig_animations[name]
         self.speeds[name] = speed
     
+    def add_animation_w_images(self, name: str, images: list, speed: float):
+        self.orig_animations[name] = images
+        self.animations[name] = images
+        self.speeds[name] = speed
+    
     def set_animation(self, name):
         if name not in self.animations:
             print(f'{name} not in animations')
