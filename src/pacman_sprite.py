@@ -23,6 +23,7 @@ class PacmanSprite(AnimatedSprite):
             self.pacman_movement = (0, 0)
             self.set_animation('death')
             return
+        self.set_animation('base')
         # movement, rotation
         # movement multiplied by speeds later
         # x, y, '-' is up/left

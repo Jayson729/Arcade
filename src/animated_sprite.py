@@ -75,27 +75,27 @@ class AnimatedSprite(Sprite):
     def draw(self, screen: pygame.Surface) -> None:
         screen.blit(self.image, self.rect.center)
 
-    def resize(self, new_width, new_height, original=False, name: str='base'):
+    def resize(self, new_width, new_height, original=False):
         if original:
             for key, value in enumerate(self.images):
-                self.orig_animations[name][key] = pygame.transform.scale(
-                    self.orig_animations[name][key],
+                self.orig_animations[self.current_animation][key] = pygame.transform.scale(
+                    self.orig_animations[self.current_animation][key],
                     (new_width, new_height)
                 )
-            self.orig_image = self.orig_animations[name][0]
+            self.orig_image = self.orig_animations[self.current_animation][0]
             self.orig_size = self.orig_image.get_size()
 
         for key, value in enumerate(self.images):
             # scales image
             self.images[key] = pygame.transform.scale(
-                self.orig_animations[name][key],
+                self.orig_animations[self.current_animation][key],
                 (new_width, new_height)
             )
             self.image = self.images[int(self.current_sprite)]
             self.rect = self.images[0].get_rect(center=self.rect.center)
         
-    def rotate(self, degrees, name='base'):
-        self.images = [pygame.transform.rotate(i, degrees) for i in self.animations[name]]
+    def rotate(self, degrees):
+        self.images = [pygame.transform.rotate(i, degrees) for i in self.animations[self.current_animation]]
         
     def add_animation(self, name: str, folder_path: str, speed: float):
         self.orig_animations[name] = self.get_images(folder_path)
@@ -105,6 +105,9 @@ class AnimatedSprite(Sprite):
     def set_animation(self, name):
         if name not in self.animations:
             print(f'{name} not in animations')
+            return
+        # ignore if it's already at that animation
+        if name == self.current_animation:
             return
         self.current_sprite = 0
         self.current_animation = name
