@@ -12,19 +12,36 @@ class PacmanSprite(AnimatedSprite):
             base_path: str, death_path: str, 
             move_speed: float=2.0, animation_speed: float=0.3,
             color=None) -> None:
-        super().__init__(x, y, base_path, color, animation_speed)
+        super().__init__(x, y, base_path, animation_speed, color=color)
         self.add_animation('death', death_path, animation_speed*.5)
+
+        # move these to sprite.py
         self.f_centerx = float(self.rect.centerx)
         self.f_centery = float(self.rect.centery)
+
+        # move these to animatedsprite? maybe new class
         self.move_speed = move_speed
-        self.movement = (self.move_speed, 0)
+        self.movement = (0, 0)
     
-    def move_pacman(self, dir: str) -> None:
+    # good I think
+    def do_movement(self) -> None:
+        # find dir based on keys pressed
+        dir = None
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_UP] or keys[pygame.K_w]:
+            dir = 'up'
+        elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
+            dir = 'down'
+        elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
+            dir = 'left'
+        elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+            dir = 'right'
+
         if dir == 'right':
             self.movement = (0, 0)
             self.set_animation('death')
             return
-        self.set_animation('base')
+
         # movement, rotation
         # movement multiplied by speeds later
         # x, y, '-' is up/left
@@ -37,21 +54,26 @@ class PacmanSprite(AnimatedSprite):
         }
 
         # sets movement and rotates pacman
-        self.movement = movements[dir][0]
-        self.rotate(movements[dir][1])
+        if dir is not None:
+            self.set_animation('base')
+            self.movement = movements[dir][0]
+            self.rotate(movements[dir][1])
 
+    # move this, probably to sprite.py
     def update(self):
-        self.f_centerx += self.movement[0]
-        self.f_centery += self.movement[1]
-        self.rect.centerx = self.f_centerx
-        self.rect.centery = self.f_centery
+        self.do_movement()
+        # self.f_centerx += self.movement[0]
+        # self.f_centery += self.movement[1]
+        # self.rect.centerx = self.f_centerx
+        # self.rect.centery = self.f_centery
 
-        # self.rect.centerx += self.pacman_movement[0]
-        # self.rect.centery += self.pacman_movement[1]
+        self.rect.centerx += self.movement[0]
+        self.rect.centery += self.movement[1]
         self.check_out_of_bounds()
         super().update()
 
     """doesn't work, stops too late on bottom/right and too early on top/left"""
+    # Move this, probably to sprite.py
     def check_out_of_bounds(self):
         if self.rect.top < 0:
             self.rect.top = 0

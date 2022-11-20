@@ -10,22 +10,22 @@ import os
 """AnimatedSprite class that switches between images in a given folder"""
 class AnimatedSprite(Sprite):
     def __init__(self, x: int, y: int, 
-            folder_path: str='images/start_menu/waterfall/', 
-            color=None, speed=1.0, name: str='base') -> None:
+            path: str, animation_speed: float,
+            name='base', color=None) -> None:
 
         # load images
-        self.orig_animations = {name: self.get_images(folder_path)}
+        self.orig_animations = {name: self.get_images(path)}
         self.animations = {name: self.orig_animations[name]}
         self.images = self.animations[name]
         
         self.NUM_IMAGES = len(self.images)
 
-        super().__init__(self.images[0], x, y, color)
+        super().__init__(x, y, self.images[0], color)
 
         # Sets current sprite to the first image in the array
         self.current_sprite = 0
         self.current_animation = name
-        self.speeds = {name: speed}
+        self.animation_speeds = {name: animation_speed}
     
     def get_images(self, path: str):
         images = []
@@ -61,7 +61,7 @@ class AnimatedSprite(Sprite):
     """Updates sprite"""
     def update(self) -> None:
         # Incrementing the sprites with a decimal so the array will loop slower
-        self.current_sprite += self.speeds[self.current_animation]
+        self.current_sprite += self.animation_speeds[self.current_animation]
 
         # Condition for current sprite to be set back to first image
         if self.current_sprite >= self.NUM_IMAGES:
@@ -99,12 +99,12 @@ class AnimatedSprite(Sprite):
     def add_animation(self, name: str, folder_path: str, speed: float):
         self.orig_animations[name] = self.get_images(folder_path)
         self.animations[name] = self.orig_animations[name]
-        self.speeds[name] = speed
+        self.animation_speeds[name] = speed
     
     def add_animation_w_images(self, name: str, images: list, speed: float):
         self.orig_animations[name] = images
         self.animations[name] = images
-        self.speeds[name] = speed
+        self.animation_speeds[name] = speed
     
     def set_animation(self, name):
         if name not in self.animations:

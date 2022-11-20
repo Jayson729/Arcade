@@ -10,57 +10,76 @@ from itertools import islice
 import random
 from settings import Settings
 class Ghost(AnimatedSprite):
-    def __init__(self, x: int, y: int, path: str, move_speed: float=2.0, animation_speed: float=0.3):
+    def __init__(self, x: int, y: int, 
+            base_path: str, 
+            move_speed: float=2.0, animation_speed: float=0.3,
+            color=None) -> None:
         # first, calls super with all animations and sets instance variables
-        super().__init__(x, y, folder_path=path, speed=animation_speed)
+        super().__init__(x, y, base_path, animation_speed)
+
+        # move these probably
+        right, down, left, up = self.split_animations('base', num_animations=4)
+        self.add_animation_w_images('right', right, animation_speed)
+        self.add_animation_w_images('down', down, animation_speed)
+        self.add_animation_w_images('left', left, animation_speed)
+        self.add_animation_w_images('up', up, animation_speed)
+
+        # move these to sprite.py
         self.f_centerx = float(self.rect.centerx)
         self.f_centery = float(self.rect.centery)
+
+        # move these to new class?
         self.move_speed = move_speed
-        self.movement = 0
-        self.ghost_movement = (self.move_speed, 0)
+        self.movement = (0, 0)
 
         # this is only for random movements
         # get rid of this later
         self.temp_timer = 0
-
-        # then, splits into different animations
-        NUM_ANIMATIONS = 4
-        all_images = self.orig_animations['base']
+        
+    # move to animatedsprite
+    def split_animations(self, name, num_animations):
+        all_images = self.orig_animations[name]
 
         # split into right=0, down=1, left=2, up=3
-        split_images = split_list(all_images, len(all_images)//NUM_ANIMATIONS)
+        split_images = split_list(all_images, len(all_images)//num_animations)
 
-        # then, adds animations
-        self.add_animation_w_images('right', split_images[0], animation_speed)
-        self.add_animation_w_images('down', split_images[1], animation_speed)
-        self.add_animation_w_images('left', split_images[2], animation_speed)
-        self.add_animation_w_images('up', split_images[3], animation_speed)
+        return split_images
 
+    # good I think
     def move_ghost(self):
-        # for now, random movements
-        # in the future, I want to implement DFS toward pacman
         movements = {
             'up': (0, -self.move_speed),
             'down': (0, self.move_speed),
             'left': (-self.move_speed, 0),
             'right': (self.move_speed, 0),
         }
+        dir = self.get_move(movements)
+        self.movement = movements[dir]
+        self.set_animation(dir)
+    
+    # good location, code is junk
+    def get_move(self, movements):
+        # for now, random movements
+        # in the future, I want to implement DFS toward pacman
         dir = self.current_animation if self.current_animation != 'base' else random.choice(list(movements.keys()))
         self.temp_timer += 1
         if self.temp_timer >= 25:
             dir = random.choice(list(movements.keys()))
             self.temp_timer = 0
-        # print(dir)
-        self.ghost_movement = movements[dir]
-        self.set_animation(dir)
+        
+        return dir
     
+    # move parts
     def update(self):
         self.move_ghost()
-        self.rect.centerx += self.ghost_movement[0]
-        self.rect.centery += self.ghost_movement[1]
+
+        # move this, probably sprite.py
+        self.rect.centerx += self.movement[0]
+        self.rect.centery += self.movement[1]
         self.check_out_of_bounds()
         super().update()
-        
+    
+    # move
     """doesn't work, stops too late on bottom/right and too early on top/left"""
     def check_out_of_bounds(self):
         if self.rect.top < 0:
@@ -72,6 +91,7 @@ class Ghost(AnimatedSprite):
         elif self.rect.right > Settings.window_width:
             self.rect.right = Settings.window_width
 
+# possibly move
 # from https://predictivehacks.com/?all-tips=how-to-split-a-list-into-equal-elements-in-python
 # don't really know how it works but it does
 def split_list(input, num_elem):
