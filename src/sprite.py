@@ -14,7 +14,7 @@ class Sprite(pygame.sprite.Sprite):
         if color is not None:
             self.color = color
             color_image = pygame.Surface(
-                self.orig_size
+                self.ORIGINAL_IMAGE.get_size()
             ).convert_alpha()
             color_image.fill(color)
             self.image.blit(
