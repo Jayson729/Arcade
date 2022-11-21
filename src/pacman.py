@@ -9,12 +9,9 @@ or maybe those will be part of the eventual pause menu
 
 import sys
 import pygame
-from sprite import Sprite
 from pacman_sprite import PacmanSprite
 from state import State
 from settings import Settings, Colors, Fonts
-# from spritesheet import SpriteSheet
-from animated_sprite import AnimatedSprite
 from ghost import Ghost
 
 class Pacman(State):
@@ -56,10 +53,10 @@ class Pacman(State):
     
     def get_ghosts(self):
         ghosts = pygame.sprite.Group()
-        blue_ghost = Ghost(300, 100, f'{self.img_path}blue_ghost/', animation_speed=0.15)
-        red_ghost = Ghost(400, 200, f'{self.img_path}red_ghost/', animation_speed=0.15)
-        orange_ghost = Ghost(300, 300, f'{self.img_path}orange_ghost/', animation_speed=0.15)
-        pink_ghost = Ghost(400, 400, f'{self.img_path}pink_ghost/', animation_speed=0.15)
+        blue_ghost = Ghost(300, 100, f'{self.img_path}blue_ghost/')
+        red_ghost = Ghost(400, 200, f'{self.img_path}red_ghost/')
+        orange_ghost = Ghost(300, 300, f'{self.img_path}orange_ghost/')
+        pink_ghost = Ghost(400, 400, f'{self.img_path}pink_ghost/')
 
         ghosts.add(blue_ghost)
         ghosts.add(red_ghost)

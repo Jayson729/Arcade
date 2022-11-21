@@ -4,48 +4,32 @@
 # (check for collisions with ghosts, switching animation done in animated_sprite.py)
 # """
 
-import pygame
-from animated_sprite import AnimatedSprite
-from settings import Settings
-class PacmanSprite(AnimatedSprite):
+from player import AnimatedPlayer
+class PacmanSprite(AnimatedPlayer):
     def __init__(self, x: int, y: int, 
             base_path: str, death_path: str, 
-            move_speed: float=2.0, animation_speed: float=0.3,
+            move_speed: float=2.0, animation_speed: float=100,
             color=None) -> None:
-        super().__init__(x, y, base_path, animation_speed, color=color)
-        self.add_animation('death', death_path, animation_speed*.5)
+        super().__init__(x, y, base_path, move_speed, animation_speed, color=color)
+        self.add_animation('death', death_path, animation_speed*.3)
 
         # move these to sprite.py
         self.f_centerx = float(self.rect.centerx)
         self.f_centery = float(self.rect.centery)
-
-        # move these to animatedsprite? maybe new class
-        self.move_speed = move_speed
-        self.movement = (0, 0)
     
     # good I think
     def do_movement(self) -> None:
         # find dir based on keys pressed
-        dir = None
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_UP] or keys[pygame.K_w]:
-            dir = 'up'
-        elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
-            dir = 'down'
-        elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            dir = 'left'
-        elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            dir = 'right'
-
+        dir = self.get_direction()
         if dir == 'right':
             self.movement = (0, 0)
             self.set_animation('death')
             return
 
         # movement, rotation
-        # movement multiplied by speeds later
         # x, y, '-' is up/left
-        # rotation from facing right counter-clockwise in degrees
+        # rotation in degrees from facing right
+        # counter-clockwise in degrees
         movements = {
             'up': [(0, -self.move_speed), 90],
             'down': [(0, self.move_speed), 270],
@@ -59,27 +43,7 @@ class PacmanSprite(AnimatedSprite):
             self.movement = movements[dir][0]
             self.rotate(movements[dir][1])
 
-    # move this, probably to sprite.py
+    # move parts
     def update(self):
         self.do_movement()
-        # self.f_centerx += self.movement[0]
-        # self.f_centery += self.movement[1]
-        # self.rect.centerx = self.f_centerx
-        # self.rect.centery = self.f_centery
-
-        self.rect.centerx += self.movement[0]
-        self.rect.centery += self.movement[1]
-        self.check_out_of_bounds()
         super().update()
-
-    """doesn't work, stops too late on bottom/right and too early on top/left"""
-    # Move this, probably to sprite.py
-    def check_out_of_bounds(self):
-        if self.rect.top < 0:
-            self.rect.top = 0
-        elif self.rect.bottom > Settings.window_height:
-            self.rect.bottom = Settings.window_height
-        elif self.rect.left < 0:
-            self.rect.left = 0
-        elif self.rect.right > Settings.window_width:
-            self.rect.right = Settings.window_width
