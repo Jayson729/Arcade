@@ -23,12 +23,18 @@ class Sprite(pygame.sprite.Sprite):
                 special_flags=pygame.BLEND_RGBA_MULT
             )
     
-    def resize(self, multiplier) -> None:
-        height = self.ORIGINAL_IMAGE.get_height() * multiplier
-        width = height * self.IMAGE_RATIO
+    def resize(self, new_width, new_height) -> None:
+        # height = self.ORIGINAL_IMAGE.get_height() * multiplier
+        # width = height * self.IMAGE_RATIO
+        # self.image = pygame.transform.scale(
+        #     self.ORIGINAL_IMAGE,
+        #     (width, height)
+        # )
+        # self.rect = self.image.get_rect(center=self.rect.center)
+        # scales image
         self.image = pygame.transform.scale(
             self.ORIGINAL_IMAGE,
-            (width, height)
+            (new_width, new_height)
         )
         self.rect = self.image.get_rect(center=self.rect.center)
     
@@ -120,14 +126,22 @@ class AnimatedSprite(Sprite):
 
         return split_images
 
-    def resize(self, multiplier):
+    def resize(self, new_width, new_height):
+        # for key, value in enumerate(self.images):
+        #     height = self.ORIGINAL_IMAGE.get_height() * multiplier
+        #     width = height * self.IMAGE_RATIO
+        #     self.images[key] = pygame.transform.scale(
+        #         self.ORIGINAL_IMAGE,
+        #         (width, height)
+        #     )
         for key, value in enumerate(self.images):
-            height = self.ORIGINAL_IMAGE.get_height() * multiplier
-            width = height * self.IMAGE_RATIO
+            # scales image
             self.images[key] = pygame.transform.scale(
-                self.ORIGINAL_IMAGE,
-                (width, height)
+                self.original_animations[self.current_animation][key],
+                (new_width, new_height)
             )
+            self.image = self.images[int(self.current_sprite)]
+            self.rect = self.images[0].get_rect(center=self.rect.center)
         self.image = self.images[int(self.current_sprite)]
         self.rect = self.image.get_rect(center=self.rect.center)
         

@@ -10,7 +10,7 @@ class Cloud(Sprite):
     """Initializes cloud"""
     def __init__(self, img: pygame.Surface, x: int, y: int, 
             sway_distance: float, sway_speed: float) -> None:
-        super().__init__(img, x, y)
+        super().__init__(x, y, img)
 
         self.orig_centery = self.rect.centery
         self.sway_distance = sway_distance

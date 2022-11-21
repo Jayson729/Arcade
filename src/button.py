@@ -35,7 +35,7 @@ class Button(Sprite):
         self.font_render = self.font.render(self.text, True, self.color)
 
         # call super with rendered font
-        super().__init__(self.font_render, x, y)
+        super().__init__(x, y, self.font_render)
     
     """Checks if the mouse is hovering
     return True if colliding, False if not

@@ -25,12 +25,12 @@ class Pacman(State):
         # create game objects
         self.img_path = 'images/pacman/'
         self.clock = pygame.time.Clock()
-        self.screen = self.create_screen()
+        self.screen = self.get_screen()
         pygame.display.set_caption('Pacman')
         self.create_game()
         super().__init__()
 
-    def create_screen(self):
+    def get_screen(self):
         screen = pygame.display.set_mode(
             (Settings.window_width, Settings.window_height),
             pygame.RESIZABLE

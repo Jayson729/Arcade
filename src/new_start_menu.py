@@ -1,10 +1,9 @@
 import sys
 import pygame
 from state import State
-from animated_sprite import AnimatedSprite
 from cloud import Cloud
 from button import Button
-from sprite import Sprite
+from sprite import Sprite, AnimatedSprite
 from settings import Settings, Fonts, Colors
 
 
@@ -20,55 +19,62 @@ class StartMenu(State):
         pygame.init()
         
         # create game objects
-        self.img_root = 'images/start_menu/'
+        self.img_path = 'images/start_menu/'
         self.clock = pygame.time.Clock()
-        screen = self.create_screen()
-        clouds = self.create_clouds()
-        buttons = self.create_buttons()
-        waterfall = AnimatedSprite(390, 350, folder_path=f'{self.img_root}waterfall/', speed=0.15)
-        waterfall.resize(60, 415, True)
-        background = self.create_background()
+        self.screen = self.get_screen()
         pygame.display.set_caption('Start Menu')
-        pygame.display.set_icon(pygame.image.load(f'{self.img_root}main.png'))
+        pygame.display.set_icon(pygame.image.load(f'{self.img_path}main.png'))
+        self.create_game()
         super().__init__()
+    
+    def create_game(self):
+        self.background = self.get_background()
+        self.waterfall = self.get_waterfall()
+        self.clouds = self.get_clouds()
+        self.buttons = self.get_buttons()
+        self.NUM_BUTTONS = len(self.buttons)
 
-        # create GameManager
-        self.game_manager = GameManager(screen, clouds, 
-            waterfall, buttons, background)
+        self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
+        self.menu_sound.set_volume(0.3)
+        
+        pygame.mixer.music.load('music/runescape_dream.wav')
+        pygame.mixer.music.set_volume(0.2)
+        # loops music
+        pygame.mixer.music.play(-1)
 
-    """Starts the game loop"""
-    def startup(self) -> None:
-        while True:
-            self.game_manager.do_input()
-            self.game_manager.run_game()
+        self.curr_index = 0
 
-            pygame.display.flip()
-
-            self.clock.tick(Settings.fps)
-            # print(f"fps: {self.clock.get_fps()}")
-
+        # starts first button as hovered
+        first_sprite = self.buttons.sprites()[self.curr_index]
+        first_sprite.set_keyboard_hover(True)
+        
+    def get_waterfall(self):
+        waterfall = AnimatedSprite(390, 350, f'{self.img_path}waterfall/', animation_speed=150)
+        waterfall.resize(60, 415)
+        return waterfall
+    
     """Returns a Surface to be used as a screen"""
-    def create_screen(self) -> pygame.Surface:
+    def get_screen(self) -> pygame.Surface:
         screen = pygame.display.set_mode(
             (Settings.window_width, Settings.window_height),
             pygame.RESIZABLE
         )
         return screen
-
+    
     """Creates background as Sprite"""
-    def create_background(self) -> Sprite:
-        bg_image = pygame.image.load(f"{self.img_root}backgroundMain.png")
-        background = Sprite(bg_image, 0, 0)
+    def get_background(self) -> Sprite:
+        bg_image = pygame.image.load(f"{self.img_path}backgroundMain.png")
+        background = Sprite(0, 0, bg_image)
         background.resize(800, 600)
         return background
-
+    
     """Creates a group of clouds"""
-    def create_clouds(self, large_clouds: list=None, 
+    def get_clouds(self, large_clouds: list=None, 
             small_clouds: list=None, sway_distance: float=1.5, 
             sway_speed: float=0.025) -> pygame.sprite.Group:
         # load images
-        large_cloud_img = pygame.image.load(f'{self.img_root}large_cloud.png')
-        small_cloud_img = pygame.image.load(f'{self.img_root}small_cloud.png')
+        large_cloud_img = pygame.image.load(f'{self.img_path}large_cloud.png')
+        small_cloud_img = pygame.image.load(f'{self.img_path}small_cloud.png')
 
         large_clouds = [
             {'coords': (155, 465), 'mirrored': False, 
@@ -112,9 +118,9 @@ class StartMenu(State):
             clouds.add(cloud)
 
         return clouds
-
+    
     """Creates a group of buttons"""
-    def create_buttons(self) -> pygame.sprite.Group:
+    def get_buttons(self) -> pygame.sprite.Group:
         def arcade_action():
             print('arcade')
             pygame.mixer.Channel(0).play(
@@ -156,62 +162,20 @@ class StartMenu(State):
                 size=vals['size']
             )
             buttons.add(button)
-
+        
         return buttons
 
-
-"""Runs all parts of the menu, including
-handling buttons, drawing and updating objects
-"""
-class GameManager:
-
-    """Initializes a GameManager"""
-    def __init__(self, screen: pygame.Surface, 
-            clouds: pygame.sprite.Group, waterfall: AnimatedSprite,
-            buttons: pygame.sprite.Group, 
-            background: Sprite) -> None:
-        self.screen = screen
-        self.clouds = clouds
-        self.waterfall = waterfall
-        self.background = background
-        self.buttons = buttons
-        self.NUM_BUTTONS = len(buttons)
-
-        self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
-        self.menu_sound.set_volume(0.3)
+    """Starts the game loop"""
+    def startup(self) -> None:
+        while True:
+            self.check_events()
+            self.update()
+            self.draw()
+            # self.clock.tick(Settings.fps)
+            # print(f"fps: {self.clock.get_fps()}")
         
-        pygame.mixer.music.load('music/runescape_dream.wav')
-        pygame.mixer.music.set_volume(0.2)
-        # loops music
-        pygame.mixer.music.play(-1)
-
-        self.curr_index = 0
-
-        # starts first button as hovered
-        first_sprite = self.buttons.sprites()[self.curr_index]
-        first_sprite.set_keyboard_hover(True)
-    
-    """Changes the selected button and updates hover"""
-    def change_button(self, dir: str) -> None:
-        # plays click sound
-        self.menu_sound.play()
-
-        # sets current button to not hovered
-        cur_sprite = self.buttons.sprites()[self.curr_index]
-        cur_sprite.set_keyboard_hover(False)
-
-        # changes button
-        if dir == 'up':
-            self.curr_index = (self.curr_index - 1) % self.NUM_BUTTONS
-        else:
-            self.curr_index = (self.curr_index + 1) % self.NUM_BUTTONS
-        
-        # sets new button to hovered
-        cur_sprite = self.buttons.sprites()[self.curr_index]    
-        cur_sprite.set_keyboard_hover(True)
-
     """Accepts and deals with inputs"""
-    def do_input(self) -> None:
+    def check_events(self) -> None:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -234,28 +198,44 @@ class GameManager:
                     self.change_button('down')
                 if event.key == pygame.K_RETURN:
                     self.handle_action()
-            
-    """Draws game objects"""
-    def draw_game_objects(self) -> None:
+        
+    def draw(self):
+        self.background.draw(self.screen)
         self.waterfall.draw(self.screen)
         self.clouds.draw(self.screen)
         self.buttons.draw(self.screen)
-
-    """Runs the Game, draws/updates game objects"""
-    def run_game(self) -> None:
-        self.screen.blit(self.background.image, (0, 0))
-        self.draw_game_objects()
-
-        self.clouds.update()
+    
+    def update(self):
         self.waterfall.update()
+        self.clouds.update()
         self.buttons.update()
+        pygame.display.flip()
+        self.clock.tick(Settings.fps)
+    
+    """Changes the selected button and updates hover"""
+    def change_button(self, dir: str) -> None:
+        # plays click sound
+        self.menu_sound.play()
 
+        # sets current button to not hovered
+        cur_sprite = self.buttons.sprites()[self.curr_index]
+        cur_sprite.set_keyboard_hover(False)
+
+        # changes button
+        if dir == 'up':
+            self.curr_index = (self.curr_index - 1) % self.NUM_BUTTONS
+        else:
+            self.curr_index = (self.curr_index + 1) % self.NUM_BUTTONS
+        
+        # sets new button to hovered
+        cur_sprite = self.buttons.sprites()[self.curr_index]    
+        cur_sprite.set_keyboard_hover(True)
+    
     """Handles button actions for keyboard"""
     def handle_action(self) -> None:
         # does action for current button
         cur_button = self.buttons.sprites()[self.curr_index]
         cur_button.do_action()
-
 
 """Main function"""
 def main() -> None:
