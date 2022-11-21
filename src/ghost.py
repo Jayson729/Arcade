@@ -13,32 +13,19 @@ class Ghost(AnimatedPlayer):
             color=None) -> None:
         # first, calls super with all animations and sets instance variables
         super().__init__(x, y, base_path, move_speed, animation_speed, color)
-
-        # move these probably
-        right, down, left, up = self.split_animations('base', num_animations=4)
-        self.add_animation_w_images('right', right, animation_speed)
-        self.add_animation_w_images('down', down, animation_speed)
-        self.add_animation_w_images('left', left, animation_speed)
-        self.add_animation_w_images('up', up, animation_speed)
-
-        # move these to sprite.py
-        self.f_centerx = float(self.rect.centerx)
-        self.f_centery = float(self.rect.centery)
-
+        self.split_add_animations()
+        
         # this is only for random movements
         # get rid of this later
         self.temp_timer = 0
-        
-    # move to animatedsprite
-    def split_animations(self, name, num_animations):
-        all_images = self.animations[name]
 
-        # split into right=0, down=1, left=2, up=3
-        split_images = self.split_list(list(all_images), len(all_images)//num_animations)
+    def split_add_animations(self):
+        right, down, left, up = self.split_animations('base', num_animations=4)
+        self.add_animation_w_images('right', right)
+        self.add_animation_w_images('down', down)
+        self.add_animation_w_images('left', left)
+        self.add_animation_w_images('up', up)
 
-        return split_images
-
-    # good I think
     def do_movement(self) -> None:
         movements = {
             'up': (0, -self.move_speed),
@@ -50,7 +37,6 @@ class Ghost(AnimatedPlayer):
         self.movement = movements[dir]
         self.set_animation(dir)
     
-    # good location, code is junk
     def get_direction(self, movements):
         # for now, random movements
         # in the future, I want to implement DFS toward pacman
@@ -62,7 +48,6 @@ class Ghost(AnimatedPlayer):
         
         return dir
     
-    # move parts
     def update(self):
         self.do_movement()
         super().update()

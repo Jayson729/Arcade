@@ -12,10 +12,6 @@ class PacmanSprite(AnimatedPlayer):
             color=None) -> None:
         super().__init__(x, y, base_path, move_speed, animation_speed, color=color)
         self.add_animation('death', death_path, animation_speed*.3)
-
-        # move these to sprite.py
-        self.f_centerx = float(self.rect.centerx)
-        self.f_centery = float(self.rect.centery)
     
     # good I think
     def do_movement(self) -> None:

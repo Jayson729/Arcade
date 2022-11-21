@@ -8,6 +8,8 @@ class Sprite(pygame.sprite.Sprite):
         self.ORIGINAL_IMAGE = self.image.copy()
         self.rect = self.image.get_rect(center=(x, y))
         self.IMAGE_RATIO = self.image.get_width() / self.image.get_height()
+        self.f_centerx = float(self.rect.centerx)
+        self.f_centery = float(self.rect.centery)
 
         if color is not None:
             self.color = color
@@ -109,6 +111,14 @@ class AnimatedSprite(Sprite):
             output.append(input[i:i + num_elem])
 
         return output
+    
+    def split_animations(self, name, num_animations):
+        all_images = self.animations[name]
+
+        # split into right=0, down=1, left=2, up=3
+        split_images = self.split_list(list(all_images), len(all_images)//num_animations)
+
+        return split_images
 
     def resize(self, multiplier):
         for key, value in enumerate(self.images):
@@ -124,15 +134,19 @@ class AnimatedSprite(Sprite):
     def rotate(self, degrees):
         self.images = [pygame.transform.rotate(i, degrees) for i in self.animations[self.current_animation]]
 
-    def add_animation(self, name: str, folder_path: str, speed: float):
+    def add_animation(self, name: str, folder_path: str, animation_speed: float=None):
+        if animation_speed is None:
+            animation_speed = self.animation_speed
         self.original_animations[name] = self.get_images(folder_path)
         self.animations[name] = self.original_animations[name]
-        self.animation_speeds[name] = speed
+        self.animation_speeds[name] = animation_speed
     
-    def add_animation_w_images(self, name: str, images: list, speed: float):
+    def add_animation_w_images(self, name: str, images: list, animation_speed: float=None):
+        if animation_speed is None:
+            animation_speed = self.animation_speed
         self.original_animations[name] = images
         self.animations[name] = images
-        self.animation_speeds[name] = speed
+        self.animation_speeds[name] = animation_speed
 
     def set_animation(self, name):
         if name not in self.animations:
