@@ -56,9 +56,10 @@ class Game:
         #     pygame.display.update()
         self.state = self.state()
         while not self.state.done:
-            self.state.game_manager.do_input()
-            self.state.game_manager.run_game()
-            pygame.display.update()
-            self.clock.tick(self.fps)
+            self.state.draw()
+            self.state.update()
+            self.state.check_events()
+            # pygame.display.update()
+            # self.clock.tick(self.fps)
             if self.state.done:
                 self.flip_state()

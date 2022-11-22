@@ -169,9 +169,9 @@ class StartMenu(State):
     def startup(self) -> None:
         """Starts the game loop"""
         while True:
-            self.check_events()
-            self.update()
             self.draw()
+            self.update()
+            self.check_events()
             # self.clock.tick(Settings.fps)
             # print(f"fps: {self.clock.get_fps()}")
 

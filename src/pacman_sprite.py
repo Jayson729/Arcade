@@ -34,8 +34,8 @@ class PacmanSprite(AnimatedPlayer):
                 self.set_animation('death')
                 return
             self.set_animation('base')
-            self.movement = movements[direction][0]
             self.rotate(movements[direction][1])
+            self.movement = movements[direction][0]
 
     # move parts
     def update(self):
