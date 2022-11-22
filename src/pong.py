@@ -268,7 +268,7 @@ class Pong(State):
                 )
 
     def update_scores(self) -> None:
-        if win := self.check_win is not None:
+        if (win := self.check_win) is not None:
             self.win_game(win)
 
     def win_game(self, winner):
@@ -297,7 +297,7 @@ class Pong(State):
         self.draw_scores()
 
     def update(self) -> None:
-        if win := self.check_win() is not None:
+        if (win := self.check_win()) is not None:
             self.win_game(win)
         else:
             self.paddles.update(self.balls)

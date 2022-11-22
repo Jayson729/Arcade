@@ -28,7 +28,7 @@ class PacmanSprite(AnimatedPlayer):
 
         # find direction based on keys pressed
         # sets movement and rotates pacman
-        if direction := self.get_direction() is not None:
+        if (direction := self.get_direction()) is not None:
             if direction == 'right':
                 self.movement = (0, 0)
                 self.set_animation('death')
