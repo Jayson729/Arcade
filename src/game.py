@@ -1,4 +1,5 @@
-"""TODO: Actually implement this into the game Maybe have each menu extend Game and then have Game extend State
+"""TODO: Actually implement this into the game
+Maybe have each menu extend Game and then have Game extend State
 that way they'd all have the same screen/states and stuff like that
 This should also store the settings if we decide to
 have a class for settings instead

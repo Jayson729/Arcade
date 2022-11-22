@@ -1,29 +1,30 @@
 from abc import abstractmethod
-# from animated_sprite import AnimatedSprite
+import pygame
 from sprite import Sprite, AnimatedSprite
 from settings import Settings
-import pygame
+
 
 class AnimatedPlayer(AnimatedSprite):
-    def __init__(self, x: int, y: int, 
-            base_path: str, move_speed: float, 
+    def __init__(self, x: int, y: int,
+            base_path: str, move_speed: float,
             animation_speed: float, color=None):
         super().__init__(x, y, base_path, animation_speed, color=color)
         self.move_speed = move_speed
         self.movement = (0, 0)
 
-    def get_direction(self) -> str:
-        dir = None
+    @staticmethod
+    def get_direction() -> str:
+        direction = None
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP] or keys[pygame.K_w]:
-            dir = 'up'
+            direction = 'up'
         elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
-            dir = 'down'
+            direction = 'down'
         elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            dir = 'left'
+            direction = 'left'
         elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            dir = 'right'
-        return dir
+            direction = 'right'
+        return direction
 
     def check_out_of_bounds(self):
         if self.rect.top < 0:
@@ -34,7 +35,7 @@ class AnimatedPlayer(AnimatedSprite):
             self.rect.left = 0
         elif self.rect.right > Settings.window_width:
             self.rect.right = Settings.window_width
-    
+
     @abstractmethod
     def do_movement(self) -> None:
         pass
@@ -47,25 +48,26 @@ class AnimatedPlayer(AnimatedSprite):
 
 # copy of AnimatedPlayer except for single img
 class StaticPlayer(Sprite):
-    def __init__(self, x: int, y: int, 
-            img: pygame.Surface, move_speed: float, 
+    def __init__(self, x: int, y: int,
+            img: pygame.Surface, move_speed: float,
             color=None) -> None:
         super().__init__(x, y, img, color)
         self.move_speed = move_speed
         self.movement = (0, 0)
 
-    def get_direction(self) -> str:
-        dir = None
+    @staticmethod
+    def get_direction() -> str:
+        direction = None
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP] or keys[pygame.K_w]:
-            dir = 'up'
+            direction = 'up'
         elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
-            dir = 'down'
+            direction = 'down'
         elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            dir = 'left'
+            direction = 'left'
         elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            dir = 'right'
-        return dir
+            direction = 'right'
+        return direction
 
     def check_out_of_bounds(self):
         if self.rect.top < 0:
@@ -76,7 +78,7 @@ class StaticPlayer(Sprite):
             self.rect.left = 0
         elif self.rect.right > Settings.window_width:
             self.rect.right = Settings.window_width
-    
+
     @abstractmethod
     def do_movement(self) -> None:
         pass

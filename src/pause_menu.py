@@ -37,7 +37,7 @@ class PauseMenu(State):
                     self.next_state = "SETTINGS"
                 elif event.key == pygame.K_RETURN and item == "QUIT GAME":
                     self.next_state = "QUIT GAME"
-                
+          
     def render_text(self, index):
         if index == 0:
             self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 50)

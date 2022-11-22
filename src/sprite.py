@@ -22,7 +22,7 @@ class Sprite(pygame.sprite.Sprite):
                 (0, 0),
                 special_flags=pygame.BLEND_RGBA_MULT
             )
-    
+
     def resize(self, new_width, new_height) -> None:
         # height = self.ORIGINAL_IMAGE.get_height() * multiplier
         # width = height * self.IMAGE_RATIO
@@ -37,12 +37,12 @@ class Sprite(pygame.sprite.Sprite):
             (new_width, new_height)
         )
         self.rect = self.image.get_rect(center=self.rect.center)
-    
+
     # rounding errors if not rotating by 90 degree increments
     # I think
     def rotate(self, degrees):
         self.image = pygame.transform.rotate(self.image, degrees)
-    
+
     def draw(self, screen: pygame.Surface) -> None:
         screen.blit(self.image, self.rect.center)
 
@@ -57,7 +57,7 @@ class AnimatedSprite(Sprite):
         self.animations = {name: self.images}
         self.animation_speeds = {name: animation_speed}
         self.original_animations = {name: self.images}
-        
+
         self.animation_time_prev = pygame.time.get_ticks()
         self.animation_trigger = False
 
@@ -84,21 +84,22 @@ class AnimatedSprite(Sprite):
             self.animation_time_prev = time_now
             self.animation_trigger = True
 
-    def get_images(self, path: str):
+    @staticmethod
+    def get_images(path: str):
         images = []
         files = {}
         # finds all files in path (ignores folders)
         # also ignores any files not named a digit
-        for f in os.listdir(path):
-            if not os.path.isfile(os.path.join(path, f)):
+        for file in os.listdir(path):
+            if not os.path.isfile(os.path.join(path, file)):
                 continue
-            
+
             # splits file_name from extension
-            file_name, file_extension = os.path.splitext(f)
-            if not file_name.isnumeric(): 
+            file_name, file_extension = os.path.splitext(file)
+            if not file_name.isnumeric():
                 continue
-            
-            # adds file_extension to a dict at key file_name 
+
+            # adds file_extension to a dict at key file_name
             # this way, we can sort later and still
             # know what the file name is
             files[file_name] = file_extension
@@ -110,14 +111,15 @@ class AnimatedSprite(Sprite):
         return images
 
     # from https://predictivehacks.com/?all-tips=how-to-split-a-list-into-equal-elements-in-python
-    # don't really know how it works but it does    
-    def split_list(self, input: list, num_elem):
+    # don't really know how it works but it does
+    @staticmethod
+    def split_list(user_input: list, num_elem):
         output = []
-        for i in range(0, len(input), num_elem):
-            output.append(input[i:i + num_elem])
+        for i in range(0, len(user_input), num_elem):
+            output.append(user_input[i:i + num_elem])
 
         return output
-    
+
     def split_animations(self, name, num_animations):
         all_images = self.animations[name]
 
@@ -134,7 +136,7 @@ class AnimatedSprite(Sprite):
         #         self.ORIGINAL_IMAGE,
         #         (width, height)
         #     )
-        for key, value in enumerate(self.images):
+        for key, _ in enumerate(self.images):
             # scales image
             self.images[key] = pygame.transform.scale(
                 self.original_animations[self.current_animation][key],
@@ -144,9 +146,10 @@ class AnimatedSprite(Sprite):
             self.rect = self.images[0].get_rect(center=self.rect.center)
         self.image = self.images[int(self.current_sprite)]
         self.rect = self.image.get_rect(center=self.rect.center)
-        
+
     def rotate(self, degrees):
-        self.images = [pygame.transform.rotate(i, degrees) for i in self.animations[self.current_animation]]
+        self.images = [pygame.transform.rotate(i, degrees)
+            for i in self.animations[self.current_animation]]
 
     def add_animation(self, name: str, folder_path: str, animation_speed: float=None):
         if animation_speed is None:
@@ -154,7 +157,7 @@ class AnimatedSprite(Sprite):
         self.original_animations[name] = self.get_images(folder_path)
         self.animations[name] = self.original_animations[name]
         self.animation_speeds[name] = animation_speed
-    
+
     def add_animation_w_images(self, name: str, images: list, animation_speed: float=None):
         if animation_speed is None:
             animation_speed = self.animation_speed

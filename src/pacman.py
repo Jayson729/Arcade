@@ -2,16 +2,15 @@
 Ghosts need to interact with pacman
 Pacman hitbox is all messed up for some reason (probably in pacman_sprite.py)
 Add some sounds/music
-Maybe some buttons for settings/pausing? 
+Maybe some buttons for settings/pausing?
 or maybe those will be part of the eventual pause menu
-
 """
 
 import sys
 import pygame
 from pacman_sprite import PacmanSprite
 from state import State
-from settings import Settings, Colors, Fonts
+from settings import Settings
 from ghost import Ghost
 
 class Pacman(State):
@@ -30,7 +29,8 @@ class Pacman(State):
         self.create_game()
         super().__init__()
 
-    def get_screen(self):
+    @staticmethod
+    def get_screen():
         screen = pygame.display.set_mode(
             (Settings.window_width, Settings.window_height),
             pygame.RESIZABLE
@@ -41,16 +41,16 @@ class Pacman(State):
         self.map = self.get_map()
         self.pacman = self.get_pacman()
         self.ghosts = self.get_ghosts()
-    
+
     def get_map(self):
-        return None
-    
+        pass
+
     def get_pacman(self):
-        return PacmanSprite(600, 400, 
-            f'{self.img_path}yellow_pacman/', 
+        return PacmanSprite(600, 400,
+            f'{self.img_path}yellow_pacman/',
             f'{self.img_path}pacman_death/',
         )
-    
+
     def get_ghosts(self):
         ghosts = pygame.sprite.Group()
         blue_ghost = Ghost(300, 100, f'{self.img_path}blue_ghost/')
@@ -64,7 +64,7 @@ class Pacman(State):
         ghosts.add(pink_ghost)
 
         return ghosts
-    
+
     def startup(self) -> None:
         while True:
             self.check_events()
@@ -74,12 +74,13 @@ class Pacman(State):
             # self.clock.tick(Settings.fps)
             # print(f"fps: {self.clock.get_fps()}")
 
-    def check_events(self):
+    @staticmethod
+    def check_events():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-    
+
     def draw(self) -> None:
         # self.screen.blit(self.background.image, (0, 0))
         self.screen.fill((0, 0, 0))

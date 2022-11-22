@@ -1,4 +1,4 @@
-"""TODO: We probably want keybindings here, 
+"""TODO: We probably want keybindings here,
 then have them either be global (like now),
 or have them initialized in a class like the commented out code
 Also, I'm not sure if sounds/music should be here,
@@ -12,7 +12,8 @@ import pygame
 # all games
 # maybe something like this?
 # class Settings:
-#     def __init__(self, window_width=800, window_height=600, aspect_ratio=4/3, fps=60, fonts=None, colors=None):
+#     def __init__(self, window_width=800, window_height=600,
+#               aspect_ratio=4/3, fps=60, fonts=None, colors=None):
 #         self.window_width = window_width
 #         self.window_height = window_height
 #         self.aspect_ratio = aspect_ratio
@@ -20,8 +21,8 @@ import pygame
 #         self.fonts = self.default_fonts if fonts is None else fonts
 #         self.colors = self.default_colors if colors is None else colors
 
-"""Stores settings for Pong"""
 class Settings:
+    """Stores settings for Pong"""
     fps = 60
     aspect_ratio = 4/3
     window_width = 800
@@ -29,16 +30,16 @@ class Settings:
     player_buffer = 40
 
 
-"""Stores fonts for Pong"""
 class Fonts:
+    """Stores fonts for Pong"""
     pygame.font.init()
     score_font = pygame.font.Font(None, 50)
     pause_font = pygame.font.Font(None, 150)
     start_menu_font = 'fonts/Stardew_Valley.ttf'
 
 
-"""Stores colors for Pong"""
 class Colors:
+    """Stores colors for Pong"""
     background_color = pygame.Color('turquoise4')
     light_grey = (200, 200, 200)
     start_menu_text = '#DDA059'
@@ -52,4 +53,3 @@ class Colors:
 # class Music:
 #     pygame.mixer.init()
 #     start_menu_music = pygame.mixer.music.load('music/runescape_dream.wav')
-    
