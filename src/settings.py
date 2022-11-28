@@ -31,11 +31,11 @@ class Settings:
 
 
 class Fonts:
-    """Stores fonts for Pong"""
-    pygame.font.init()
-    score_font = pygame.font.Font(None, 50)
-    pause_font = pygame.font.Font(None, 150)
-    start_menu_font = 'fonts/Stardew_Valley.ttf'
+    def __init__(self):
+        """Stores fonts for Pong"""
+        self.score_font = pygame.font.Font(None, 50)
+        self.pause_font = pygame.font.Font(None, 150)
+        self.start_menu_font = 'fonts/Stardew_Valley.ttf'
 
 
 class Colors:

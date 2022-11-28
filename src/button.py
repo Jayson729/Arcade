@@ -11,7 +11,8 @@ class Button(Sprite):
             hover_color: tuple=None) -> None:
         """Initializes Button"""
         # set defaults
-        default_style = Fonts.start_menu_font
+        self.fonts = Fonts()
+        default_style = self.fonts.start_menu_font
         default_size = 10
         default_color = Colors.start_menu_text
         default_hover_color = Colors.start_menu_text_hover

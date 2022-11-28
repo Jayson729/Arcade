@@ -173,6 +173,7 @@ class Pong(State):
         pygame.init()
 
         # create game objects
+        self.fonts = Fonts()
         self.img_path = 'images/pong/'
         self.clock = pygame.time.Clock()
         self.screen = self.get_screen()
@@ -251,7 +252,7 @@ class Pong(State):
 
     def draw_scores(self) -> None:
         for p in self.paddles:
-            score_text = Fonts.score_font.render(
+            score_text = self.fonts.score_font.render(
                 f'{p.score}',
                 False,
                 'grey67'
@@ -273,7 +274,7 @@ class Pong(State):
 
     def win_game(self, winner):
         p_num = 1 if winner.side == 'left' else 2
-        win_text = Fonts.pause_font.render(
+        win_text = self.fonts.pause_font.render(
             f'Player {p_num} wins!', False, 'grey67'
         )
         self.screen.blit(win_text, (0, Settings.window_height//2))
