@@ -137,32 +137,10 @@ class StartMenu(State):
             print('credits')
             self.next_state = 'CREDITS'
             self.done = True
-
-        menu_items = {
-            'ENTER ARCADE': {
-                'coords': (410, 125),
-                'action': arcade_action,
-                'size': 50
-            },
-            'SETTINGS': {
-                'coords': (410, 165),
-                'action': settings_action,
-                'size': 40
-            },
-            'CREDITS': {
-                'coords': (410, 205),
-                'action': credits_action,
-                'size': 30
-            }
-        }
-
         buttons = pygame.sprite.Group()
-        for text, vals in menu_items.items():
-            button = Button(text, vals['action'],
-                vals['coords'][0], vals['coords'][1],
-                size=vals['size']
-            )
-            buttons.add(button)
+        buttons.add(Button(410, 125, 'ENTER ARCADE', pygame.font.Font('fonts/Stardew_Valley.ttf', 50), arcade_action))
+        buttons.add(Button(410, 165, 'SETTINGS', pygame.font.Font('fonts/Stardew_Valley.ttf', 40), settings_action))
+        buttons.add(Button(410, 205, 'CREDITS', pygame.font.Font('fonts/Stardew_Valley.ttf', 30), credits_action))
 
         return buttons
 

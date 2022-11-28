@@ -2,7 +2,7 @@
 
 import sys
 import pygame
-from start_menu import StartMenu
+# from start_menu import StartMenu
 from new_start_menu import StartMenu as StartMenu2
 from pong import Pong
 from game import Game
