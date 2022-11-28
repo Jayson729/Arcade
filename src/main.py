@@ -2,8 +2,7 @@
 
 import sys
 import pygame
-from start_menu import StartMenu
-from new_start_menu import StartMenu as StartMenu2
+from new_start_menu import StartMenu
 from pong import Pong
 from game import Game
 from pacman import Pacman
@@ -14,7 +13,7 @@ screen = pygame.display.set_mode((800, 600))
 
 states = {
     # "START": StartMenu,
-    "START": StartMenu2,
+    "START": StartMenu,
     # "ARCADE" : ArcadeMenu(),
     # "SETTINGS" : SettingsMenu(),
     # "CREDITS" : Credits(),
