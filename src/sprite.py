@@ -23,7 +23,7 @@ class Sprite(pygame.sprite.Sprite):
                 special_flags=pygame.BLEND_RGBA_MULT
             )
 
-    def resize(self, new_width, new_height) -> None:
+    def resize(self, new_width, new_height):
         # height = self.ORIGINAL_IMAGE.get_height() * multiplier
         # width = height * self.IMAGE_RATIO
         # self.image = pygame.transform.scale(
@@ -37,6 +37,7 @@ class Sprite(pygame.sprite.Sprite):
             (new_width, new_height)
         )
         self.rect = self.image.get_rect(center=self.rect.center)
+        return self
 
     # rounding errors if not rotating by 90 degree increments
     # I think
@@ -146,6 +147,7 @@ class AnimatedSprite(Sprite):
             self.rect = self.images[0].get_rect(center=self.rect.center)
         self.image = self.images[int(self.current_sprite)]
         self.rect = self.image.get_rect(center=self.rect.center)
+        return self
 
     def rotate(self, degrees):
         self.images = [pygame.transform.rotate(i, degrees)
