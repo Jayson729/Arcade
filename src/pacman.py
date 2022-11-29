@@ -86,6 +86,8 @@ class Pacman(State):
         self.screen.fill((0, 0, 0))
         # self.map.draw(self.screen)
         self.pacman.draw(self.screen)
+        # for ghost in self.ghosts:
+        #     ghost.draw(self.screen)
         self.ghosts.draw(self.screen)
         # self.buttons.draw(self.screen)
 

@@ -79,12 +79,19 @@ class StartMenu(State):
 
         # add all clouds to a sprite group
         clouds = pygame.sprite.Group()
-        clouds.add(Cloud(large_cloud_img, 155, 465, sway_distance, sway_speed).resize(650, 650))
-        clouds.add(Cloud(large_cloud_img, 750, 415, sway_distance, sway_speed).resize(500, 450))
-        clouds.add(Cloud(large_cloud_img, 780, 525, sway_distance, sway_speed).resize(800, 760))
-        clouds.add(Cloud(large_cloud_img, 90, 570, sway_distance, sway_speed).resize(760, 760))
-        clouds.add(Cloud(small_cloud_img, 600, 80, sway_distance, sway_speed).resize(150, 100))
-        clouds.add(Cloud(small_cloud_mirrored, 160, 135, sway_distance, sway_speed).resize(200, 170))
+        # clouds.add(Cloud(large_cloud_img, 155, 465, sway_distance, sway_speed).resize(650, 650))
+        # clouds.add(Cloud(large_cloud_img, 750, 415, sway_distance, sway_speed).resize(500, 450))
+        # clouds.add(Cloud(large_cloud_img, 780, 525, sway_distance, sway_speed).resize(800, 760))
+        # clouds.add(Cloud(large_cloud_img, 90, 570, sway_distance, sway_speed).resize(760, 760))
+        # clouds.add(Cloud(small_cloud_img, 600, 80, sway_distance, sway_speed).resize(150, 100))
+        # clouds.add(Cloud(small_cloud_mirrored, 160, 135, sway_distance, sway_speed).resize(200, 170))
+
+        clouds.add(Cloud(large_cloud_img, -170, 140, sway_distance, sway_speed).resize(650, 650))
+        clouds.add(Cloud(large_cloud_img, 500, 190, sway_distance, sway_speed).resize(500, 450))
+        clouds.add(Cloud(large_cloud_img, 380, 145, sway_distance, sway_speed).resize(800, 760))
+        clouds.add(Cloud(large_cloud_img, -290, 190, sway_distance, sway_speed).resize(760, 760))
+        clouds.add(Cloud(small_cloud_img, 525, 30, sway_distance, sway_speed).resize(150, 100))
+        clouds.add(Cloud(small_cloud_mirrored, 60, 50, sway_distance, sway_speed).resize(200, 170))
 
         return clouds
 

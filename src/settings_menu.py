@@ -45,8 +45,8 @@ class SettingsMenu(State):
         self.curr_index = 0
 
         # starts first button as hovered
-        first_sprite = self.buttons.sprites()[self.curr_index]
-        first_sprite.set_keyboard_hover(True)
+        # first_sprite = self.buttons.sprites()[self.curr_index]
+        # first_sprite.set_keyboard_hover(True)
 
     @staticmethod
     def get_screen() -> pygame.Surface:
@@ -87,29 +87,43 @@ class SettingsMenu(State):
         menu_items = {
             '>  ': {
                 'coords': (310, 205),
-                'action': music_action_down(),
+                'action': music_action_down,
                 'size': 33
             },
             ' >': {
                 'coords': (317, 205),
-                'action': music_action_up(),
+                'action': music_action_up,
                 'size': 33
             },
             '> ': {
                 'coords': (310, 225),
-                'action': effects_action_down(),
+                'action': effects_action_down,
                 'size': 33
             },
             '>': {
                 'coords': (319, 225),
-                'action': effects_action_up(),
+                'action': effects_action_up,
                 'size': 33
             }
         }
 
         buttons = pygame.sprite.Group()
-        buttons.add(Button(310, 205, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 33),
-                           music_action_down()).rotate(180))
+        buttons.add(
+            Button(310, 205, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 33), 
+                music_action_down).rotate(270)
+        )
+        buttons.add(
+            Button(317, 205, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 33),
+                music_action_up).rotate(90)
+        )
+        buttons.add(
+            Button(310, 225, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 33),
+            effects_action_down).rotate(270)
+        )
+        buttons.add(
+            Button(319, 225, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 33),
+            effects_action_up).rotate(90)
+        )
 
         return buttons
 

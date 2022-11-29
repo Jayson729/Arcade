@@ -6,10 +6,11 @@ class Sprite(pygame.sprite.Sprite):
         super().__init__()
         self.image = img
         self.ORIGINAL_IMAGE = self.image.copy()
-        self.rect = self.image.get_rect(center=(x, y))
+        self.rect = self.image.get_rect(topleft=(x, y))
         self.IMAGE_RATIO = self.image.get_width() / self.image.get_height()
-        self.f_centerx = float(self.rect.centerx)
-        self.f_centery = float(self.rect.centery)
+        self.f_top = float(self.rect.top)
+        self.f_left = float(self.rect.left)
+        self.rotation_degrees = 0
 
         if color is not None:
             self.color = color
@@ -30,22 +31,31 @@ class Sprite(pygame.sprite.Sprite):
         #     self.ORIGINAL_IMAGE,
         #     (width, height)
         # )
-        # self.rect = self.image.get_rect(center=self.rect.center)
+        # self.rect = self.image.get_rect(topleft=self.rect.topleft)
         # scales image
         self.image = pygame.transform.scale(
             self.ORIGINAL_IMAGE,
             (new_width, new_height)
         )
-        self.rect = self.image.get_rect(center=self.rect.center)
+        self.rect = self.image.get_rect(topleft=self.rect.topleft)
         return self
 
     # rounding errors if not rotating by 90 degree increments
     # I think
     def rotate(self, degrees):
         self.image = pygame.transform.rotate(self.image, degrees)
+        self.rect = self.image.get_rect(topleft=self.rect.topleft)
+        self.rotation_degrees = degrees
+        return self
 
     def draw(self, screen: pygame.Surface) -> None:
-        screen.blit(self.image, self.rect.center)
+        screen.blit(self.image, self.rect.topleft)
+
+        # circle = pygame.font.SysFont('Ariel', 35).render('.', True, (255, 255, 255))
+        # screen.blit(circle, self.rect.topleft)
+        # screen.blit(circle, self.rect.topright)
+        # screen.blit(circle, self.rect.bottomleft)
+        # screen.blit(circle, self.rect.bottomright)
 
 
 class AnimatedSprite(Sprite):
@@ -144,14 +154,17 @@ class AnimatedSprite(Sprite):
                 (new_width, new_height)
             )
             self.image = self.images[int(self.current_sprite)]
-            self.rect = self.images[0].get_rect(center=self.rect.center)
+            self.rect = self.images[0].get_rect(topleft=self.rect.topleft)
         self.image = self.images[int(self.current_sprite)]
-        self.rect = self.image.get_rect(center=self.rect.center)
+        self.rect = self.image.get_rect(topleft=self.rect.topleft)
         return self
 
     def rotate(self, degrees):
         self.images = [pygame.transform.rotate(i, degrees)
             for i in self.animations[self.current_animation]]
+        self.image = self.images[self.current_sprite]
+        self.rect = self.image.get_rect(topleft=self.rect.topleft)
+        return self
 
     def add_animation(self, name: str, folder_path: str, animation_speed: float=None):
         if animation_speed is None:

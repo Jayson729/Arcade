@@ -12,23 +12,23 @@ class Cloud(Sprite):
         """Initializes cloud"""
         super().__init__(x, y, img)
 
-        self.orig_centery = self.rect.centery
+        self.orig_top = self.rect.top
         self.sway_distance = sway_distance
         self.sway_speed = sway_speed
         self.movement = sway_speed
 
         # stores as float to have a smooth animation
-        self.f_centery = float(self.orig_centery)
+        self.f_top = float(self.orig_top)
 
     def check_sway(self) -> None:
         """Sets the movement value based on location and sway speed"""
-        if self.f_centery <= self.orig_centery - self.sway_distance:
+        if self.f_top <= self.orig_top - self.sway_distance:
             self.movement += self.sway_speed
-        elif self.f_centery >= self.orig_centery + self.sway_distance:
+        elif self.f_top >= self.orig_top + self.sway_distance:
             self.movement += -self.sway_speed
 
     def update(self) -> None:
-        """Updates cloud based on centery as float and movement"""
+        """Updates cloud based on top as float and movement"""
         self.check_sway()
-        self.f_centery += self.movement
-        self.rect.centery = self.f_centery
+        self.f_top += self.movement
+        self.rect.top = self.f_top

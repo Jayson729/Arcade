@@ -5,7 +5,7 @@ from settings import Fonts, Colors
 class Button(Sprite):
     """Button class that works with keyboard and mouse"""
 
-    def __init__(self, x: int, y: int, text, font, action, color=None, hover_color=None) -> None:
+    def __init__(self, x: int, y: int, text, font, action, color=None, hover_color=None, center=True) -> None:
         """Initializes Button"""
         # set defaults
         # self.fonts = Fonts()
@@ -28,6 +28,10 @@ class Button(Sprite):
         # call super with rendered font
         super().__init__(x, y, self.font_render)
 
+        #center button
+        if center:
+            self.rect.center = (x, y)
+
     def check_mouse_hover(self, mouse: tuple) -> bool:
         """Checks if the mouse is hovering
         return True if colliding, False if not
@@ -44,16 +48,22 @@ class Button(Sprite):
         """Updates button"""
         self.currently_hovered = (self.currently_keyboard_hovered
             or self.currently_mouse_hovered)
+        
+        changed = False
         if self.currently_hovered:
             #re-render font to hover
             self.font_render = self.font.render(
                 self.text, True, self.hover_color)
+            changed = True
         elif not self.currently_hovered:
             #re-render font to not hovered
             self.font_render = self.font.render(
                 self.text, True, self.color)
+            changed = True
 
-        self.image = self.font_render
+        if changed:
+            self.image = self.font_render
+            self.rotate(self.rotation_degrees)
 
     def do_action(self) -> None:
         """Another way to call b.action()"""

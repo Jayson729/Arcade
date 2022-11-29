@@ -41,8 +41,8 @@ class AnimatedPlayer(AnimatedSprite):
         pass
 
     def update(self) -> None:
-        self.rect.centerx += self.movement[0]
-        self.rect.centery += self.movement[1]
+        self.rect.left += self.movement[0]
+        self.rect.top += self.movement[1]
         self.check_out_of_bounds()
         super().update()
 
@@ -84,7 +84,7 @@ class StaticPlayer(Sprite):
         pass
 
     def update(self) -> None:
-        self.rect.centerx += self.movement[0]
-        self.rect.centery += self.movement[1]
+        self.rect.left += self.movement[0]
+        self.rect.top += self.movement[1]
         self.check_out_of_bounds()
         super().update()
