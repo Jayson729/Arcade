@@ -5,31 +5,22 @@ from settings import Fonts, Colors
 class Button(Sprite):
     """Button class that works with keyboard and mouse"""
 
-    def __init__(self, text: str, action,
-            x: int, y: int, style: pygame.font.Font=None,
-            size: int=None, color: tuple=None,
-            hover_color: tuple=None) -> None:
+    def __init__(self, x: int, y: int, text, font, action, color=None, hover_color=None) -> None:
         """Initializes Button"""
         # set defaults
-        self.fonts = Fonts()
-        default_style = self.fonts.start_menu_font
-        default_size = 10
+        # self.fonts = Fonts()
         default_color = Colors.start_menu_text
         default_hover_color = Colors.start_menu_text_hover
 
         # set instance variables
-        self.text = text
-        self.action = action
-        self.style = default_style if style is None else style
-        self.size = default_size if size is None else size
         self.color = default_color if color is None else color
         self.hover_color = default_hover_color if hover_color is None else hover_color
         self.currently_hovered = False
         self.currently_keyboard_hovered = False
         self.currently_mouse_hovered = False
-
-        # set font
-        self.font = pygame.font.Font(self.style, self.size)
+        self.text = text
+        self.font = font
+        self.action = action
 
         # render font
         self.font_render = self.font.render(self.text, True, self.color)

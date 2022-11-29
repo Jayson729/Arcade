@@ -69,54 +69,22 @@ class StartMenu(State):
         background.resize(800, 600)
         return background
 
-    def get_clouds(self, large_clouds: list=None,
-            small_clouds: list=None, sway_distance: float=1.5,
+    def get_clouds(self, sway_distance: float=1.5,
             sway_speed: float=0.025) -> pygame.sprite.Group:
         """Creates a group of clouds"""
         # load images
         large_cloud_img = pygame.image.load(f'{self.img_path}large_cloud.png')
         small_cloud_img = pygame.image.load(f'{self.img_path}small_cloud.png')
-
-        large_clouds = [
-            {'coords': (155, 465), 'mirrored': False,
-                'size': (650, 650)},
-            {'coords': (750, 415), 'mirrored': False,
-                'size': (500, 450)},
-            {'coords': (780, 525), 'mirrored': False,
-                'size': (800, 760)},
-            {'coords': (90, 570), 'mirrored': False,
-                'size': (760, 760)}
-        ] if large_clouds is None else large_clouds
-        small_clouds = [
-            {'coords': (600, 80), 'mirrored': False,
-                'size': (150, 100)},
-            {'coords': (160, 135), 'mirrored': True,
-                'size': (200, 170)}
-        ] if small_clouds is None else small_clouds
+        small_cloud_mirrored = pygame.transform.flip(small_cloud_img, True, False)
 
         # add all clouds to a sprite group
         clouds = pygame.sprite.Group()
-        for c in large_clouds:
-            cloud = Cloud(large_cloud_img,
-                c['coords'][0], c['coords'][1],
-                sway_distance, sway_speed
-            )
-            cloud.resize(c['size'][0], c['size'][1])
-            if c['mirrored']:
-                cloud.image = pygame.transform.flip(
-                    cloud.image, True, False)
-            clouds.add(cloud)
-
-        for c in small_clouds:
-            cloud = Cloud(small_cloud_img,
-                c['coords'][0], c['coords'][1],
-                sway_distance, sway_speed
-            )
-            cloud.resize(c['size'][0], c['size'][1])
-            if c['mirrored']:
-                cloud.image = pygame.transform.flip(
-                    cloud.image, True, False)
-            clouds.add(cloud)
+        clouds.add(Cloud(large_cloud_img, 155, 465, sway_distance, sway_speed).resize(650, 650))
+        clouds.add(Cloud(large_cloud_img, 750, 415, sway_distance, sway_speed).resize(500, 450))
+        clouds.add(Cloud(large_cloud_img, 780, 525, sway_distance, sway_speed).resize(800, 760))
+        clouds.add(Cloud(large_cloud_img, 90, 570, sway_distance, sway_speed).resize(760, 760))
+        clouds.add(Cloud(small_cloud_img, 600, 80, sway_distance, sway_speed).resize(150, 100))
+        clouds.add(Cloud(small_cloud_mirrored, 160, 135, sway_distance, sway_speed).resize(200, 170))
 
         return clouds
 
@@ -137,32 +105,10 @@ class StartMenu(State):
             print('credits')
             self.next_state = 'CREDITS'
             self.done = True
-
-        menu_items = {
-            'ENTER ARCADE': {
-                'coords': (410, 125),
-                'action': arcade_action,
-                'size': 50
-            },
-            'SETTINGS': {
-                'coords': (410, 165),
-                'action': settings_action,
-                'size': 40
-            },
-            'CREDITS': {
-                'coords': (410, 205),
-                'action': credits_action,
-                'size': 30
-            }
-        }
-
         buttons = pygame.sprite.Group()
-        for text, vals in menu_items.items():
-            button = Button(text, vals['action'],
-                vals['coords'][0], vals['coords'][1],
-                size=vals['size']
-            )
-            buttons.add(button)
+        buttons.add(Button(410, 125, 'ENTER ARCADE', pygame.font.Font('fonts/Stardew_Valley.ttf', 50), arcade_action))
+        buttons.add(Button(410, 165, 'SETTINGS', pygame.font.Font('fonts/Stardew_Valley.ttf', 40), settings_action))
+        buttons.add(Button(410, 205, 'CREDITS', pygame.font.Font('fonts/Stardew_Valley.ttf', 30), credits_action))
 
         return buttons
 

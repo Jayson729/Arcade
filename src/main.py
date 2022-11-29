@@ -2,7 +2,12 @@
 
 import sys
 import pygame
+<<<<<<< HEAD
 from new_start_menu import StartMenu
+=======
+# from start_menu import StartMenu
+from new_start_menu import StartMenu as StartMenu2
+>>>>>>> 4a6c348336f44f6bd74a6153faa6b31732741e6a
 from pong import Pong
 from game import Game
 from pacman import Pacman
