@@ -108,7 +108,8 @@ class SettingsMenu(State):
         }
 
         buttons = pygame.sprite.Group()
-        buttons.add(Button('>', music_action_down(), 310, 205, size=33))
+        buttons.add(Button(310, 205, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 33),
+                           music_action_down()).rotate(180))
 
         return buttons
 
