@@ -4,7 +4,7 @@ from state import State
 from cloud import Cloud
 from button import Button
 from sprite import Sprite, AnimatedSprite
-from settings import Settings
+from settings import Settings, Colors
 
 
 class SettingsMenu(State):
@@ -21,13 +21,37 @@ class SettingsMenu(State):
         # create game objects
         self.img_path = 'images/settings_menu/'
         self.global_path = 'images/start_menu/'
+        self.default_color = Colors.start_menu_text
         self.clock = pygame.time.Clock()
         self.screen = self.get_screen()
-        self.counter = 2
-        pygame.display.set_caption('Start Menu')
+        self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 40)
+        self.music_vol = 0.2
+        self.music_int = 2
+        self.effects_vol = 0.3
+        self.effects_int = 3
+        self.menu_items = {1: [self.music_int, self.effects_int], 2: ["MUSIC VOLUME", "EFFECTS VOLUME"]}
+        pygame.display.set_caption('Settings')
         pygame.display.set_icon(pygame.image.load(f'{self.global_path}main.png'))
         self.create_game()
         super().__init__()
+
+    def get_text_position(self, text, index):
+        top_left = 0
+
+        for i, j in self.menu_items.items():
+            if i == 0:
+                top_left = (self.screen_rect.topleft[0] + 500, self.screen_rect.topleft[1] + 150 + (index * 30))
+            elif i == 1:
+                top_left = (self.screen_rect.topleft[0] + 500, self.screen_rect.topleft[1] + 150 + (index * 30))
+        return text.get_rect(topleft=top_left)
+
+    def render_text(self, index):
+        for i, j in self.menu_items.items():
+            if j:
+                self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 30)
+
+        return self.font.render(f'{self.menu_items[j]}', True, self.default_color)
+
 
     def create_game(self):
         self.background = self.get_background()
@@ -35,10 +59,10 @@ class SettingsMenu(State):
         self.NUM_BUTTONS = len(self.buttons)
 
         self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
-        self.menu_sound.set_volume(0.3)
+        self.menu_sound.set_volume(self.effects_vol)
 
         pygame.mixer.music.load('music/runescape_dream.wav')
-        pygame.mixer.music.set_volume(0.2)
+        pygame.mixer.music.set_volume(self.music_vol)
         # loops music
         pygame.mixer.music.play(-1)
 
@@ -69,60 +93,53 @@ class SettingsMenu(State):
 
         def music_action_down():
             print('music down')
+            if self.music_vol > 0:
+                self.music_vol -= 0.1
+                self.music_int -= 1
+                pygame.mixer.music.set_volume(self.music_vol)
 
         def music_action_up():
             print('music up')
+            if self.music_vol < 1.0:
+                self.music_vol += 0.1
+                self.music_int += 1
+                pygame.mixer.music.set_volume(self.music_vol)
 
         def effects_action_down():
             print('effects down')
+            if self.effects_vol > 0:
+                self.effects_vol -= 0.1
+                self.effects_int -= 1
+                self.menu_sound.set_volume(self.effects_vol)
 
         def effects_action_up():
             print('effects up')
+            if self.effects_vol < 1.0:
+                self.effects_vol += 0.1
+                self.effects_int += 1
+                self.menu_sound.set_volume(self.effects_vol)
 
         def back_action():
             print('back')
             self.next_state = 'START'
             self.done = True
 
-        menu_items = {
-            '>  ': {
-                'coords': (310, 205),
-                'action': music_action_down,
-                'size': 33
-            },
-            ' >': {
-                'coords': (317, 205),
-                'action': music_action_up,
-                'size': 33
-            },
-            '> ': {
-                'coords': (310, 225),
-                'action': effects_action_down,
-                'size': 33
-            },
-            '>': {
-                'coords': (319, 225),
-                'action': effects_action_up,
-                'size': 33
-            }
-        }
-
         buttons = pygame.sprite.Group()
         buttons.add(
-            Button(310, 205, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 33), 
-                music_action_down).rotate(270)
+            Button(500, 205, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
+                   music_action_down).rotate(180)
         )
         buttons.add(
-            Button(317, 205, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 33),
-                music_action_up).rotate(90)
+            Button(520, 205, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
+                   music_action_up)
         )
         buttons.add(
-            Button(310, 225, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 33),
-            effects_action_down).rotate(270)
+            Button(500, 250, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
+                   effects_action_down).rotate(180)
         )
         buttons.add(
-            Button(319, 225, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 33),
-            effects_action_up).rotate(90)
+            Button(520, 250, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
+                   effects_action_up)
         )
 
         return buttons
@@ -162,6 +179,9 @@ class SettingsMenu(State):
     def draw(self):
         self.background.draw(self.screen)
         self.buttons.draw(self.screen)
+        for index, option in enumerate(self.menu_items):
+            text_render = self.render_text(index)
+            self.screen.blit(text_render, self.get_text_position(text_render, index))
 
     def update(self):
         self.buttons.update()
@@ -202,3 +222,4 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
+
