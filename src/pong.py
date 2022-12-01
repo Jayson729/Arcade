@@ -169,7 +169,7 @@ class Opponent(Paddle):
 
 
 class Pong(State):
-    def __init__(self, p1=Paddle, p2=Paddle):
+    def __init__(self, p1=Paddle, p2=Paddle, screen=None):
         # initialize pygame
         pygame.mixer.pre_init(44100, -16, 1, 512)
         pygame.mixer.init()
@@ -178,7 +178,9 @@ class Pong(State):
         # create game objects
         self.img_path = 'images/pong/'
         self.clock = pygame.time.Clock()
-        self.screen = self.get_screen()
+        self.screen = screen
+        if screen is None:
+            self.screen = self.get_screen()
         pygame.display.set_caption('Pong')
         self.create_game(p1, p2)
         super().__init__()

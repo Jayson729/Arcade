@@ -10,7 +10,7 @@ from settings import Settings
 class SettingsMenu(State):
     """Main class that calls everything else"""
 
-    def __init__(self) -> None:
+    def __init__(self, screen=None) -> None:
         """Initializes SettingsMenu"""
 
         # initialize pygame
@@ -24,7 +24,9 @@ class SettingsMenu(State):
         self.default_color = Settings.settings_menu_text_color
         self.default_font = Settings.settings_menu_font
         self.clock = pygame.time.Clock()
-        self.screen = self.get_screen()
+        self.screen = screen
+        if screen is None:
+            self.screen = self.get_screen()
         # self.menu_items = {1: [self.music_int, self.effects_int], 2: ["MUSIC VOLUME", "EFFECTS VOLUME"]}
         pygame.display.set_caption('Settings')
         pygame.display.set_icon(pygame.image.load(

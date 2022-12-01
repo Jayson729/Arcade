@@ -16,7 +16,7 @@ from ghost import Ghost
 
 class Pacman(State):
 
-    def __init__(self):
+    def __init__(self, screen=None):
         # initialize pygame
         pygame.mixer.pre_init(44100, -16, 1, 512)
         pygame.mixer.init()
@@ -25,7 +25,9 @@ class Pacman(State):
         # create game objects
         self.img_path = 'images/pacman/'
         self.clock = pygame.time.Clock()
-        self.screen = self.get_screen()
+        self.screen = screen
+        if screen is None:
+            self.screen = self.get_screen()
         pygame.display.set_caption('Pacman')
         self.create_game()
         super().__init__()

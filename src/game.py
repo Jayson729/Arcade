@@ -30,7 +30,7 @@ class Game:
         self.state_name = next_state
         # persistent = self.state.persist
         pygame.mixer.music.stop()
-        self.state = self.states[self.state_name]()
+        self.state = self.states[self.state_name](screen=self.screen)
         self.state.done = False
         # self.state.startup(persistent)
 

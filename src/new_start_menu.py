@@ -10,7 +10,7 @@ from settings import Settings
 class StartMenu(State):
     """Main class that calls everything else"""
 
-    def __init__(self) -> None:
+    def __init__(self, screen=None) -> None:
         """Initializes StartMenu"""
 
         # initialize pygame
@@ -22,7 +22,9 @@ class StartMenu(State):
         self.img_path = 'images/start_menu/'
         self.global_img_path = 'images/'
         self.clock = pygame.time.Clock()
-        self.screen = self.get_screen()
+        self.screen = screen
+        if screen is None:
+            self.screen = self.get_screen()
         pygame.display.set_caption('Start Menu')
         pygame.display.set_icon(pygame.image.load(f'{self.global_img_path}main.png'))
         self.create_game()
