@@ -25,10 +25,6 @@ class SettingsMenu(State):
         self.default_font = Settings.settings_menu_font
         self.clock = pygame.time.Clock()
         self.screen = self.get_screen()
-        # self.music_vol = 0.2
-        self.music_vol = 20
-        # self.effects_vol = 0.3
-        self.effects_vol = 30
         # self.menu_items = {1: [self.music_int, self.effects_int], 2: ["MUSIC VOLUME", "EFFECTS VOLUME"]}
         pygame.display.set_caption('Settings')
         pygame.display.set_icon(pygame.image.load(
@@ -59,10 +55,10 @@ class SettingsMenu(State):
         self.menu_items = self.get_menu_items()
 
         self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
-        self.menu_sound.set_volume(self.effects_vol/100)
+        self.menu_sound.set_volume(Settings.effects_volume/100)
 
         pygame.mixer.music.load('music/runescape_dream.wav')
-        pygame.mixer.music.set_volume(self.music_vol/100)
+        pygame.mixer.music.set_volume(Settings.music_volume/100)
         # loops music
         pygame.mixer.music.play(-1)
 
@@ -96,34 +92,34 @@ class SettingsMenu(State):
 
         def music_action_down():
             print('music down')
-            if self.music_vol > 0:
-                self.music_vol -= 5
+            if Settings.music_volume > 0:
+                Settings.music_volume -= 5
                 # self.music_int -= 1
-                pygame.mixer.music.set_volume(self.music_vol/100)
+                pygame.mixer.music.set_volume(Settings.music_volume/100)
                 self.menu_sound.play()
 
         def music_action_up():
             print('music up')
-            if self.music_vol < 100:
-                self.music_vol += 5
+            if Settings.music_volume < 100:
+                Settings.music_volume += 5
                 # self.music_int += 1
-                pygame.mixer.music.set_volume(self.music_vol/100)
+                pygame.mixer.music.set_volume(Settings.music_volume/100)
                 self.menu_sound.play()
 
         def effects_action_down():
             print('effects down')
-            if self.effects_vol > 0:
-                self.effects_vol -= 5
+            if Settings.effects_volume > 0:
+                Settings.effects_volume -= 5
                 # self.effects_int -= 1
-                self.menu_sound.set_volume(self.effects_vol/100)
+                self.menu_sound.set_volume(Settings.effects_volume/100)
                 self.menu_sound.play()
 
         def effects_action_up():
             print('effects up')
-            if self.effects_vol < 100:
-                self.effects_vol += 5
+            if Settings.effects_volume < 100:
+                Settings.effects_volume += 5
                 # self.effects_int += 1
-                self.menu_sound.set_volume(self.effects_vol/100)
+                self.menu_sound.set_volume(Settings.effects_volume/100)
                 self.menu_sound.play()
 
         def back_action():
@@ -169,14 +165,14 @@ class SettingsMenu(State):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            self.buttons.do_event(event)
+            self.buttons.do_event(event, self.menu_sound)
 
     def draw_volumes(self, screen):
         font = pygame.font.Font('fonts/Stardew_Valley.ttf', 30)
         music_vol_render = font.render(
-            repr(self.music_vol), True, self.default_color)
+            repr(Settings.music_volume), True, self.default_color)
         effects_vol_render = font.render(
-            repr(self.effects_vol), True, self.default_color)
+            repr(Settings.effects_volume), True, self.default_color)
         screen.blit(music_vol_render, (500, 190))
         screen.blit(effects_vol_render, (500, 235))
 

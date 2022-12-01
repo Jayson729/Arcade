@@ -34,10 +34,10 @@ class StartMenu(State):
         self.buttons = self.get_buttons()
 
         self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
-        self.menu_sound.set_volume(0.3)
+        self.menu_sound.set_volume(Settings.effects_volume/100)
 
         pygame.mixer.music.load('music/runescape_dream.wav')
-        pygame.mixer.music.set_volume(0.2)
+        pygame.mixer.music.set_volume(Settings.music_volume/100)
         # loops music
         pygame.mixer.music.play(-1)
 
@@ -132,7 +132,7 @@ class StartMenu(State):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            self.buttons.do_event(event)
+            self.buttons.do_event(event, self.menu_sound)
 
     def draw(self):
         self.background.draw(self.screen)

@@ -37,6 +37,9 @@ class Settings:
     alternate_keybinding = Keybinding(
         pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_ESCAPE, pygame.K_RETURN
     )
+    music_volume = 20
+    effects_volume = 30
+
 
     # pong
     player_buffer = 40
