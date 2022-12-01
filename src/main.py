@@ -6,6 +6,7 @@ from new_start_menu import StartMenu
 from pong import Pong
 from game import Game
 from pacman import Pacman
+from settings_menu import SettingsMenu
 
 
 pygame.init()
@@ -17,7 +18,7 @@ states = {
     # "ARCADE" : ArcadeMenu(),
     # "SETTINGS" : SettingsMenu(),
     # "CREDITS" : Credits(),
-    "SETTINGS": Pong,
+    "SETTINGS": SettingsMenu,
     'CREDITS': Pacman,
 
 }

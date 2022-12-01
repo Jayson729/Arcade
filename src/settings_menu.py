@@ -25,44 +25,45 @@ class SettingsMenu(State):
         self.clock = pygame.time.Clock()
         self.screen = self.get_screen()
         self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 40)
-        self.music_vol = 0.2
-        self.music_int = 2
-        self.effects_vol = 0.3
-        self.effects_int = 3
-        self.menu_items = {1: [self.music_int, self.effects_int], 2: ["MUSIC VOLUME", "EFFECTS VOLUME"]}
+        # self.music_vol = 0.2
+        self.music_vol = 20
+        # self.effects_vol = 0.3
+        self.effects_vol = 30
+        # self.menu_items = {1: [self.music_int, self.effects_int], 2: ["MUSIC VOLUME", "EFFECTS VOLUME"]}
         pygame.display.set_caption('Settings')
         pygame.display.set_icon(pygame.image.load(f'{self.global_path}main.png'))
         self.create_game()
         super().__init__()
 
-    def get_text_position(self, text, index):
-        top_left = 0
+    # def get_text_position(self, text, index):
+    #     top_left = 0
 
-        for i, j in self.menu_items.items():
-            if i == 0:
-                top_left = (self.screen_rect.topleft[0] + 500, self.screen_rect.topleft[1] + 150 + (index * 30))
-            elif i == 1:
-                top_left = (self.screen_rect.topleft[0] + 500, self.screen_rect.topleft[1] + 150 + (index * 30))
-        return text.get_rect(topleft=top_left)
+    #     for i, j in self.menu_items.items():
+    #         if i == 0:
+    #             top_left = (self.screen_rect.topleft[0] + 500, self.screen_rect.topleft[1] + 150 + (index * 30))
+    #         elif i == 1:
+    #             top_left = (self.screen_rect.topleft[0] + 500, self.screen_rect.topleft[1] + 150 + (index * 30))
+    #     return text.get_rect(topleft=top_left)
 
-    def render_text(self, index):
-        for i, j in self.menu_items.items():
-            if j:
-                self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 30)
+    # def render_text(self, index):
+    #     for i, j in self.menu_items.items():
+    #         if j:
+    #             self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 30)
 
-        return self.font.render(f'{self.menu_items[j]}', True, self.default_color)
+    #     return self.font.render(f'{self.menu_items[j]}', True, self.default_color)
 
 
     def create_game(self):
         self.background = self.get_background()
         self.buttons = self.get_buttons()
+        self.menu_items = self.get_menu_items()
         self.NUM_BUTTONS = len(self.buttons)
 
         self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
-        self.menu_sound.set_volume(self.effects_vol)
+        self.menu_sound.set_volume(self.effects_vol/100)
 
         pygame.mixer.music.load('music/runescape_dream.wav')
-        pygame.mixer.music.set_volume(self.music_vol)
+        pygame.mixer.music.set_volume(self.music_vol/100)
         # loops music
         pygame.mixer.music.play(-1)
 
@@ -81,6 +82,13 @@ class SettingsMenu(State):
         )
         return screen
 
+    def get_menu_items(self):
+        font = pygame.font.Font('fonts/Stardew_Valley.ttf', 30)
+        menu_items = pygame.sprite.Group()
+        menu_items.add(Sprite(280, 190, font.render('MUSIC VOLUME', True, self.default_color)))
+        menu_items.add(Sprite(280, 240, font.render('EFFECTS VOLUME', True, self.default_color)))
+        return menu_items
+
     def get_background(self) -> Sprite:
         """Creates background as Sprite"""
         bg_image = pygame.image.load(f"{self.img_path}settings_menu_background.png")
@@ -94,30 +102,34 @@ class SettingsMenu(State):
         def music_action_down():
             print('music down')
             if self.music_vol > 0:
-                self.music_vol -= 0.1
-                self.music_int -= 1
-                pygame.mixer.music.set_volume(self.music_vol)
+                self.music_vol -= 5
+                # self.music_int -= 1
+                pygame.mixer.music.set_volume(self.music_vol/100)
+                self.menu_sound.play()
 
         def music_action_up():
             print('music up')
-            if self.music_vol < 1.0:
-                self.music_vol += 0.1
-                self.music_int += 1
-                pygame.mixer.music.set_volume(self.music_vol)
+            if self.music_vol < 100:
+                self.music_vol += 5
+                # self.music_int += 1
+                pygame.mixer.music.set_volume(self.music_vol/100)
+                self.menu_sound.play()
 
         def effects_action_down():
             print('effects down')
             if self.effects_vol > 0:
-                self.effects_vol -= 0.1
-                self.effects_int -= 1
-                self.menu_sound.set_volume(self.effects_vol)
+                self.effects_vol -= 5
+                # self.effects_int -= 1
+                self.menu_sound.set_volume(self.effects_vol/100)
+                self.menu_sound.play()
 
         def effects_action_up():
             print('effects up')
-            if self.effects_vol < 1.0:
-                self.effects_vol += 0.1
-                self.effects_int += 1
-                self.menu_sound.set_volume(self.effects_vol)
+            if self.effects_vol < 100:
+                self.effects_vol += 5
+                # self.effects_int += 1
+                self.menu_sound.set_volume(self.effects_vol/100)
+                self.menu_sound.play()
 
         def back_action():
             print('back')
@@ -140,6 +152,10 @@ class SettingsMenu(State):
         buttons.add(
             Button(520, 250, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
                    effects_action_up)
+        )
+        buttons.add(
+            Button(50, 50, 'BACK', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
+                back_action)
         )
 
         return buttons
@@ -175,13 +191,23 @@ class SettingsMenu(State):
                     self.change_button('down')
                 if event.key == pygame.K_RETURN:
                     self.handle_action()
+    
+    def draw_volumes(self, screen):
+        font = pygame.font.Font('fonts/Stardew_Valley.ttf', 40)
+        music_vol_render = font.render(repr(self.music_vol), True, self.default_color)
+        effects_vol_render = font.render(repr(self.effects_vol), True, self.default_color)
+        screen.blit(music_vol_render, (500, 160))
+        screen.blit(effects_vol_render, (500, 210))
 
     def draw(self):
         self.background.draw(self.screen)
         self.buttons.draw(self.screen)
-        for index, option in enumerate(self.menu_items):
-            text_render = self.render_text(index)
-            self.screen.blit(text_render, self.get_text_position(text_render, index))
+        self.menu_items.draw(self.screen)
+        self.draw_volumes(self.screen)
+
+        # for index, option in enumerate(self.menu_items):
+        #     text_render = self.render_text(index)
+        #     self.screen.blit(text_render, self.get_text_position(text_render, index))
 
     def update(self):
         self.buttons.update()
