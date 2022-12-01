@@ -172,23 +172,32 @@ class SettingsMenu(State):
 
     def draw_volumes(self, screen):
         font = pygame.font.Font('fonts/Stardew_Valley.ttf', 30)
+        # render fonts
         music_vol_render = font.render(
             repr(Settings.music_volume), True, self.default_color)
         effects_vol_render = font.render(
             repr(Settings.effects_volume), True, self.default_color)
-        if Settings.music_volume == 100:
-            screen.blit(music_vol_render, (500, 190))
-        elif 100 > Settings.music_volume > 9:
-            screen.blit(music_vol_render, (508, 190))
-        else:
-            screen.blit(music_vol_render, (513, 190))
+        
+        # get rects for blitting
+        music_vol_rect = music_vol_render.get_rect(center=(520, 205))
+        effects_vol_rect = effects_vol_render.get_rect(center=(520, 250))
+        
+        # blit renders to screen
+        screen.blit(music_vol_render, music_vol_rect)
+        screen.blit(effects_vol_render, effects_vol_rect)
+        # if Settings.music_volume == 100:
+        #     screen.blit(music_vol_render, (500, 190))
+        # elif 100 > Settings.music_volume > 9:
+        #     screen.blit(music_vol_render, (508, 190))
+        # else:
+        #     screen.blit(music_vol_render, (513, 190))
 
-        if Settings.effects_volume == 100:
-            screen.blit(effects_vol_render, (500, 235))
-        elif 100 > Settings.effects_volume > 9:
-            screen.blit(effects_vol_render, (508, 235))
-        else:
-            screen.blit(effects_vol_render, (513, 235))
+        # if Settings.effects_volume == 100:
+        #     screen.blit(effects_vol_render, (500, 235))
+        # elif 100 > Settings.effects_volume > 9:
+        #     screen.blit(effects_vol_render, (508, 235))
+        # else:
+        #     screen.blit(effects_vol_render, (513, 235))
 
     def draw(self):
         self.background.draw(self.screen)
