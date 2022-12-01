@@ -62,6 +62,7 @@ class SettingsMenu(State):
         pygame.mixer.music.load('music/runescape_dream.wav')
         pygame.mixer.music.set_volume(Settings.music_volume/100)
         # loops music
+
         pygame.mixer.music.play(-1)
 
     def get_screen(self) -> pygame.Surface:
@@ -175,8 +176,19 @@ class SettingsMenu(State):
             repr(Settings.music_volume), True, self.default_color)
         effects_vol_render = font.render(
             repr(Settings.effects_volume), True, self.default_color)
-        screen.blit(music_vol_render, (500, 190))
-        screen.blit(effects_vol_render, (500, 235))
+        if Settings.music_volume == 100:
+            screen.blit(music_vol_render, (500, 190))
+        elif 100 > Settings.music_volume > 9:
+            screen.blit(music_vol_render, (508, 190))
+        else:
+            screen.blit(music_vol_render, (513, 190))
+
+        if Settings.effects_volume == 100:
+            screen.blit(effects_vol_render, (500, 235))
+        elif 100 > Settings.effects_volume > 9:
+            screen.blit(effects_vol_render, (508, 235))
+        else:
+            screen.blit(effects_vol_render, (513, 235))
 
     def draw(self):
         self.background.draw(self.screen)
