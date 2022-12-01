@@ -87,6 +87,8 @@ class ButtonGroup:
     def add(self, button: Button):
         self.num_buttons += 1
         self.button_list.append(button)
+        if self.num_buttons == 1:
+            self.button_list[0].set_keyboard_hover(True)
 
     def draw(self, screen):
         for button in self.button_list:
