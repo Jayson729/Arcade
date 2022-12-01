@@ -1,191 +1,161 @@
+import sys
 import pygame
-import pygame.display
-import pygame.freetype
-import pygame.mixer
-from old_waterfall import Waterfall
 from state import State
+from cloud import Cloud
+from button import Button, ButtonGroup
+from sprite import Sprite, AnimatedSprite
+from settings import Settings
 
 
-# Initializes the main menu
-# Creates a screen for main menu
 class StartMenu(State):
-    def __init__(self):
-        super(StartMenu, self).__init__()
+    """Main class that calls everything else"""
+
+    def __init__(self, screen=None) -> None:
+        """Initializes StartMenu"""
+
+        # initialize pygame
+        pygame.mixer.pre_init(44100, -16, 1, 512)
+        pygame.mixer.init()
+        pygame.init()
+
+        # create game objects
+        self.img_path = 'images/start_menu/'
+        self.global_img_path = 'images/'
         self.clock = pygame.time.Clock()
-        self.fps = 60
-        self.clock.tick(self.fps)
-        pygame.display.set_caption("Arcade Games")
-        img_root = 'images/start_menu/'
-        pygame.display.set_icon(pygame.image.load(f'{img_root}main.png'))
+        self.screen = screen
+        if screen is None:
+            self.screen = self.get_screen()
+        pygame.display.set_caption('Start Menu')
+        pygame.display.set_icon(pygame.image.load(f'{self.global_img_path}main.png'))
+        self.create_game()
+        super().__init__()
+
+    def create_game(self):
+        self.background = self.get_background()
+        self.waterfall = self.get_waterfall()
+        self.clouds = self.get_clouds()
+        self.buttons = self.get_buttons()
+
         self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
-        self.menu_sound.set_volume(0.3)
+        self.menu_sound.set_volume(Settings.effects_volume/100)
+
         pygame.mixer.music.load('music/runescape_dream.wav')
+        pygame.mixer.music.set_volume(Settings.music_volume/100)
+        # loops music
         pygame.mixer.music.play(-1)
-        self.curr_index = 0
-        # Cloud movement items
-        self.move_1 = 0
-        self.move_2 = 0
-        self.move_3 = 0
-        self.move_4 = 0
-        self.move_5 = 0
-        self.move_6 = 0
-        self.change = [0.025, - 0.025]
-        self.menu_items = ["ENTER ARCADE", "SETTINGS", "CREDITS"]
-        self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 10)
-        self.large_cloud = pygame.image.load(
-            f"{img_root}large_cloud.png").convert_alpha()
-        self.small_right = pygame.image.load(
-            f"{img_root}small_right.png").convert_alpha()
-        self.small_left = pygame.image.load(
-            f"{img_root}small_left.png").convert_alpha()
-        self.background_img = pygame.transform.scale(
-            pygame.image.load(f"{img_root}backgroundMain.png"), (800, 600))
-        # Cloud y values from cloud_1 to small_cloud_2
-        self.list = [140, 190, 145, 190, 30, 50]
-        self.cloud_1 = self.transform_image(self.large_cloud, 650, 650)
-        self.cloud_2 = self.transform_image(self.large_cloud, 500, 450)
-        self.cloud_3 = self.transform_image(self.large_cloud, 800, 760)
-        self.cloud_4 = self.transform_image(self.large_cloud, 760, 760)
-        self.small_cloud_1 = self.transform_image(self.small_left, 150, 100)
-        self.small_cloud_2 = self.transform_image(self.small_right, 200, 170)
-        self.index = 0
-        self.y = 0
-        self.sprites = pygame.sprite.Group()
-        waterfall = Waterfall(390, 350)
-        self.sprites.add(waterfall)
 
-    def which_state(self, event):
-        for item in self.menu_items:
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_RETURN and item == "ENTER ARCADE":
-                    self.next_state = "ARCADE"
-                elif event.key == pygame.K_RETURN and item == "SETTINGS":
-                    self.next_state = "SETTINGS"
-                elif event.key == pygame.K_RETURN and item == "CREDITS":
-                    self.next_state = "ARCADE"
+    def get_waterfall(self):
+        waterfall = AnimatedSprite(
+            390, 350, f'{self.img_path}waterfall/', animation_speed=150)
+        waterfall.resize(60, 415)
+        return waterfall
 
-    def render_text(self, index):
-        if index == 0:
-            self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 50)
-        elif index == 1:
-            self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 40)
-        elif index == 2:
-            self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 30)
+    def get_screen(self) -> pygame.Surface:
+        """Returns a Surface to be used as a screen"""
+        screen = pygame.display.set_mode(
+            (Settings.window_width, Settings.window_height),
+            pygame.RESIZABLE
+        )
+        return screen
 
-        color = '#FFD921' if index == self.curr_index else '#DDA059'
-        return self.font.render(self.menu_items[index], True, color)
+    def get_background(self) -> Sprite:
+        """Creates background as Sprite"""
+        bg_image = pygame.image.load(f"{self.img_path}backgroundMain.png")
+        background = Sprite(0, 0, bg_image)
+        background.resize(800, 600)
+        return background
 
-    def get_text_position(self, text, index):
-        center = (self.screen_rect.topleft[0] + 410,
-                  self.screen_rect.topleft[1] + 125 + (index * 40))
-        return text.get_rect(center=center)
+    def get_clouds(self, sway_distance: float = 1.5,
+                   sway_speed: float = 0.025) -> pygame.sprite.Group:
+        """Creates a group of clouds"""
+        # load images
+        large_cloud_img = pygame.image.load(f'{self.img_path}large_cloud.png')
+        small_cloud_img = pygame.image.load(f'{self.img_path}small_cloud.png')
+        small_cloud_mirrored = pygame.transform.flip(
+            small_cloud_img, True, False)
 
-    def handle_action(self):
-        if self.curr_index == 0:
+        # add all clouds to a sprite group
+        clouds = pygame.sprite.Group()
+
+        clouds.add(Cloud(large_cloud_img, -170, 140,
+                   sway_distance, sway_speed).resize(650, 650))
+        clouds.add(Cloud(large_cloud_img, 500, 190,
+                   sway_distance, sway_speed).resize(500, 450))
+        clouds.add(Cloud(large_cloud_img, 380, 145,
+                   sway_distance, sway_speed).resize(800, 760))
+        clouds.add(Cloud(large_cloud_img, -290, 190,
+                   sway_distance, sway_speed).resize(760, 760))
+        clouds.add(Cloud(small_cloud_img, 525, 30,
+                   sway_distance, sway_speed).resize(150, 100))
+        clouds.add(Cloud(small_cloud_mirrored, 60, 50,
+                   sway_distance, sway_speed).resize(200, 170))
+
+        return clouds
+
+    def get_buttons(self) -> ButtonGroup:
+        """Creates a group of buttons"""
+        def arcade_action():
+            print('arcade')
             pygame.mixer.Channel(0).play(
-                pygame.mixer.Sound('sounds/arcade_door.wav'))
-        elif self.curr_index == 1:
+                pygame.mixer.Sound('sounds/arcade_door.wav')
+            )
+            # self.next_state = 'ARCADE'
+            # self.done = True
+
+        def settings_action():
+            print('settings')
+            self.next_state = 'SETTINGS'
             self.done = True
-        elif self.curr_index == 2:
+
+        def credits_action():
+            print('credits')
+            self.next_state = 'CREDITS'
             self.done = True
+        buttons = ButtonGroup()
+        buttons.add(Button(410, 125, 'ENTER ARCADE', pygame.font.Font(
+            'fonts/Stardew_Valley.ttf', 50), arcade_action))
+        buttons.add(Button(410, 165, 'SETTINGS', pygame.font.Font(
+            'fonts/Stardew_Valley.ttf', 40), settings_action))
+        buttons.add(Button(410, 205, 'CREDITS', pygame.font.Font(
+            'fonts/Stardew_Valley.ttf', 30), credits_action))
 
-    def get_event(self, event):
-        if event.type == pygame.QUIT:
-            self.quit = True
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_ESCAPE:
-                self.quit = True
-            if event.key == pygame.K_UP:
-                self.menu_sound.play()
-                if self.curr_index <= 0:
-                    self.curr_index = 2
-                elif self.curr_index == 2:
-                    self.curr_index = 1
-                else:
-                    self.curr_index = 0
-            elif event.key == pygame.K_w:
-                self.menu_sound.play()
-                if self.curr_index <= 0:
-                    self.curr_index = 2
-                elif self.curr_index == 2:
-                    self.curr_index = 1
-                else:
-                    self.curr_index = 0
-            elif event.key == pygame.K_DOWN:
-                self.menu_sound.play()
-                if self.curr_index == 0:
-                    self.curr_index = 1
-                elif self.curr_index >= 2:
-                    self.curr_index = 0
-                else:
-                    self.curr_index = 2
-            elif event.key == pygame.K_s:
-                self.menu_sound.play()
-                if self.curr_index == 0:
-                    self.curr_index = 1
-                elif self.curr_index >= 2:
-                    self.curr_index = 0
-                else:
-                    self.curr_index = 2
+        return buttons
 
-            elif event.key == pygame.K_RETURN:
-                self.handle_action()
+    def startup(self) -> None:
+        """Starts the game loop"""
+        while True:
+            self.draw()
+            self.update()
+            self.check_events()
+            # print(f"fps: {self.clock.get_fps()}")
 
-    def transform_image(self, image, scalex, scaley):
-        return pygame.transform.scale(image, (scalex, scaley))
+    def check_events(self) -> None:
+        """Accepts and deals with inputs"""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            self.buttons.do_event(event, self.menu_sound)
 
-    def update_count(self, count):
-        if count <= 0:
-            count += 0.25
+    def draw(self):
+        self.background.draw(self.screen)
+        self.waterfall.draw(self.screen)
+        self.clouds.draw(self.screen)
+        self.buttons.draw(self.screen)
 
-    def draw(self, screen):
-        screen.blit(self.background_img, (0, 0))
+    def update(self):
+        self.waterfall.update()
+        self.clouds.update()
+        self.buttons.update()
+        pygame.display.flip()
+        self.clock.tick(Settings.fps)
 
-        self.list[0] += self.move_1
-        if self.list[0] <= 137:
-            self.move_1 = self.change[0]
-        elif self.list[0] >= 140:
-            self.move_1 = self.change[1]
 
-        self.list[1] += self.move_2
-        if self.list[1] <= 187:
-            self.move_2 = self.change[0]
-        elif self.list[1] >= 190:
-            self.move_2 = self.change[1]
+def main() -> None:
+    """Main function"""
+    start_menu = StartMenu()
+    start_menu.startup()
 
-        self.list[2] += self.move_3
-        if self.list[2] <= 142:
-            self.move_3 = self.change[0]
-        elif self.list[2] >= 145:
-            self.move_3 = self.change[1]
 
-        self.list[3] += self.move_4
-        if self.list[3] <= 187:
-            self.move_4 = self.change[0]
-        elif self.list[3] >= 190:
-            self.move_4 = self.change[1]
-
-        self.list[4] += self.move_5
-        if self.list[4] <= 27:
-            self.move_5 = self.change[0]
-        elif self.list[4] >= 30:
-            self.move_5 = self.change[1]
-
-        self.list[5] += self.move_6
-        if self.list[5] <= 47:
-            self.move_6 = self.change[0]
-        elif self.list[5] >= 50:
-            self.move_6 = self.change[1]
-
-        self.sprites.draw(screen)
-        screen.blit(self.cloud_1, (-170, self.list[0]))
-        screen.blit(self.cloud_2, (500, self.list[1]))
-        screen.blit(self.cloud_3, (380, self.list[2]))
-        screen.blit(self.cloud_4, (-290, self.list[3]))
-        screen.blit(self.small_cloud_1, (525, self.list[4]))
-        screen.blit(self.small_cloud_2, (60, self.list[5]))
-        self.sprites.update()
-        for index, option in enumerate(self.menu_items):
-            text_render = self.render_text(index)
-            screen.blit(text_render, self.get_text_position(
-                text_render, index))
+if __name__ == '__main__':
+    main()
