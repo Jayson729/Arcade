@@ -137,6 +137,13 @@ class StartMenu(State):
             for b in self.buttons:
                 mouse = pygame.mouse.get_pos()
                 if b.check_mouse_hover(mouse):
+                    # if the mouse is hovered, 
+                    # set the keyboard hover for all buttons to false
+                    for b in self.buttons:
+                            b.set_keyboard_hover(False)
+
+                    # if the mouse if hovered, check for mouse press
+                    # if mouse press, do the button's action
                     if (event.type == pygame.MOUSEBUTTONDOWN
                             and event.button == 1):
                         b.do_action()
@@ -166,6 +173,12 @@ class StartMenu(State):
 
     def change_button(self, direction: str) -> None:
         """Changes the selected button and updates hover"""
+        # if the mouse is currently hovering a button,
+        # ignore all keyboard inputs
+        for b in self.buttons:
+            if b.currently_mouse_hovered:
+                return
+
         # plays click sound
         self.menu_sound.play()
 
