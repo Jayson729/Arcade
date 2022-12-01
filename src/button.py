@@ -102,11 +102,6 @@ class ButtonGroup:
             button.update()
 
     def change_button(self, direction: str, sound=None):
-        # if any button in the group is being hovered
-        # by the mouse don't do any actions
-        if not self.enable_keyboard:
-            return
-        
         # play sound
         if sound:
             sound.play()
@@ -144,13 +139,25 @@ class ButtonGroup:
 
     def do_event(self, event, sound=None):
         mouse = pygame.mouse.get_pos()
-        event_done = False
+        mouse_hovered = False
+        button_clicked = False
         for button in self.button_list:
-            if button.check_mouse_hover(mouse) and not event_done:
+            mouse_hovered = button.check_mouse_hover(mouse) or mouse_hovered
+            if mouse_hovered:
                 self.enable_keyboard = False
-                event_done = button.do_event(event)
-            else:
-                self.enable_keyboard = True
+                if not button_clicked:
+                    button_clicked = button.do_event(event)
+
+        # if the mouse is not hovering over a button, enable the keyboard
+        if not mouse_hovered:
+            self.enable_keyboard = True
+
+        # if any button in the group is being hovered
+        # by the mouse don't do any actions
+        if not self.enable_keyboard:
+            return
+
+        # handle changing buttons and doing actions
         if event.type == pygame.KEYDOWN:
             if event.key in (Settings.main_keybinding.up, Settings.alternate_keybinding.up):
                 self.change_button('up', sound)
