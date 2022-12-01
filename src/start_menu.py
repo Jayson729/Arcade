@@ -32,10 +32,14 @@ class StartMenu(State):
         self.change = [0.025, - 0.025]
         self.menu_items = ["ENTER ARCADE", "SETTINGS", "CREDITS"]
         self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 10)
-        self.large_cloud = pygame.image.load(f"{img_root}large_cloud.png").convert_alpha()
-        self.small_right = pygame.image.load(f"{img_root}small_right.png").convert_alpha()
-        self.small_left = pygame.image.load(f"{img_root}small_left.png").convert_alpha()
-        self.background_img = pygame.transform.scale(pygame.image.load(f"{img_root}backgroundMain.png"), (800, 600))
+        self.large_cloud = pygame.image.load(
+            f"{img_root}large_cloud.png").convert_alpha()
+        self.small_right = pygame.image.load(
+            f"{img_root}small_right.png").convert_alpha()
+        self.small_left = pygame.image.load(
+            f"{img_root}small_left.png").convert_alpha()
+        self.background_img = pygame.transform.scale(
+            pygame.image.load(f"{img_root}backgroundMain.png"), (800, 600))
         # Cloud y values from cloud_1 to small_cloud_2
         self.list = [140, 190, 145, 190, 30, 50]
         self.cloud_1 = self.transform_image(self.large_cloud, 650, 650)
@@ -72,12 +76,14 @@ class StartMenu(State):
         return self.font.render(self.menu_items[index], True, color)
 
     def get_text_position(self, text, index):
-        center = (self.screen_rect.topleft[0] + 410, self.screen_rect.topleft[1] + 125 + (index * 40))
+        center = (self.screen_rect.topleft[0] + 410,
+                  self.screen_rect.topleft[1] + 125 + (index * 40))
         return text.get_rect(center=center)
 
     def handle_action(self):
         if self.curr_index == 0:
-            pygame.mixer.Channel(0).play(pygame.mixer.Sound('sounds/arcade_door.wav'))
+            pygame.mixer.Channel(0).play(
+                pygame.mixer.Sound('sounds/arcade_door.wav'))
         elif self.curr_index == 1:
             self.done = True
         elif self.curr_index == 2:
@@ -181,4 +187,5 @@ class StartMenu(State):
         self.sprites.update()
         for index, option in enumerate(self.menu_items):
             text_render = self.render_text(index)
-            screen.blit(text_render, self.get_text_position(text_render, index))
+            screen.blit(text_render, self.get_text_position(
+                text_render, index))

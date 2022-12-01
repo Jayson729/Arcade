@@ -9,6 +9,7 @@ The self.screen here should be used for all games
 import pygame
 from state import State
 
+
 class Game:
     def __init__(self, screen, states, start_state):
         self.done = False
@@ -59,7 +60,5 @@ class Game:
             self.state.draw()
             self.state.update()
             self.state.check_events()
-            # pygame.display.update()
-            # self.clock.tick(self.fps)
             if self.state.done:
                 self.flip_state()

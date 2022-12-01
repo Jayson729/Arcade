@@ -6,6 +6,7 @@ are supposed to be finished
 
 import pygame
 
+
 class State:
     """Stores basic state information for every game"""
 

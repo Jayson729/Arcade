@@ -2,9 +2,9 @@ import sys
 import pygame
 from state import State
 from cloud import Cloud
-from button import Button
+from button import Button, ButtonGroup
 from sprite import Sprite, AnimatedSprite
-from settings import Settings, Colors
+from settings import Settings
 
 
 class SettingsMenu(State):
@@ -21,17 +21,18 @@ class SettingsMenu(State):
         # create game objects
         self.img_path = 'images/settings_menu/'
         self.global_path = 'images/start_menu/'
-        self.default_color = Colors.start_menu_text
+        self.default_color = Settings.settings_menu_text_color
+        self.default_font = Settings.settings_menu_font
         self.clock = pygame.time.Clock()
         self.screen = self.get_screen()
-        self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 40)
         # self.music_vol = 0.2
         self.music_vol = 20
         # self.effects_vol = 0.3
         self.effects_vol = 30
         # self.menu_items = {1: [self.music_int, self.effects_int], 2: ["MUSIC VOLUME", "EFFECTS VOLUME"]}
         pygame.display.set_caption('Settings')
-        pygame.display.set_icon(pygame.image.load(f'{self.global_path}main.png'))
+        pygame.display.set_icon(pygame.image.load(
+            f'{self.global_path}main.png'))
         self.create_game()
         super().__init__()
 
@@ -52,12 +53,10 @@ class SettingsMenu(State):
 
     #     return self.font.render(f'{self.menu_items[j]}', True, self.default_color)
 
-
     def create_game(self):
         self.background = self.get_background()
         self.buttons = self.get_buttons()
         self.menu_items = self.get_menu_items()
-        self.NUM_BUTTONS = len(self.buttons)
 
         self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
         self.menu_sound.set_volume(self.effects_vol/100)
@@ -67,14 +66,7 @@ class SettingsMenu(State):
         # loops music
         pygame.mixer.music.play(-1)
 
-        self.curr_index = 0
-
-        # starts first button as hovered
-        # first_sprite = self.buttons.sprites()[self.curr_index]
-        # first_sprite.set_keyboard_hover(True)
-
-    @staticmethod
-    def get_screen() -> pygame.Surface:
+    def get_screen(self) -> pygame.Surface:
         """Returns a Surface to be used as a screen"""
         screen = pygame.display.set_mode(
             (Settings.window_width, Settings.window_height),
@@ -83,20 +75,23 @@ class SettingsMenu(State):
         return screen
 
     def get_menu_items(self):
-        font = pygame.font.Font('fonts/Stardew_Valley.ttf', 30)
+        font = pygame.font.Font(self.default_font, 30)
         menu_items = pygame.sprite.Group()
-        menu_items.add(Sprite(280, 190, font.render('MUSIC VOLUME', True, self.default_color)))
-        menu_items.add(Sprite(280, 240, font.render('EFFECTS VOLUME', True, self.default_color)))
+        menu_items.add(Sprite(280, 190, font.render(
+            'MUSIC VOLUME', True, self.default_color)))
+        menu_items.add(Sprite(280, 240, font.render(
+            'EFFECTS VOLUME', True, self.default_color)))
         return menu_items
 
     def get_background(self) -> Sprite:
         """Creates background as Sprite"""
-        bg_image = pygame.image.load(f"{self.img_path}settings_menu_background.png")
+        bg_image = pygame.image.load(
+            f"{self.img_path}settings_menu_background.png")
         background = Sprite(0, 0, bg_image)
         background.resize(800, 600)
         return background
 
-    def get_buttons(self) -> pygame.sprite.Group:
+    def get_buttons(self) -> ButtonGroup:
         """Creates a group of buttons"""
 
         def music_action_down():
@@ -136,7 +131,7 @@ class SettingsMenu(State):
             self.next_state = 'START'
             self.done = True
 
-        buttons = pygame.sprite.Group()
+        buttons = ButtonGroup()
         buttons.add(
             Button(500, 205, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
                    music_action_down).rotate(180)
@@ -155,7 +150,7 @@ class SettingsMenu(State):
         )
         buttons.add(
             Button(50, 50, 'BACK', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
-                back_action)
+                   back_action)
         )
 
         return buttons
@@ -166,7 +161,6 @@ class SettingsMenu(State):
             self.draw()
             self.update()
             self.check_events()
-            # self.clock.tick(Settings.fps)
             # print(f"fps: {self.clock.get_fps()}")
 
     def check_events(self) -> None:
@@ -175,27 +169,14 @@ class SettingsMenu(State):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            for b in self.buttons:
-                mouse = pygame.mouse.get_pos()
-                if b.check_mouse_hover(mouse):
-                    if (event.type == pygame.MOUSEBUTTONDOWN
-                            and event.button == 1):
-                        b.do_action()
-                        # if clicking multiple buttons,
-                        # only do one action
-                        break
-            if event.type == pygame.KEYDOWN:
-                if event.key in (pygame.K_UP, pygame.K_w):
-                    self.change_button('up')
-                if event.key in (pygame.K_DOWN, pygame.K_s):
-                    self.change_button('down')
-                if event.key == pygame.K_RETURN:
-                    self.handle_action()
-    
+            self.buttons.do_event(event)
+
     def draw_volumes(self, screen):
         font = pygame.font.Font('fonts/Stardew_Valley.ttf', 40)
-        music_vol_render = font.render(repr(self.music_vol), True, self.default_color)
-        effects_vol_render = font.render(repr(self.effects_vol), True, self.default_color)
+        music_vol_render = font.render(
+            repr(self.music_vol), True, self.default_color)
+        effects_vol_render = font.render(
+            repr(self.effects_vol), True, self.default_color)
         screen.blit(music_vol_render, (500, 160))
         screen.blit(effects_vol_render, (500, 210))
 
@@ -205,39 +186,10 @@ class SettingsMenu(State):
         self.menu_items.draw(self.screen)
         self.draw_volumes(self.screen)
 
-        # for index, option in enumerate(self.menu_items):
-        #     text_render = self.render_text(index)
-        #     self.screen.blit(text_render, self.get_text_position(text_render, index))
-
     def update(self):
         self.buttons.update()
         pygame.display.flip()
         self.clock.tick(Settings.fps)
-
-    def change_button(self, direction: str) -> None:
-        """Changes the selected button and updates hover"""
-        # plays click sound
-        self.menu_sound.play()
-
-        # sets current button to not hovered
-        cur_sprite = self.buttons.sprites()[self.curr_index]
-        cur_sprite.set_keyboard_hover(False)
-
-        # changes button
-        if direction == 'up':
-            self.curr_index = (self.curr_index - 1) % self.NUM_BUTTONS
-        else:
-            self.curr_index = (self.curr_index + 1) % self.NUM_BUTTONS
-
-        # sets new button to hovered
-        cur_sprite = self.buttons.sprites()[self.curr_index]
-        cur_sprite.set_keyboard_hover(True)
-
-    def handle_action(self) -> None:
-        """Handles button actions for keyboard"""
-        # does action for current button
-        cur_button = self.buttons.sprites()[self.curr_index]
-        cur_button.do_action()
 
 
 def main() -> None:
@@ -248,4 +200,3 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
-

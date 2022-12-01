@@ -7,11 +7,12 @@ go in different directions toward the player
 import random
 from player import AnimatedPlayer
 
+
 class Ghost(AnimatedPlayer):
     def __init__(self, x: int, y: int,
-            base_path: str,
-            move_speed: float=2.0, animation_speed: float=150,
-            color=None) -> None:
+                 base_path: str,
+                 move_speed: float = 2.0, animation_speed: float = 150,
+                 color=None) -> None:
         # first, calls super with all animations and sets instance variables
         super().__init__(x, y, base_path, move_speed, animation_speed, color)
         self.split_add_animations()
@@ -42,7 +43,7 @@ class Ghost(AnimatedPlayer):
         # for now, random movements
         # in the future, I want to implement DFS toward pacman
         direction = (self.current_animation
-            if self.current_animation != 'base' else random.choice(list(movements.keys())))
+                     if self.current_animation != 'base' else random.choice(list(movements.keys())))
         self.temp_timer += 1
         if self.temp_timer >= 25:
             direction = random.choice(list(movements.keys()))

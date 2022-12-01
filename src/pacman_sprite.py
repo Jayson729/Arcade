@@ -5,11 +5,13 @@ Switch to pacman death when you touch a ghost
 """
 
 from player import AnimatedPlayer
+
+
 class PacmanSprite(AnimatedPlayer):
     def __init__(self, x: int, y: int,
-            base_path: str, death_path: str,
-            move_speed: float=2.0, animation_speed: float=100,
-            color=None) -> None:
+                 base_path: str, death_path: str,
+                 move_speed: float = 2.0, animation_speed: float = 100,
+                 color=None) -> None:
         super().__init__(x, y, base_path, move_speed, animation_speed, color=color)
         self.add_animation('death', death_path, animation_speed*.3)
 

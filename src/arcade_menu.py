@@ -28,6 +28,7 @@ person2Img = pygame.image.load(f'{img_root}/people_sprite2.png')
 person2 = Sprite(person2Img, 700, 200)
 person2.resize(100.7, 189.2)
 
+
 def cabinetScreen(x, y, width, height, color):
     pygame.draw.rect(gameDisplay, color, (x, y, width, height))
 
@@ -37,12 +38,14 @@ def cabinetScreen(x, y, width, height, color):
 # def person2(x,y):
 #     gameDisplay.blit(person2.image, (x, y))
 
+
 def textObjects(text, font):
     textSurface = font.render(text, True, white_color)
     return textSurface, textSurface.get_rect()
 
+
 def messageDisplay(text):
-    # TO DO: Basically what I want to do is make it so once you hover it shows 
+    # TO DO: Basically what I want to do is make it so once you hover it shows
     # the title and a brief description as a text box on the bottom of the screen
     largeText = pygame.font.Font('freesansbold.ttf', 115)
     TextSurf, TextRect = textObjects(text, largeText)
@@ -51,8 +54,10 @@ def messageDisplay(text):
 
     pygame.display.update()
 
+
 def gameHover():
     messageDisplay('Pong')
+
 
 def game_loop():
 
@@ -60,7 +65,7 @@ def game_loop():
     x2 = 700
     y1 = (display_height * 0.7)
     y2 = 200
-    
+
     cabinetScreenStartX = 150
     cabinetScreenStartY = 300
     cabinetScreenWidth = 100
@@ -76,16 +81,17 @@ def game_loop():
                 pygame.quit()
                 quit()
 
-
         gameDisplay.fill(black_color)
 
         mouse = pygame.mouse.get_pos()
 
         if cabinetScreenStartX + cabinetScreenWidth > mouse[0] > cabinetScreenStartX and cabinetScreenStartY + cabinetScreenHeight > mouse[1] > cabinetScreenStartY:
-            cabinetScreen(cabinetScreenStartX, cabinetScreenStartY, cabinetScreenWidth, cabinetScreenHeight, light_blue_color)
+            cabinetScreen(cabinetScreenStartX, cabinetScreenStartY,
+                          cabinetScreenWidth, cabinetScreenHeight, light_blue_color)
         else:
-            cabinetScreen(cabinetScreenStartX, cabinetScreenStartY, cabinetScreenWidth, cabinetScreenHeight, white_color)
-        
+            cabinetScreen(cabinetScreenStartX, cabinetScreenStartY,
+                          cabinetScreenWidth, cabinetScreenHeight, white_color)
+
         gameDisplay.blit(person1.image, (x1, y1))
         gameDisplay.blit(person2.image, (x2, y2))
 
@@ -108,10 +114,12 @@ def game_loop():
         pygame.display.update()
         clock.tick(60)
 
+
 def main():
     game_loop()
     pygame.quit()
     quit()
+
 
 if __name__ == '__main__':
     main()

@@ -25,8 +25,8 @@ class PauseMenu(State):
         self.curr_index = 0
         self.menu_items = ["RESUME", "SETTINGS", "QUIT GAME"]
         img_root = 'images/pause_menu/'
-        self.background_img = pygame.transform.scale(pygame.image.load(f"{img_root}Myproject-1.png"), (800, 600))
-
+        self.background_img = pygame.transform.scale(
+            pygame.image.load(f"{img_root}Myproject-1.png"), (800, 600))
 
     def which_state(self, event):
         for item in self.menu_items:
@@ -37,7 +37,7 @@ class PauseMenu(State):
                     self.next_state = "SETTINGS"
                 elif event.key == pygame.K_RETURN and item == "QUIT GAME":
                     self.next_state = "QUIT GAME"
-          
+
     def render_text(self, index):
         if index == 0:
             self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 50)
@@ -50,7 +50,8 @@ class PauseMenu(State):
         return self.font.render(self.menu_items[index], True, color)
 
     def get_text_position(self, text, index):
-        center = (self.screen_rect.topleft[0] + 410, self.screen_rect.topleft[1] + 125 + (index * 40))
+        center = (self.screen_rect.topleft[0] + 410,
+                  self.screen_rect.topleft[1] + 125 + (index * 40))
         return text.get_rect(center=center)
 
     def handle_action(self):
@@ -59,8 +60,8 @@ class PauseMenu(State):
         elif self.curr_index == 1:
             self.done = True
         elif self.curr_index == 2:
-            self.done = True 
-        
+            self.done = True
+
     def get_event(self, event):
         if event.type == pygame.QUIT:
             self.quit = True
@@ -114,7 +115,9 @@ class PauseMenu(State):
         screen.blit(self.background_img, (0, 0))
         for index, option in enumerate(self.menu_items):
             text_render = self.render_text(index)
-            screen.blit(text_render, self.get_text_position(text_render, index))
+            screen.blit(text_render, self.get_text_position(
+                text_render, index))
+
 
 def main():
     pygame.init()
@@ -122,6 +125,7 @@ def main():
     game = Game(screen, {'PAUSE': PauseMenu()}, 'PAUSE')
     game.run()
     PauseMenu()
+
 
 if __name__ == '__main__':
     main()

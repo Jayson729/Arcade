@@ -8,48 +8,47 @@ that you can select between
 """
 
 import pygame
-# TODO: make these more general to be used in
-# all games
-# maybe something like this?
-# class Settings:
-#     def __init__(self, window_width=800, window_height=600,
-#               aspect_ratio=4/3, fps=60, fonts=None, colors=None):
-#         self.window_width = window_width
-#         self.window_height = window_height
-#         self.aspect_ratio = aspect_ratio
-#         self.fps = fps
-#         self.fonts = self.default_fonts if fonts is None else fonts
-#         self.colors = self.default_colors if colors is None else colors
+from enum import Enum
+
+
+class Keybinding:
+    def __init__(self, up, down, left, right, escape, enter):
+        self.up = up
+        self.down = down
+        self.left = left
+        self.right = right
+        self.escape = escape
+        self.enter = enter
+
 
 class Settings:
-    """Stores settings for Pong"""
+    # global
     fps = 60
+    resolutions = [(800, 600), (160, 120), (256, 192), (320, 240),
+                   (320, 240), (640, 480), (960, 720), (1024, 768),
+                   (1152, 864), (1280, 960)]
     aspect_ratio = 4/3
-    window_width = 800
-    window_height = 600
+    window_size = resolutions[0]
+    window_width = window_size[0]
+    window_height = window_size[1]
+    main_keybinding = Keybinding(
+        pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_ESCAPE, pygame.K_RETURN
+    )
+    alternate_keybinding = Keybinding(
+        pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_ESCAPE, pygame.K_RETURN
+    )
+
+    # pong
     player_buffer = 40
-
-
-class Fonts:
-    def __init__(self):
-        """Stores fonts for Pong"""
-        self.score_font = pygame.font.Font(None, 50)
-        self.pause_font = pygame.font.Font(None, 150)
-        self.start_menu_font = 'fonts/Stardew_Valley.ttf'
-
-
-class Colors:
-    """Stores colors for Pong"""
     background_color = pygame.Color('turquoise4')
     light_grey = (200, 200, 200)
-    start_menu_text = '#DDA059'
-    start_menu_text_hover = '#FFD921'
 
-# class Sounds:
-#     pygame.mixer.init()
-#     start_menu_sound = pygame.mixer.Sound('sounds/click.wav')
-#     start_menu_sound.set_volume(0.3)
+    # start menu
+    start_menu_font = 'fonts/Stardew_Valley.ttf'
+    start_menu_text_color = '#DDA059'
+    start_menu_hover_text_color = '#FFD921'
 
-# class Music:
-#     pygame.mixer.init()
-#     start_menu_music = pygame.mixer.music.load('music/runescape_dream.wav')
+    # settings menu
+    settings_menu_font = 'fonts/Stardew_Valley.ttf'
+    settings_menu_text_color = '#DDA059'
+    settings_menu_hover_text_color = '#FFD921'

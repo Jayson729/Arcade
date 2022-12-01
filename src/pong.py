@@ -3,20 +3,21 @@ import sys
 import random
 import pygame
 from player import StaticPlayer
-from settings import Settings, Colors, Fonts
 from state import State
+from settings import Settings
+
 
 class Ball(StaticPlayer):
     """Handles all ball movements and scoring"""
 
     def __init__(self, x: int, y: int, img: pygame.Surface,
-                move_speed: int = 15,
-                color: pygame.Color = pygame.Color(0, 0, 0),
-                paddles: pygame.sprite.Group = None) -> None:
+                 move_speed: int = 15,
+                 color: pygame.Color = pygame.Color(0, 0, 0),
+                 paddles: pygame.sprite.Group = None) -> None:
         """Initializes Ball"""
         super().__init__(x, y, img, move_speed, color)
         self.movement = (self.move_speed * random.choice((-1, 1)),
-            self.move_speed * random.choice((-1, 1)))
+                         self.move_speed * random.choice((-1, 1)))
         self.paddles = paddles
 
     def do_movement(self) -> None:
@@ -70,7 +71,7 @@ class Ball(StaticPlayer):
         self.rect.center = (Settings.window_width//2,
                             Settings.window_height//2)
         self.movement = (self.move_speed * random.choice((-1, 1)),
-            self.move_speed * random.choice((-1, 1)))
+                         self.move_speed * random.choice((-1, 1)))
 
     def update_score(self) -> None:
         """updates player score and resets ball to middle"""
@@ -120,9 +121,9 @@ class Paddle(StaticPlayer):
     """Controls all player movements"""
 
     def __init__(self, x: int, y: int, img: pygame.Surface, side: str,
-                move_speed: int = 10,
-                color: pygame.Color = pygame.Color(0, 0, 0),
-                score: int = 0) -> None:
+                 move_speed: int = 10,
+                 color: pygame.Color = pygame.Color(0, 0, 0),
+                 score: int = 0) -> None:
         """Initializes Player"""
         super().__init__(x, y, img, move_speed, color)
         self.score = score
@@ -152,9 +153,10 @@ class Paddle(StaticPlayer):
 
 class Opponent(Paddle):
     """AI for pong"""
+
     def __init__(self, x: int, y: int, img: pygame.Surface, side: str,
-            move_speed: int = 10, color: pygame.Color = pygame.Color(0, 0, 0),
-            score: int = 0) -> None:
+                 move_speed: int = 10, color: pygame.Color = pygame.Color(0, 0, 0),
+                 score: int = 0) -> None:
         super().__init__(x, y, img, side, move_speed, color, score)
 
     def get_direction(self, balls) -> str:
@@ -165,6 +167,7 @@ class Opponent(Paddle):
             return 'up'
         return 'stop'
 
+
 class Pong(State):
     def __init__(self, p1=Paddle, p2=Paddle):
         # initialize pygame
@@ -173,7 +176,6 @@ class Pong(State):
         pygame.init()
 
         # create game objects
-        self.fonts = Fonts()
         self.img_path = 'images/pong/'
         self.clock = pygame.time.Clock()
         self.screen = self.get_screen()
@@ -181,8 +183,7 @@ class Pong(State):
         self.create_game(p1, p2)
         super().__init__()
 
-    @staticmethod
-    def get_screen() -> pygame.Surface:
+    def get_screen(self) -> pygame.Surface:
         screen = pygame.display.set_mode(
             (Settings.window_width, Settings.window_height),
             pygame.RESIZABLE
@@ -215,15 +216,15 @@ class Pong(State):
         paddles = pygame.sprite.Group()
         for side, settings in paddle_settings.items():
             paddle = settings['type'](settings['coords'][0],
-                settings['coords'][1], paddle_img,
-                side, color=settings['color']
-            )
+                                      settings['coords'][1], paddle_img,
+                                      side, color=settings['color']
+                                      )
             paddle.resize(20, 160)
             paddles.add(paddle)
 
         return paddles
 
-    def get_balls(self, num_balls: int=1) -> pygame.sprite.Group:
+    def get_balls(self, num_balls: int = 1) -> pygame.sprite.Group:
         ball_img = pygame.image.load(f'{self.img_path}ball1.png')
         balls = pygame.sprite.Group()
         for i in range(num_balls):
@@ -251,8 +252,9 @@ class Pong(State):
                 sys.exit()
 
     def draw_scores(self) -> None:
+        score_font = pygame.font.Font(None, 50)
         for p in self.paddles:
-            score_text = self.fonts.score_font.render(
+            score_text = score_font.render(
                 f'{p.score}',
                 False,
                 'grey67'
@@ -273,8 +275,9 @@ class Pong(State):
             self.win_game(win)
 
     def win_game(self, winner):
+        pause_font = pygame.font.Font(None, 150)
         p_num = 1 if winner.side == 'left' else 2
-        win_text = self.fonts.pause_font.render(
+        win_text = pause_font.render(
             f'Player {p_num} wins!', False, 'grey67'
         )
         self.screen.blit(win_text, (0, Settings.window_height//2))
@@ -286,10 +289,10 @@ class Pong(State):
         return None
 
     def draw(self) -> None:
-        self.screen.fill(Colors.background_color)
+        self.screen.fill(Settings.background_color)
         pygame.draw.aaline(
             self.screen,
-            Colors.light_grey,
+            Settings.light_gray,
             (Settings.window_width//2, 0),
             (Settings.window_width//2, Settings.window_height)
         )
@@ -306,7 +309,6 @@ class Pong(State):
         # self.update_scores()
         pygame.display.flip()
         self.clock.tick(Settings.fps)
-
 
     # def run_game(self) -> None:
     #     # fill background
@@ -329,7 +331,6 @@ class Pong(State):
     #     # update game objects
     #     self.players.update(self.balls)
     #     self.balls.update()
-
 
 
 # """ Runs all parts of the game, including

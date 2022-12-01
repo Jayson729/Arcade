@@ -13,6 +13,7 @@ from state import State
 from settings import Settings
 from ghost import Ghost
 
+
 class Pacman(State):
 
     def __init__(self):
@@ -47,9 +48,9 @@ class Pacman(State):
 
     def get_pacman(self):
         return PacmanSprite(600, 400,
-            f'{self.img_path}yellow_pacman/',
-            f'{self.img_path}pacman_death/',
-        )
+                            f'{self.img_path}yellow_pacman/',
+                            f'{self.img_path}pacman_death/',
+                            )
 
     def get_ghosts(self):
         ghosts = pygame.sprite.Group()
@@ -99,9 +100,11 @@ class Pacman(State):
         pygame.display.flip()
         self.clock.tick(Settings.fps)
 
+
 def main() -> None:
     pacman = Pacman()
     pacman.startup()
+
 
 if __name__ == '__main__':
     main()

@@ -1,6 +1,7 @@
 import pygame
 from sprite import Sprite
-from settings import Fonts, Colors
+from settings import Settings
+
 
 class Button(Sprite):
     """Button class that works with keyboard and mouse"""
@@ -8,9 +9,8 @@ class Button(Sprite):
     def __init__(self, x: int, y: int, text, font, action, color=None, hover_color=None, center=True) -> None:
         """Initializes Button"""
         # set defaults
-        # self.fonts = Fonts()
-        default_color = Colors.start_menu_text
-        default_hover_color = Colors.start_menu_text_hover
+        default_color = '#DDA059'
+        default_hover_color = '#FFD921'
 
         # set instance variables
         self.color = default_color if color is None else color
@@ -28,7 +28,7 @@ class Button(Sprite):
         # call super with rendered font
         super().__init__(x, y, self.font_render)
 
-        #center button
+        # center button
         if center:
             self.rect.center = (x, y)
 
@@ -47,16 +47,16 @@ class Button(Sprite):
     def update(self) -> None:
         """Updates button"""
         self.currently_hovered = (self.currently_keyboard_hovered
-            or self.currently_mouse_hovered)
-        
+                                  or self.currently_mouse_hovered)
+
         changed = False
         if self.currently_hovered:
-            #re-render font to hover
+            # re-render font to hover
             self.font_render = self.font.render(
                 self.text, True, self.hover_color)
             changed = True
         elif not self.currently_hovered:
-            #re-render font to not hovered
+            # re-render font to not hovered
             self.font_render = self.font.render(
                 self.text, True, self.color)
             changed = True
@@ -68,3 +68,87 @@ class Button(Sprite):
     def do_action(self) -> None:
         """Another way to call b.action()"""
         self.action()
+
+    def do_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            self.do_action()
+            return True
+        else:
+            return False
+
+
+class ButtonGroup:
+    def __init__(self):
+        self.button_list: list[Button] = []
+        self.num_buttons = 0
+        self.current_button_index = 0
+        self.enable_keyboard = True
+
+    def add(self, button: Button):
+        self.num_buttons += 1
+        self.button_list.append(button)
+
+    def draw(self, screen):
+        for button in self.button_list:
+            button.draw(screen)
+
+    def update(self):
+        if not self.enable_keyboard:
+            for button in self.button_list:
+                button.currently_keyboard_hovered = False
+        for button in self.button_list:
+            button.update()
+
+    def change_button(self, direction: str):
+        # if any button in the group is being hovered
+        # by the mouse don't do any actions
+        if not self.enable_keyboard:
+            return
+
+        # sets current button to not hovered
+        self.button_list[self.current_button_index].set_keyboard_hover(False)
+
+        # changes button
+        if direction == 'up':
+            self.current_button_index = (
+                self.current_button_index - 1) % self.num_buttons
+        elif direction == 'down':
+            self.current_button_index = (
+                self.current_button_index + 1) % self.num_buttons
+
+        # sets new button to hovered
+        self.button_list[self.current_button_index].set_keyboard_hover(True)
+
+    def do_action(self):
+        self.button_list[self.current_button_index].do_action()
+
+    @staticmethod
+    def get_direction() -> str:
+        direction = None
+        keys = pygame.key.get_pressed()
+        if keys[Settings.main_keybinding.up] or keys[Settings.alternate_keybinding.up]:
+            direction = 'up'
+        elif keys[Settings.main_keybinding.down] or keys[Settings.alternate_keybinding.down]:
+            direction = 'down'
+        return direction
+
+    def do_movement(self):
+        if (direction := self.get_direction()) is not None:
+            self.change_button(direction)
+
+    def do_event(self, event):
+        mouse = pygame.mouse.get_pos()
+        event_done = False
+        for button in self.button_list:
+            if button.check_mouse_hover(mouse) and not event_done:
+                self.enable_keyboard = False
+                event_done = button.do_event(event)
+            else:
+                self.enable_keyboard = True
+        if event.type == pygame.KEYDOWN:
+            if event.key in (Settings.main_keybinding.up, Settings.alternate_keybinding.up):
+                self.change_button('up')
+            elif event.key in (Settings.main_keybinding.down, Settings.alternate_keybinding.down):
+                self.change_button('down')
+            elif event.key == Settings.main_keybinding.enter:
+                self.do_action()

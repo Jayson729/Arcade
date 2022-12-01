@@ -1,6 +1,7 @@
 import os
 import pygame
 
+
 class Sprite(pygame.sprite.Sprite):
     def __init__(self, x, y, img, color=None):
         super().__init__()
@@ -116,7 +117,8 @@ class AnimatedSprite(Sprite):
             files[file_name] = file_extension
 
         for file_name in sorted(files, key=int):
-            img = pygame.image.load(f'{path}/{file_name}{files[file_name]}').convert_alpha()
+            img = pygame.image.load(
+                f'{path}/{file_name}{files[file_name]}').convert_alpha()
             images.append(img)
 
         return images
@@ -135,7 +137,8 @@ class AnimatedSprite(Sprite):
         all_images = self.animations[name]
 
         # split into right=0, down=1, left=2, up=3
-        split_images = self.split_list(list(all_images), len(all_images)//num_animations)
+        split_images = self.split_list(
+            list(all_images), len(all_images)//num_animations)
 
         return split_images
 
@@ -161,19 +164,19 @@ class AnimatedSprite(Sprite):
 
     def rotate(self, degrees):
         self.images = [pygame.transform.rotate(i, degrees)
-            for i in self.animations[self.current_animation]]
+                       for i in self.animations[self.current_animation]]
         self.image = self.images[self.current_sprite]
         self.rect = self.image.get_rect(topleft=self.rect.topleft)
         return self
 
-    def add_animation(self, name: str, folder_path: str, animation_speed: float=None):
+    def add_animation(self, name: str, folder_path: str, animation_speed: float = None):
         if animation_speed is None:
             animation_speed = self.animation_speed
         self.original_animations[name] = self.get_images(folder_path)
         self.animations[name] = self.original_animations[name]
         self.animation_speeds[name] = animation_speed
 
-    def add_animation_w_images(self, name: str, images: list, animation_speed: float=None):
+    def add_animation_w_images(self, name: str, images: list, animation_speed: float = None):
         if animation_speed is None:
             animation_speed = self.animation_speed
         self.original_animations[name] = images

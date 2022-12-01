@@ -7,6 +7,7 @@ from pong import Pong
 from game import Game
 from pacman import Pacman
 from settings_menu import SettingsMenu
+from settings import Settings
 
 
 pygame.init()
