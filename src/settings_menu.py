@@ -20,7 +20,7 @@ class SettingsMenu(State):
 
         # create game objects
         self.img_path = 'images/settings_menu/'
-        self.global_path = 'images/start_menu/'
+        self.global_path = 'images/'
         self.default_color = Settings.settings_menu_text_color
         self.default_font = Settings.settings_menu_font
         self.clock = pygame.time.Clock()

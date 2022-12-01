@@ -20,10 +20,11 @@ class StartMenu(State):
 
         # create game objects
         self.img_path = 'images/start_menu/'
+        self.global_img_path = 'images/'
         self.clock = pygame.time.Clock()
         self.screen = self.get_screen()
         pygame.display.set_caption('Start Menu')
-        pygame.display.set_icon(pygame.image.load(f'{self.img_path}main.png'))
+        pygame.display.set_icon(pygame.image.load(f'{self.global_img_path}main.png'))
         self.create_game()
         super().__init__()
 
