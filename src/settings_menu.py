@@ -172,27 +172,15 @@ class SettingsMenu(State):
             self.buttons.do_event(event)
 
     def draw_volumes(self, screen):
+        font = pygame.font.Font('fonts/Stardew_Valley.ttf', 30)
+        music_vol_render = font.render(
+            repr(self.music_vol), True, self.default_color)
+        effects_vol_render = font.render(
+            repr(self.effects_vol), True, self.default_color)
+        screen.blit(music_vol_render, (500, 190))
+        screen.blit(effects_vol_render, (500, 235))
 
-
-<< << << < HEAD
-   font = pygame.font.Font('fonts/Stardew_Valley.ttf', 40)
-    music_vol_render = font.render(
-        repr(self.music_vol), True, self.default_color)
-    effects_vol_render = font.render(
-        repr(self.effects_vol), True, self.default_color)
-    screen.blit(music_vol_render, (500, 160))
-    screen.blit(effects_vol_render, (500, 210))
-== == == =
-   font = pygame.font.Font('fonts/Stardew_Valley.ttf', 30)
-    music_vol_render = font.render(
-        repr(self.music_vol), True, self.default_color)
-    effects_vol_render = font.render(
-        repr(self.effects_vol), True, self.default_color)
-    screen.blit(music_vol_render, (500, 190))
-    screen.blit(effects_vol_render, (500, 235))
->>>>>> > 0cbf802516a40babc8fff2d1b6b369cf131956e9
-
-   def draw(self):
+    def draw(self):
         self.background.draw(self.screen)
         self.buttons.draw(self.screen)
         self.menu_items.draw(self.screen)
