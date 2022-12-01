@@ -133,23 +133,23 @@ class SettingsMenu(State):
 
         buttons = ButtonGroup()
         buttons.add(
-            Button(500, 205, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
+            Button(490, 205, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
                    music_action_down).rotate(180)
         )
         buttons.add(
-            Button(520, 205, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
+            Button(550, 205, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
                    music_action_up)
         )
         buttons.add(
-            Button(500, 250, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
+            Button(490, 250, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
                    effects_action_down).rotate(180)
         )
         buttons.add(
-            Button(520, 250, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
+            Button(550, 250, '>', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
                    effects_action_up)
         )
         buttons.add(
-            Button(50, 50, 'BACK', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
+            Button(50, 575, 'BACK', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
                    back_action)
         )
 
@@ -172,15 +172,27 @@ class SettingsMenu(State):
             self.buttons.do_event(event)
 
     def draw_volumes(self, screen):
-        font = pygame.font.Font('fonts/Stardew_Valley.ttf', 40)
-        music_vol_render = font.render(
-            repr(self.music_vol), True, self.default_color)
-        effects_vol_render = font.render(
-            repr(self.effects_vol), True, self.default_color)
-        screen.blit(music_vol_render, (500, 160))
-        screen.blit(effects_vol_render, (500, 210))
 
-    def draw(self):
+
+<< << << < HEAD
+   font = pygame.font.Font('fonts/Stardew_Valley.ttf', 40)
+    music_vol_render = font.render(
+        repr(self.music_vol), True, self.default_color)
+    effects_vol_render = font.render(
+        repr(self.effects_vol), True, self.default_color)
+    screen.blit(music_vol_render, (500, 160))
+    screen.blit(effects_vol_render, (500, 210))
+== == == =
+   font = pygame.font.Font('fonts/Stardew_Valley.ttf', 30)
+    music_vol_render = font.render(
+        repr(self.music_vol), True, self.default_color)
+    effects_vol_render = font.render(
+        repr(self.effects_vol), True, self.default_color)
+    screen.blit(music_vol_render, (500, 190))
+    screen.blit(effects_vol_render, (500, 235))
+>>>>>> > 0cbf802516a40babc8fff2d1b6b369cf131956e9
+
+   def draw(self):
         self.background.draw(self.screen)
         self.buttons.draw(self.screen)
         self.menu_items.draw(self.screen)
