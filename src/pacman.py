@@ -77,12 +77,15 @@ class Pacman(State):
             # self.clock.tick(Settings.fps)
             # print(f"fps: {self.clock.get_fps()}")
 
-    @staticmethod
-    def check_events():
+    def check_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key in (Settings.main_keybinding.escape, Settings.alternate_keybinding.escape):
+                    self.next_state = 'PAUSE'
+                    self.done = True
 
     def draw(self) -> None:
         # self.screen.blit(self.background.image, (0, 0))

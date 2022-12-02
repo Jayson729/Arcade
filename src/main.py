@@ -8,6 +8,7 @@ from game import Game
 from pacman import Pacman
 from settings_menu import SettingsMenu
 from settings import Settings
+from pause_menu import PauseMenu
 
 
 pygame.init()
@@ -21,7 +22,7 @@ states = {
     # "CREDITS" : Credits(),
     "SETTINGS": SettingsMenu,
     'CREDITS': Pacman,
-
+    'PAUSE': PauseMenu,
 }
 
 game = Game(screen, states, "START")

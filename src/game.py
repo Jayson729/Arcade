@@ -28,8 +28,9 @@ class Game:
     def flip_state(self):
         next_state = self.state.next_state
         self.state_name = next_state
-        # persistent = self.state.persist
+        # persistent = self.state.persist.pop()
         pygame.mixer.music.stop()
+        # self.state = self.states[persistent](screen=self.screen)
         self.state = self.states[self.state_name](screen=self.screen)
         self.state.done = False
         # self.state.startup(persistent)
