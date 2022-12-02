@@ -294,7 +294,7 @@ class Pong(State):
         self.screen.fill(Settings.background_color)
         pygame.draw.aaline(
             self.screen,
-            Settings.light_gray,
+            Settings.light_grey,
             (Settings.window_width//2, 0),
             (Settings.window_width//2, Settings.window_height)
         )
