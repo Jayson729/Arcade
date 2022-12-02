@@ -7,10 +7,11 @@ from button import Button, ButtonGroup
 from settings import Settings
 import random
 
+
 class ArcadeMenu(State):
 
     def __init__(self) -> None:
-        
+
         # initialize pygame
         pygame.mixer.pre_init(44100, -16, 1, 512)
         pygame.mixer.init()
@@ -19,16 +20,17 @@ class ArcadeMenu(State):
         # create game objects
         display_width = 800
         display_height = 600
-        
+
         pygame.display.set_caption('Select Game')
-        pygame.display.set_icon(pygame.image.load(f'{self.global_img_path}main.png'))
+        pygame.display.set_icon(pygame.image.load(
+            f'{self.global_img_path}main.png'))
         self.create_menu()
         super().__init__()
 
         img_root = 'images/arcade_menu/'
 
-        
-        person1 = Sprite(person1Img, display_width * 0.45, display_height * 0.7)
+        person1 = Sprite(person1Img, display_width *
+                         0.45, display_height * 0.7)
         person1.resize(100.7, 189.2)
 
         person2Img = pygame.image.load(f'{img_root}/people_sprite2.png')
@@ -62,7 +64,7 @@ class ArcadeMenu(State):
         return background
 
     def get_people(self) -> pygame.sprite.Group:
-        #TO DO
+        # TO DO
         person1Img = pygame.image.load(f"{self.img_path}people_sprite.png")
         people = pygame.sprite.Group()
 
@@ -73,6 +75,7 @@ class ArcadeMenu(State):
     def get_buttons(self) -> ButtonGroup:
         buttons = ButtonGroup()
         return buttons
+
     def cabinetScreen(x, y, width, height, color):
         pygame.draw.rect(gameDisplay, color, (x, y, width, height))
 
@@ -85,8 +88,6 @@ class ArcadeMenu(State):
         self.background.update()
         self.people.update()
         self.buttons.update()
-
-    
 
     def textObjects(text, font):
         textSurface = font.render(text, True, white_color)
@@ -102,10 +103,8 @@ class ArcadeMenu(State):
 
         pygame.display.update()
 
-
     def gameHover():
         messageDisplay('Pong')
-
 
     def game_loop():
 
@@ -135,10 +134,10 @@ class ArcadeMenu(State):
 
             if cabinetScreenStartX + cabinetScreenWidth > mouse[0] > cabinetScreenStartX and cabinetScreenStartY + cabinetScreenHeight > mouse[1] > cabinetScreenStartY:
                 cabinetScreen(cabinetScreenStartX, cabinetScreenStartY,
-                            cabinetScreenWidth, cabinetScreenHeight, light_blue_color)
+                              cabinetScreenWidth, cabinetScreenHeight, light_blue_color)
             else:
                 cabinetScreen(cabinetScreenStartX, cabinetScreenStartY,
-                            cabinetScreenWidth, cabinetScreenHeight, white_color)
+                              cabinetScreenWidth, cabinetScreenHeight, white_color)
 
             gameDisplay.blit(person1.image, (x1, y1))
             gameDisplay.blit(person2.image, (x2, y2))
@@ -162,12 +161,10 @@ class ArcadeMenu(State):
             pygame.display.update()
             clock.tick(60)
 
-
     def main() -> None:
         game_loop()
         pygame.quit()
         quit()
-
 
     if __name__ == '__main__':
         main()

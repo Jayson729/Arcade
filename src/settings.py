@@ -8,7 +8,6 @@ that you can select between
 """
 
 import pygame
-from enum import Enum
 
 
 class Keybinding:
@@ -40,7 +39,6 @@ class Settings:
     music_volume = 20
     effects_volume = 30
 
-
     # pong
     player_buffer = 40
     background_color = pygame.Color('turquoise4')
@@ -55,3 +53,8 @@ class Settings:
     settings_menu_font = 'fonts/Stardew_Valley.ttf'
     settings_menu_text_color = '#DDA059'
     settings_menu_hover_text_color = '#FFD921'
+
+    # pause menu
+    pause_menu_font = 'fonts/Stardew_Valley.ttf'
+    pause_menu_text_color = '#DDA059'
+    pause_menu_hover_text_color = '#FFD921'

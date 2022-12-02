@@ -6,7 +6,8 @@ from settings import Settings
 class Button(Sprite):
     """Button class that works with keyboard and mouse"""
 
-    def __init__(self, x: int, y: int, text, font, action, color=None, hover_color=None, center=True) -> None:
+    def __init__(self, x: int, y: int, text, font, action,
+                 color=None, hover_color=None, center=True) -> None:
         """Initializes Button"""
         # set defaults
         default_color = '#DDA059'
@@ -73,8 +74,7 @@ class Button(Sprite):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             self.do_action()
             return True
-        else:
-            return False
+        return False
 
 
 class ButtonGroup:

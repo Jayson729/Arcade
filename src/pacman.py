@@ -6,7 +6,6 @@ Maybe some buttons for settings/pausing?
 or maybe those will be part of the eventual pause menu
 """
 
-import sys
 import pygame
 from pacman_sprite import PacmanSprite
 from state import State
@@ -17,6 +16,8 @@ from ghost import Ghost
 class Pacman(State):
 
     def __init__(self):
+        super().__init__()
+
         # initialize pygame
         pygame.mixer.pre_init(44100, -16, 1, 512)
         pygame.mixer.init()
@@ -28,15 +29,6 @@ class Pacman(State):
         # self.screen = self.get_screen()
         pygame.display.set_caption('Pacman')
         self.create_game()
-        super().__init__()
-
-    @staticmethod
-    def get_screen():
-        screen = pygame.display.set_mode(
-            (Settings.window_width, Settings.window_height),
-            pygame.RESIZABLE
-        )
-        return screen
 
     def create_game(self):
         self.map = self.get_map()
@@ -66,33 +58,17 @@ class Pacman(State):
 
         return ghosts
 
-    def startup(self) -> None:
-        screen = self.get_screen()
-        while True:
-            self.check_events()
-            self.update()
-            self.draw(screen)
-            # pygame.display.flip()
-            # self.clock.tick(Settings.fps)
-            # print(f"fps: {self.clock.get_fps()}")
-
-    def check_events(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key in (Settings.main_keybinding.escape, Settings.alternate_keybinding.escape):
-                    self.next_state = 'PAUSE'
-                    self.done = True
+    def do_event(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key in (Settings.main_keybinding.escape, Settings.alternate_keybinding.escape):
+                self.next_state = 'PAUSE'
+                self.done = True
 
     def draw(self, screen) -> None:
         # self.screen.blit(self.background.image, (0, 0))
         screen.fill((0, 0, 0))
         # self.map.draw(self.screen)
         self.pacman.draw(screen)
-        # for ghost in self.ghosts:
-        #     ghost.draw(self.screen)
         self.ghosts.draw(screen)
         # self.buttons.draw(self.screen)
 
@@ -101,13 +77,11 @@ class Pacman(State):
         self.ghosts.update()
         # self.buttons.update()
         # self.map.update()
-        pygame.display.flip()
-        self.clock.tick(Settings.fps)
 
 
 def main() -> None:
-    pacman = Pacman()
-    pacman.startup()
+    from main import main
+    main('PACMAN')
 
 
 if __name__ == '__main__':

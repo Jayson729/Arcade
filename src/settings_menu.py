@@ -1,9 +1,7 @@
-import sys
 import pygame
 from state import State
-from cloud import Cloud
 from button import Button, ButtonGroup
-from sprite import Sprite, AnimatedSprite
+from sprite import Sprite
 from settings import Settings
 
 
@@ -12,6 +10,7 @@ class SettingsMenu(State):
 
     def __init__(self) -> None:
         """Initializes SettingsMenu"""
+        super().__init__()
 
         # initialize pygame
         pygame.mixer.pre_init(44100, -16, 1, 512)
@@ -24,29 +23,11 @@ class SettingsMenu(State):
         self.default_color = Settings.settings_menu_text_color
         self.default_font = Settings.settings_menu_font
         self.clock = pygame.time.Clock()
-        # self.menu_items = {1: [self.music_int, self.effects_int], 2: ["MUSIC VOLUME", "EFFECTS VOLUME"]}
+
         pygame.display.set_caption('Settings')
         pygame.display.set_icon(pygame.image.load(
             f'{self.global_path}main.png'))
         self.create_game()
-        super().__init__()
-
-    # def get_text_position(self, text, index):
-    #     top_left = 0
-
-    #     for i, j in self.menu_items.items():
-    #         if i == 0:
-    #             top_left = (self.screen_rect.topleft[0] + 500, self.screen_rect.topleft[1] + 150 + (index * 30))
-    #         elif i == 1:
-    #             top_left = (self.screen_rect.topleft[0] + 500, self.screen_rect.topleft[1] + 150 + (index * 30))
-    #     return text.get_rect(topleft=top_left)
-
-    # def render_text(self, index):
-    #     for i, j in self.menu_items.items():
-    #         if j:
-    #             self.font = pygame.font.Font('fonts/Stardew_Valley.ttf', 30)
-
-    #     return self.font.render(f'{self.menu_items[j]}', True, self.default_color)
 
     def create_game(self):
         self.background = self.get_background()
@@ -61,14 +42,6 @@ class SettingsMenu(State):
         # loops music
 
         pygame.mixer.music.play(-1)
-
-    def get_screen(self) -> pygame.Surface:
-        """Returns a Surface to be used as a screen"""
-        screen = pygame.display.set_mode(
-            (Settings.window_width, Settings.window_height),
-            pygame.RESIZABLE
-        )
-        return screen
 
     def get_menu_items(self):
         font = pygame.font.Font(self.default_font, 30)
@@ -151,22 +124,8 @@ class SettingsMenu(State):
 
         return buttons
 
-    def startup(self) -> None:
-        """Starts the game loop"""
-        screen = self.get_screen()
-        while True:
-            self.draw(screen)
-            self.update()
-            self.check_events()
-            # print(f"fps: {self.clock.get_fps()}")
-
-    def check_events(self) -> None:
-        """Accepts and deals with inputs"""
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            self.buttons.do_event(event, self.menu_sound)
+    def do_event(self, event):
+        self.buttons.do_event(event)
 
     def draw_volumes(self, screen):
         font = pygame.font.Font('fonts/Stardew_Valley.ttf', 30)
@@ -175,27 +134,14 @@ class SettingsMenu(State):
             str(Settings.music_volume), True, self.default_color)
         effects_vol_render = font.render(
             str(Settings.effects_volume), True, self.default_color)
-        
+
         # get rects for blitting
         music_vol_rect = music_vol_render.get_rect(center=(520, 205))
         effects_vol_rect = effects_vol_render.get_rect(center=(520, 250))
-        
+
         # blit renders to screen
         screen.blit(music_vol_render, music_vol_rect)
         screen.blit(effects_vol_render, effects_vol_rect)
-        # if Settings.music_volume == 100:
-        #     screen.blit(music_vol_render, (500, 190))
-        # elif 100 > Settings.music_volume > 9:
-        #     screen.blit(music_vol_render, (508, 190))
-        # else:
-        #     screen.blit(music_vol_render, (513, 190))
-
-        # if Settings.effects_volume == 100:
-        #     screen.blit(effects_vol_render, (500, 235))
-        # elif 100 > Settings.effects_volume > 9:
-        #     screen.blit(effects_vol_render, (508, 235))
-        # else:
-        #     screen.blit(effects_vol_render, (513, 235))
 
     def draw(self, screen):
         self.background.draw(screen)
@@ -205,14 +151,12 @@ class SettingsMenu(State):
 
     def update(self):
         self.buttons.update()
-        pygame.display.flip()
-        self.clock.tick(Settings.fps)
 
 
 def main() -> None:
     """Main function"""
-    settings_menu = SettingsMenu()
-    settings_menu.startup()
+    from main import main
+    main('SETTINGS')
 
 
 if __name__ == '__main__':

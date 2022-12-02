@@ -1,4 +1,3 @@
-import sys
 import pygame
 from state import State
 from cloud import Cloud
@@ -12,6 +11,7 @@ class StartMenu(State):
 
     def __init__(self) -> None:
         """Initializes StartMenu"""
+        super().__init__()
 
         # initialize pygame
         pygame.mixer.pre_init(44100, -16, 1, 512)
@@ -23,11 +23,12 @@ class StartMenu(State):
         self.global_img_path = 'images/'
         self.clock = pygame.time.Clock()
         pygame.display.set_caption('Start Menu')
-        pygame.display.set_icon(pygame.image.load(f'{self.global_img_path}main.png'))
+        pygame.display.set_icon(pygame.image.load(
+            f'{self.global_img_path}main.png'))
         self.create_game()
-        super().__init__()
 
     def create_game(self):
+        """creates all game objects"""
         self.background = self.get_background()
         self.waterfall = self.get_waterfall()
         self.clouds = self.get_clouds()
@@ -42,18 +43,11 @@ class StartMenu(State):
         pygame.mixer.music.play(-1)
 
     def get_waterfall(self):
+        """gets animated waterfall"""
         waterfall = AnimatedSprite(
             390, 350, f'{self.img_path}waterfall/', animation_speed=150)
         waterfall.resize(60, 415)
         return waterfall
-
-    def get_screen(self) -> pygame.Surface:
-        """Returns a Surface to be used as a screen"""
-        screen = pygame.display.set_mode(
-            (Settings.window_width, Settings.window_height),
-            pygame.RESIZABLE
-        )
-        return screen
 
     def get_background(self) -> Sprite:
         """Creates background as Sprite"""
@@ -108,6 +102,7 @@ class StartMenu(State):
             print('credits')
             self.next_state = 'CREDITS'
             self.done = True
+
         buttons = ButtonGroup()
         buttons.add(Button(410, 125, 'ENTER ARCADE', pygame.font.Font(
             'fonts/Stardew_Valley.ttf', 50), arcade_action))
@@ -118,22 +113,8 @@ class StartMenu(State):
 
         return buttons
 
-    def startup(self) -> None:
-        """Starts the game loop"""
-        screen = self.get_screen()
-        while True:
-            self.draw(screen)
-            self.update()
-            self.check_events()
-            # print(f"fps: {self.clock.get_fps()}")
-
-    def check_events(self) -> None:
-        """Accepts and deals with inputs"""
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            self.buttons.do_event(event, self.menu_sound)
+    def do_event(self, event):
+        self.buttons.do_event(event, self.menu_sound)
 
     def draw(self, screen):
         self.background.draw(screen)
@@ -145,14 +126,12 @@ class StartMenu(State):
         self.waterfall.update()
         self.clouds.update()
         self.buttons.update()
-        pygame.display.flip()
-        self.clock.tick(Settings.fps)
 
 
 def main() -> None:
     """Main function"""
-    start_menu = StartMenu()
-    start_menu.startup()
+    from main import main
+    main('START')
 
 
 if __name__ == '__main__':

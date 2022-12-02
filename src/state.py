@@ -4,6 +4,7 @@ Also, i'm not sure if the functions that do nothing
 are supposed to be finished
 """
 
+from abc import abstractmethod
 import pygame
 
 
@@ -19,14 +20,17 @@ class State:
         self.persist = {}
         self.font = pygame.font.Font(None, 24)
 
-    def startup(self, persistent):
-        self.persist = persistent
+    # def startup(self, persistent):
+    #     self.persist = persistent
 
-    def get_event(self, event):
-        pass
+    @abstractmethod
+    def do_event(self, event):
+        """Accepts and deals with inputs"""
 
-    def update(self, dt):
-        pass
+    @abstractmethod
+    def update(self, delta_time):
+        """Updates all game objects"""
 
+    @abstractmethod
     def draw(self, surface):
-        pass
+        """Draw all game objects"""

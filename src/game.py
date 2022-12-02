@@ -6,12 +6,14 @@ have a class for settings instead
 The self.screen here should be used for all games
 """
 
+import sys
 import pygame
-from state import State
+from settings import Settings
 
 
 class Game:
     def __init__(self, screen, states, start_state):
+        self.delta_time = 1
         self.done = False
         self.screen = screen
         self.clock = pygame.time.Clock()
@@ -21,13 +23,15 @@ class Game:
         self.state_name = start_state
         self.state = self.states[self.state_name]
 
-    def event_loop(self):
+    def check_events(self):
         for event in pygame.event.get():
-            self.state.get_event(event)
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            self.state.do_event(event)
 
     def flip_state(self):
-        next_state = self.state.next_state
-        self.state_name = next_state
+        self.state_name = self.state.next_state
         # persistent = self.state.persist.pop()
         pygame.mixer.music.stop()
         # self.state = self.states[persistent](screen=self.screen)
@@ -36,14 +40,12 @@ class Game:
         # self.state.startup(persistent)
 
     def update(self, dt):
-        if self.state.quit:
-            self.done = True
-        elif self.state.done:
+        self.state.update()
+        if self.state.done:
             self.flip_state()
-        self.state.update(dt)
 
-    def draw(self):
-        self.state.draw(self.screen)
+    def draw(self, screen):
+        self.state.draw(screen)
 
     def run(self):
         # while not self.done:
@@ -58,8 +60,8 @@ class Game:
         #     pygame.display.update()
         self.state = self.state()
         while not self.state.done:
-            self.state.draw(self.screen)
-            self.state.update()
-            self.state.check_events()
-            if self.state.done:
-                self.flip_state()
+            delta_time = self.clock.tick(Settings.fps)
+            self.check_events()
+            self.update(delta_time)
+            self.draw(self.screen)
+            pygame.display.update()
