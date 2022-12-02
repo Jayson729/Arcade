@@ -10,7 +10,7 @@ from settings import Settings
 class StartMenu(State):
     """Main class that calls everything else"""
 
-    def __init__(self, screen=None) -> None:
+    def __init__(self) -> None:
         """Initializes StartMenu"""
 
         # initialize pygame
@@ -22,9 +22,6 @@ class StartMenu(State):
         self.img_path = 'images/start_menu/'
         self.global_img_path = 'images/'
         self.clock = pygame.time.Clock()
-        self.screen = screen
-        if screen is None:
-            self.screen = self.get_screen()
         pygame.display.set_caption('Start Menu')
         pygame.display.set_icon(pygame.image.load(f'{self.global_img_path}main.png'))
         self.create_game()
@@ -123,8 +120,9 @@ class StartMenu(State):
 
     def startup(self) -> None:
         """Starts the game loop"""
+        screen = self.get_screen()
         while True:
-            self.draw()
+            self.draw(screen)
             self.update()
             self.check_events()
             # print(f"fps: {self.clock.get_fps()}")
@@ -137,11 +135,11 @@ class StartMenu(State):
                 sys.exit()
             self.buttons.do_event(event, self.menu_sound)
 
-    def draw(self):
-        self.background.draw(self.screen)
-        self.waterfall.draw(self.screen)
-        self.clouds.draw(self.screen)
-        self.buttons.draw(self.screen)
+    def draw(self, screen):
+        self.background.draw(screen)
+        self.waterfall.draw(screen)
+        self.clouds.draw(screen)
+        self.buttons.draw(screen)
 
     def update(self):
         self.waterfall.update()

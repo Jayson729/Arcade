@@ -10,7 +10,7 @@ from settings import Settings
 class SettingsMenu(State):
     """Main class that calls everything else"""
 
-    def __init__(self, screen=None) -> None:
+    def __init__(self) -> None:
         """Initializes SettingsMenu"""
 
         # initialize pygame
@@ -24,9 +24,6 @@ class SettingsMenu(State):
         self.default_color = Settings.settings_menu_text_color
         self.default_font = Settings.settings_menu_font
         self.clock = pygame.time.Clock()
-        self.screen = screen
-        if screen is None:
-            self.screen = self.get_screen()
         # self.menu_items = {1: [self.music_int, self.effects_int], 2: ["MUSIC VOLUME", "EFFECTS VOLUME"]}
         pygame.display.set_caption('Settings')
         pygame.display.set_icon(pygame.image.load(
@@ -156,8 +153,9 @@ class SettingsMenu(State):
 
     def startup(self) -> None:
         """Starts the game loop"""
+        screen = self.get_screen()
         while True:
-            self.draw()
+            self.draw(screen)
             self.update()
             self.check_events()
             # print(f"fps: {self.clock.get_fps()}")
@@ -174,9 +172,9 @@ class SettingsMenu(State):
         font = pygame.font.Font('fonts/Stardew_Valley.ttf', 30)
         # render fonts
         music_vol_render = font.render(
-            repr(Settings.music_volume), True, self.default_color)
+            str(Settings.music_volume), True, self.default_color)
         effects_vol_render = font.render(
-            repr(Settings.effects_volume), True, self.default_color)
+            str(Settings.effects_volume), True, self.default_color)
         
         # get rects for blitting
         music_vol_rect = music_vol_render.get_rect(center=(520, 205))
@@ -199,11 +197,11 @@ class SettingsMenu(State):
         # else:
         #     screen.blit(effects_vol_render, (513, 235))
 
-    def draw(self):
-        self.background.draw(self.screen)
-        self.buttons.draw(self.screen)
-        self.menu_items.draw(self.screen)
-        self.draw_volumes(self.screen)
+    def draw(self, screen):
+        self.background.draw(screen)
+        self.buttons.draw(screen)
+        self.menu_items.draw(screen)
+        self.draw_volumes(screen)
 
     def update(self):
         self.buttons.update()

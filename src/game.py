@@ -31,7 +31,7 @@ class Game:
         # persistent = self.state.persist.pop()
         pygame.mixer.music.stop()
         # self.state = self.states[persistent](screen=self.screen)
-        self.state = self.states[self.state_name](screen=self.screen)
+        self.state = self.states[self.state_name]()
         self.state.done = False
         # self.state.startup(persistent)
 
@@ -58,7 +58,7 @@ class Game:
         #     pygame.display.update()
         self.state = self.state()
         while not self.state.done:
-            self.state.draw()
+            self.state.draw(self.screen)
             self.state.update()
             self.state.check_events()
             if self.state.done:

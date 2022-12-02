@@ -9,7 +9,7 @@ import random
 
 class ArcadeMenu(State):
 
-    def __init__(self, screen=None) -> None:
+    def __init__(self) -> None:
         
         # initialize pygame
         pygame.mixer.pre_init(44100, -16, 1, 512)
@@ -20,9 +20,6 @@ class ArcadeMenu(State):
         display_width = 800
         display_height = 600
         
-        self.screen = screen
-        if screen is None:
-            self.screen = self.get_screen()
         pygame.display.set_caption('Select Game')
         pygame.display.set_icon(pygame.image.load(f'{self.global_img_path}main.png'))
         self.create_menu()
@@ -79,10 +76,10 @@ class ArcadeMenu(State):
     def cabinetScreen(x, y, width, height, color):
         pygame.draw.rect(gameDisplay, color, (x, y, width, height))
 
-    def draw(self):
-        self.background.draw(self.screen)
-        self.people.draw(self.screen)
-        self.buttons.draw(self.screen)
+    def draw(self, screen):
+        self.background.draw(screen)
+        self.people.draw(screen)
+        self.buttons.draw(screen)
 
     def update(self):
         self.background.update()

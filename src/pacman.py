@@ -16,7 +16,7 @@ from ghost import Ghost
 
 class Pacman(State):
 
-    def __init__(self, screen=None):
+    def __init__(self):
         # initialize pygame
         pygame.mixer.pre_init(44100, -16, 1, 512)
         pygame.mixer.init()
@@ -25,9 +25,7 @@ class Pacman(State):
         # create game objects
         self.img_path = 'images/pacman/'
         self.clock = pygame.time.Clock()
-        self.screen = screen
-        if screen is None:
-            self.screen = self.get_screen()
+        # self.screen = self.get_screen()
         pygame.display.set_caption('Pacman')
         self.create_game()
         super().__init__()
@@ -69,10 +67,11 @@ class Pacman(State):
         return ghosts
 
     def startup(self) -> None:
+        screen = self.get_screen()
         while True:
             self.check_events()
             self.update()
-            self.draw()
+            self.draw(screen)
             # pygame.display.flip()
             # self.clock.tick(Settings.fps)
             # print(f"fps: {self.clock.get_fps()}")
@@ -87,14 +86,14 @@ class Pacman(State):
                     self.next_state = 'PAUSE'
                     self.done = True
 
-    def draw(self) -> None:
+    def draw(self, screen) -> None:
         # self.screen.blit(self.background.image, (0, 0))
-        self.screen.fill((0, 0, 0))
+        screen.fill((0, 0, 0))
         # self.map.draw(self.screen)
-        self.pacman.draw(self.screen)
+        self.pacman.draw(screen)
         # for ghost in self.ghosts:
         #     ghost.draw(self.screen)
-        self.ghosts.draw(self.screen)
+        self.ghosts.draw(screen)
         # self.buttons.draw(self.screen)
 
     def update(self) -> None:

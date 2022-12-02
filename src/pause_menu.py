@@ -12,7 +12,7 @@ from sprite import Sprite
 from button import Button, ButtonGroup
 
 class PauseMenu(State):
-    def __init__(self, screen=None) -> None:
+    def __init__(self) -> None:
         """Initializes SettingsMenu"""
 
         # initialize pygame
@@ -26,9 +26,6 @@ class PauseMenu(State):
         self.default_color = Settings.settings_menu_text_color
         self.default_font = Settings.settings_menu_font
         self.clock = pygame.time.Clock()
-        self.screen = screen
-        if screen is None:
-            self.screen = self.get_screen()
         pygame.display.set_caption('Settings')
         pygame.display.set_icon(pygame.image.load(
             f'{self.global_path}main.png'))
@@ -87,8 +84,9 @@ class PauseMenu(State):
         return buttons
 
     def startup(self):
+        screen = self.get_screen()
         while True:
-            self.draw()
+            self.draw(screen)
             self.update()
             self.check_events()
 
@@ -99,9 +97,9 @@ class PauseMenu(State):
                 sys.exit()
             self.buttons.do_event(event, self.menu_sound)
     
-    def draw(self):
-        self.background.draw(self.screen)
-        self.buttons.draw(self.screen)
+    def draw(self, screen):
+        self.background.draw(screen)
+        self.buttons.draw(screen)
     
     def update(self):
         self.buttons.update()
