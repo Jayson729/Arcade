@@ -17,7 +17,7 @@ class ArcadeMenu(State):
         pygame.mixer.init()
         pygame.init()
 
-        self.img_path = 'images/arcade_menu'
+        self.img_path = 'images/arcade_menu/'
         self.global_img_path = 'images/'
         self.clock = pygame.time.Clock()
         pygame.display.set_caption('Select Game')
@@ -30,10 +30,10 @@ class ArcadeMenu(State):
         self.buttons = self.get_buttons()
         self.people = self.get_people()
 
-        self.menu_sound = pygame.mixer.Sound()
+        self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
         self.menu_sound.set_volume(Settings.effects_volume/100)
 
-        pygame.mixer.music.load()
+        pygame.mixer.music.load('music/runescape_dream.wav')
         pygame.mixer.music.set_volume(Settings.music_volume/100)
         # loops music
         pygame.mixer.music.play(-1)
@@ -63,7 +63,6 @@ class ArcadeMenu(State):
         return people
 
     def get_buttons(self) -> ButtonGroup:
-        # TO DO
         def back_action():
             print('back')
             self.next_state = 'START'
@@ -71,21 +70,28 @@ class ArcadeMenu(State):
 
         def pong_action():
             print('pong')
+            self.next_state = 'PONG'
 
         def pacman_action():
             print('pacman')
+            self.next_state = 'PACMAN'
 
         buttons = ButtonGroup()
 
         buttons.add(
-            Button(50, 575, 'BACK', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
-                   back_action)
-        )
+            Button(50, 575, 'BACK', pygame.font.Font(
+                'fonts/Stardew_Valley.ttf', 40), back_action))
+        buttons.add(
+            Button(410, 165, 'PONG', pygame.font.Font(
+                'fonts/Stardew_Valley.ttf', 50), pong_action))
+        buttons.add(
+            Button(410, 205, 'PACMAN', pygame.font.Font(
+                'fonts/Stardew_Valley.ttf', 50), pacman_action))
 
         return buttons
 
-    def cabinetScreen(x, y, width, height, color):
-        pygame.draw.rect(gameDisplay, color, (x, y, width, height))
+    def do_event(self, event):
+        self.buttons.do_event(event, self.menu_sound)
 
     def draw(self, screen):
         self.background.draw(screen)
@@ -96,9 +102,11 @@ class ArcadeMenu(State):
         self.people.update()
         self.buttons.update()
 
+
 def main() -> None:
     from main import main
-    main('START')
+    main('ARCADE')
+
 
 if __name__ == '__main__':
     main()

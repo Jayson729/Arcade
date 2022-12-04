@@ -90,8 +90,8 @@ class StartMenu(State):
             pygame.mixer.Channel(0).play(
                 pygame.mixer.Sound('sounds/arcade_door.wav')
             )
-            # self.next_state = 'ARCADE'
-            # self.done = True
+            self.next_state = 'ARCADE'
+            self.done = True
 
         def settings_action():
             print('settings')
