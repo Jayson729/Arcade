@@ -1,7 +1,7 @@
 import pygame
 from state import State
 from people import People
-from sprite import Sprite
+from sprite import Sprite, AnimatedSprite
 from button import Button, ButtonGroup
 from settings import Settings
 
@@ -27,6 +27,8 @@ class ArcadeMenu(State):
 
     def create_menu(self):
         self.background = self.get_background()
+        self.pac = self.get_pac()
+        self.anipac = self.get_anipac()
         self.buttons = self.get_buttons()
         self.people = self.get_people()
 
@@ -45,20 +47,35 @@ class ArcadeMenu(State):
         )
         return screen
 
+    def get_pac(self):
+        pacimg = pygame.image.load(f"{self.img_path}pac.png")
+        pac = Sprite(200, 200, pacimg)
+        pac.resize(200, 200)
+        return pac
+
+    def get_anipac(self):
+        anipac = AnimatedSprite(
+            200, 200, f'{self.img_path}anipac/', animation_speed=150)
+        anipac.resize(200, 200)
+        return anipac
+
     def get_background(self) -> Sprite:
-        bg_image = pygame.image.load(f"{self.img_path}backgroundAMenu.png")
+        bg_image = pygame.image.load(f"{self.img_path}backgroundArcade.png")
         background = Sprite(0, 0, bg_image)
         background.resize(800, 600)
         return background
 
-    def get_people(self) -> pygame.sprite.Group:
+    def get_people(self, move_horif: float = 1, move_horib = 1.1,
+                   move_vert: float = 1) -> pygame.sprite.Group:
         # TO DO
-        person1Img = pygame.image.load(f"{self.img_path}people_sprite.png")
-        person2Img = pygame.image.load(f"{self.img_path}people_sprite2.png")
+        personf1Img = pygame.image.load(f"{self.img_path}peoplef1.png")
+        personb1Img = pygame.image.load(f"{self.img_path}peopleb1.png")
         people = pygame.sprite.Group()
 
-        people.add(People(person1Img, 100, 100).resize(650, 650))
-        people.add(People(person2Img, 200, 200).resize(650, 650))
+        people.add(People(personb1Img, -40, 760,
+                    move_horib, move_vert).resize(155, 291))
+        people.add(People(personf1Img, 895, -55,
+                    move_horif, move_vert).resize(214, 430))
 
         return people
 
@@ -71,10 +88,12 @@ class ArcadeMenu(State):
         def pong_action():
             print('pong')
             self.next_state = 'PONG'
+            self.done = True
 
         def pacman_action():
             print('pacman')
             self.next_state = 'PACMAN'
+            self.done = True
 
         buttons = ButtonGroup()
 
@@ -82,8 +101,8 @@ class ArcadeMenu(State):
             Button(50, 575, 'BACK', pygame.font.Font(
                 'fonts/Stardew_Valley.ttf', 40), back_action))
         buttons.add(
-            Button(410, 165, 'PONG', pygame.font.Font(
-                'fonts/Stardew_Valley.ttf', 50), pong_action))
+            Button(350, 380, 'PONG', pygame.font.Font(
+                'fonts/Stardew_Valley.ttf', 1), pong_action))
         buttons.add(
             Button(410, 205, 'PACMAN', pygame.font.Font(
                 'fonts/Stardew_Valley.ttf', 50), pacman_action))
@@ -97,8 +116,13 @@ class ArcadeMenu(State):
         self.background.draw(screen)
         self.people.draw(screen)
         self.buttons.draw(screen)
+        self.pac.draw(screen)
+
+    def draw_anipac(self, screen):
+        self.anipac.draw(screen)
 
     def update(self):
+        self.anipac.update()
         self.people.update()
         self.buttons.update()
 
