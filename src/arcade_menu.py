@@ -27,6 +27,8 @@ class ArcadeMenu(State):
 
     def create_menu(self):
         self.background = self.get_background()
+        self.pong = self.get_pong()
+        self.anipong = self.get_anipong()
         self.pac = self.get_pac()
         self.anipac = self.get_anipac()
         self.buttons = self.get_buttons()
@@ -47,16 +49,28 @@ class ArcadeMenu(State):
         )
         return screen
 
+    def get_pong(self):
+        pongimg = pygame.image.load(f"{self.img_path}pong.png")
+        pong = Sprite(225, 180, pongimg)
+        pong.resize(100, 100)
+        return pong
+
+    def get_anipong(self):
+        anipong = AnimatedSprite(
+            225, 180, f'{self.img_path}anipong/', animation_speed=150)
+        anipong.resize(100, 100)
+        return anipong
+
     def get_pac(self):
         pacimg = pygame.image.load(f"{self.img_path}pac.png")
-        pac = Sprite(200, 200, pacimg)
-        pac.resize(200, 200)
+        pac = Sprite(450, -15, pacimg)
+        pac.resize(230, 230)
         return pac
 
     def get_anipac(self):
         anipac = AnimatedSprite(
-            200, 200, f'{self.img_path}anipac/', animation_speed=150)
-        anipac.resize(200, 200)
+            450, -15, f'{self.img_path}anipac/', animation_speed=150)
+        anipac.resize(230, 230)
         return anipac
 
     def get_background(self) -> Sprite:
@@ -101,11 +115,11 @@ class ArcadeMenu(State):
             Button(50, 575, 'BACK', pygame.font.Font(
                 'fonts/Stardew_Valley.ttf', 40), back_action))
         buttons.add(
-            Button(350, 380, 'PONG', pygame.font.Font(
-                'fonts/Stardew_Valley.ttf', 1), pong_action))
+            Button(278, 200, 'PONG', pygame.font.Font(
+                'fonts/Stardew_Valley.ttf', 50), pong_action))
         buttons.add(
-            Button(410, 205, 'PACMAN', pygame.font.Font(
-                'fonts/Stardew_Valley.ttf', 50), pacman_action))
+            Button(550, 110, 'PAC', pygame.font.Font(
+                'fonts/Stardew_Valley.ttf', 20), pacman_action))
 
         return buttons
 
@@ -116,13 +130,18 @@ class ArcadeMenu(State):
         self.background.draw(screen)
         self.people.draw(screen)
         self.buttons.draw(screen)
+        self.pong.draw(screen)
         self.pac.draw(screen)
 
+    def draw_anipong(self, screen):
+        self.anipong.draw(screen)
+    
     def draw_anipac(self, screen):
         self.anipac.draw(screen)
 
     def update(self):
         self.anipac.update()
+        self.anipong.update()
         self.people.update()
         self.buttons.update()
 
