@@ -3,12 +3,13 @@ from state import State
 from button import Button, ButtonGroup
 from sprite import Sprite
 from settings import Settings
+from music_player import MusicPlayer
 
 
 class SettingsMenu(State):
     """Main class that calls everything else"""
 
-    def __init__(self) -> None:
+    def __init__(self, music_player: MusicPlayer) -> None:
         """Initializes SettingsMenu"""
         super().__init__()
 
@@ -23,6 +24,7 @@ class SettingsMenu(State):
         self.default_color = Settings.settings_menu_text_color
         self.default_font = Settings.settings_menu_font
         self.clock = pygame.time.Clock()
+        self.music_player = music_player
 
         pygame.display.set_caption('Settings')
         pygame.display.set_icon(pygame.image.load(
@@ -33,15 +35,10 @@ class SettingsMenu(State):
         self.background = self.get_background()
         self.buttons = self.get_buttons()
         self.menu_items = self.get_menu_items()
+        self.music_player.load_play_music('music/runescape_dream.wav')
 
         self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
         self.menu_sound.set_volume(Settings.effects_volume/100)
-
-        pygame.mixer.music.load('music/runescape_dream.wav')
-        pygame.mixer.music.set_volume(Settings.music_volume/100)
-        # loops music
-
-        pygame.mixer.music.play(-1)
 
     def get_menu_items(self):
         font = pygame.font.Font(self.default_font, 30)
@@ -97,7 +94,7 @@ class SettingsMenu(State):
 
         def back_action():
             print('back')
-            self.next_state = 'START'
+            self.next_state = 'PREVIOUS'
             self.done = True
 
         buttons = ButtonGroup()

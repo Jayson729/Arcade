@@ -8,10 +8,11 @@ from state import State
 from settings import Settings
 from sprite import Sprite
 from button import Button, ButtonGroup
+from music_player import MusicPlayer
 
 
 class PauseMenu(State):
-    def __init__(self) -> None:
+    def __init__(self, music_player: MusicPlayer) -> None:
         """Initializes SettingsMenu"""
         super().__init__()
 
@@ -26,6 +27,7 @@ class PauseMenu(State):
         self.default_color = Settings.pause_menu_text_color
         self.default_font = Settings.pause_menu_font
         self.clock = pygame.time.Clock()
+        self.music_player = music_player
         pygame.display.set_caption('Pause Menu')
         pygame.display.set_icon(pygame.image.load(
             f'{self.global_path}main.png'))
@@ -37,12 +39,7 @@ class PauseMenu(State):
 
         self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
         self.menu_sound.set_volume(Settings.effects_volume/100)
-
-        pygame.mixer.music.load('music/runescape_dream.wav')
-        pygame.mixer.music.set_volume(Settings.music_volume/100)
-        # loops music
-
-        pygame.mixer.music.play(-1)
+        self.music_player.load_play_music('music/runescape_dream.wav')
 
     def get_background(self):
         """Creates background as Sprite"""
@@ -55,7 +52,7 @@ class PauseMenu(State):
     def get_buttons(self):
         def resume_action():
             print('resume')
-            self.next_state = 'RESUME'
+            self.next_state = 'PREVIOUS'
             self.done = True
 
         def settings_action():

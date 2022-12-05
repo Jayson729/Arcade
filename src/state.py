@@ -19,6 +19,7 @@ class State:
         self.screen_rect = pygame.display.get_surface().get_rect()
         self.persist = {}
         self.font = pygame.font.Font(None, 24)
+        self.music_player = None
 
     # def startup(self, persistent):
     #     self.persist = persistent

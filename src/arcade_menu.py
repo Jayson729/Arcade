@@ -4,11 +4,12 @@ from people import People
 from sprite import Sprite, AnimatedSprite
 from button import Button, ButtonGroup
 from settings import Settings
+from music_player import MusicPlayer
 
 
 class ArcadeMenu(State):
 
-    def __init__(self) -> None:
+    def __init__(self, music_player: MusicPlayer) -> None:
 
         super().__init__()
 
@@ -20,6 +21,7 @@ class ArcadeMenu(State):
         self.img_path = 'images/arcade_menu/'
         self.global_img_path = 'images/'
         self.clock = pygame.time.Clock()
+        self.music_player = music_player
         pygame.display.set_caption('Select Game')
         pygame.display.set_icon(pygame.image.load(
             f'{self.global_img_path}main.png'))
@@ -33,14 +35,10 @@ class ArcadeMenu(State):
         self.anipac = self.get_anipac()
         self.buttons = self.get_buttons()
         self.people = self.get_people()
+        self.music_player.load_play_music('music/runescape_dream.wav')
 
         self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
         self.menu_sound.set_volume(Settings.effects_volume/100)
-
-        pygame.mixer.music.load('music/runescape_dream.wav')
-        pygame.mixer.music.set_volume(Settings.music_volume/100)
-        # loops music
-        pygame.mixer.music.play(-1)
 
     def get_screen(self) -> pygame.Surface:
         screen = pygame.display.set_mode(

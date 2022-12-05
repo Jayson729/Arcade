@@ -11,11 +11,12 @@ from pacman_sprite import PacmanSprite
 from state import State
 from settings import Settings
 from ghost import Ghost
+from music_player import MusicPlayer
 
 
 class Pacman(State):
 
-    def __init__(self):
+    def __init__(self, music_player: MusicPlayer):
         super().__init__()
 
         # initialize pygame
@@ -26,6 +27,7 @@ class Pacman(State):
         # create game objects
         self.img_path = 'images/pacman/'
         self.clock = pygame.time.Clock()
+        self.music_player = music_player
         # self.screen = self.get_screen()
         pygame.display.set_caption('Pacman')
         self.create_game()
@@ -58,11 +60,11 @@ class Pacman(State):
 
         return ghosts
 
-    def do_event(self, event):
-        if event.type == pygame.KEYDOWN:
-            if event.key in (Settings.main_keybinding.escape, Settings.alternate_keybinding.escape):
-                self.next_state = 'PAUSE'
-                self.done = True
+    # def do_event(self, event):
+    #     if event.type == pygame.KEYDOWN:
+    #         if event.key in (Settings.main_keybinding.escape, Settings.alternate_keybinding.escape):
+    #             self.next_state = 'PAUSE'
+    #             self.done = True
 
     def draw(self, screen) -> None:
         # self.screen.blit(self.background.image, (0, 0))
@@ -73,6 +75,7 @@ class Pacman(State):
         # self.buttons.draw(self.screen)
 
     def update(self) -> None:
+        self.music_player.load_play_music('music/pacman_chomp.wav')
         self.pacman.update()
         self.ghosts.update()
         # self.buttons.update()
