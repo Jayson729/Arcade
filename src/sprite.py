@@ -143,21 +143,12 @@ class AnimatedSprite(Sprite):
         return split_images
 
     def resize(self, new_width, new_height):
-        # for key, value in enumerate(self.images):
-        #     height = self.ORIGINAL_IMAGE.get_height() * multiplier
-        #     width = height * self.IMAGE_RATIO
-        #     self.images[key] = pygame.transform.scale(
-        #         self.ORIGINAL_IMAGE,
-        #         (width, height)
-        #     )
-        for key, _ in enumerate(self.images):
-            # scales image
-            self.images[key] = pygame.transform.scale(
-                self.original_animations[self.current_animation][key],
-                (new_width, new_height)
-            )
-            self.image = self.images[int(self.current_sprite)]
-            self.rect = self.images[0].get_rect(topleft=self.rect.topleft)
+        for animation_name, images in self.animations.items():
+            for i, _ in enumerate(images):
+                self.animations[animation_name][i] = pygame.transform.scale(
+                    self.original_animations[animation_name][i], (new_width, new_height)
+                )
+        self.set_animation(self.current_animation)
         self.image = self.images[int(self.current_sprite)]
         self.rect = self.image.get_rect(topleft=self.rect.topleft)
         return self

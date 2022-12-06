@@ -12,6 +12,7 @@ from state import State
 from settings import Settings
 from ghost import Ghost
 from music_player import MusicPlayer
+from map import Map
 
 
 class Pacman(State):
@@ -34,29 +35,40 @@ class Pacman(State):
 
     def create_game(self):
         self.map = self.get_map()
-        self.pacman = self.get_pacman()
-        self.ghosts = self.get_ghosts()
+        self.pacman = self.get_pacman(self.map)
+        self.ghosts = self.get_ghosts(self.map)
 
     def get_map(self):
-        pass
+        return Map()
 
-    def get_pacman(self):
-        return PacmanSprite(600, 400,
+    def get_pacman(self, map: Map):
+        """These coordinates are some of the most disguisting code I've ever written
+        places pacman at coordinate indicated on map"""
+        return PacmanSprite(map.game_objects['pacman'][0][0]*map.tile_width, map.game_objects['pacman'][0][1]*map.tile_width,
                             f'{self.img_path}yellow_pacman/',
                             f'{self.img_path}pacman_death/',
-                            )
+                            ).resize(map.tile_width, map.tile_height)
 
-    def get_ghosts(self):
+    def get_ghosts(self, map: Map):
+        """These coordinates are some of the most disguisting code I've ever written
+        places ghosts at coordinates indicated on map
+        of course since it's horribly written, if there aren't 4 ghosts on the map,
+        it will crash
+        """
         ghosts = pygame.sprite.Group()
-        blue_ghost = Ghost(300, 100, f'{self.img_path}blue_ghost/')
-        red_ghost = Ghost(400, 200, f'{self.img_path}red_ghost/')
-        orange_ghost = Ghost(300, 300, f'{self.img_path}orange_ghost/')
-        pink_ghost = Ghost(400, 400, f'{self.img_path}pink_ghost/')
+        blue_ghost = Ghost(map.game_objects['ghosts'][0][0]*map.tile_width,
+                           map.game_objects['ghosts'][0][1]*map.tile_width, f'{self.img_path}blue_ghost/')
+        red_ghost = Ghost(map.game_objects['ghosts'][1][0]*map.tile_width,
+                          map.game_objects['ghosts'][1][1]*map.tile_width, f'{self.img_path}red_ghost/')
+        orange_ghost = Ghost(map.game_objects['ghosts'][2][0]*map.tile_width,
+                             map.game_objects['ghosts'][2][1]*map.tile_width, f'{self.img_path}orange_ghost/')
+        pink_ghost = Ghost(map.game_objects['ghosts'][3][0]*map.tile_width,
+                           map.game_objects['ghosts'][3][1]*map.tile_width, f'{self.img_path}pink_ghost/')
 
-        ghosts.add(blue_ghost)
-        ghosts.add(red_ghost)
-        ghosts.add(orange_ghost)
-        ghosts.add(pink_ghost)
+        ghosts.add(blue_ghost.resize(map.tile_width, map.tile_height))
+        ghosts.add(red_ghost.resize(map.tile_width, map.tile_height))
+        ghosts.add(orange_ghost.resize(map.tile_width, map.tile_height))
+        ghosts.add(pink_ghost.resize(map.tile_width, map.tile_height))
 
         return ghosts
 
@@ -69,7 +81,7 @@ class Pacman(State):
     def draw(self, screen) -> None:
         # self.screen.blit(self.background.image, (0, 0))
         screen.fill((0, 0, 0))
-        # self.map.draw(self.screen)
+        self.map.draw(screen)
         self.pacman.draw(screen)
         self.ghosts.draw(screen)
         # self.buttons.draw(self.screen)
@@ -79,7 +91,7 @@ class Pacman(State):
         self.pacman.update()
         self.ghosts.update()
         # self.buttons.update()
-        # self.map.update()
+        self.map.update(self.pacman, self.ghosts)
 
 
 def main() -> None:

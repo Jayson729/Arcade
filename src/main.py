@@ -15,7 +15,7 @@ from music_player import MusicPlayer
 
 def main(state):
     pygame.init()
-    screen = pygame.display.set_mode(Settings.resolutions[0])
+    screen = pygame.display.set_mode(Settings.window_size)
     music_player = MusicPlayer()
 
     states = {
