@@ -51,6 +51,8 @@ class Ghost(AnimatedPlayer):
 
         return direction
 
-    def update(self):
+    def update(self, map):
         self.do_movement()
+        if map.is_wall((self.rect.centerx + self.movement[0], self.rect.centery + self.movement[1])):
+            self.movement = (0, 0)
         super().update()

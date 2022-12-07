@@ -88,8 +88,8 @@ class Pacman(State):
 
     def update(self) -> None:
         self.music_player.load_play_music('music/pacman_chomp.wav')
-        self.pacman.update()
-        self.ghosts.update()
+        self.pacman.update(self.map)
+        self.ghosts.update(self.map)
         # self.buttons.update()
         self.map.update(self.pacman, self.ghosts)
 

@@ -27,7 +27,7 @@ class Settings:
                    (320, 240), (640, 480), (960, 720), (1024, 768),
                    (1152, 864), (1280, 960)]
     aspect_ratio = 4/3
-    window_size = resolutions[0]
+    window_size = resolutions[9]
     window_width = window_size[0]
     window_height = window_size[1]
     main_keybinding = Keybinding(

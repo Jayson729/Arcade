@@ -144,7 +144,9 @@ class Map:
             self.game_objects['food'].remove(x)
         if (x := self.game_objects['pacman'][0]) in self.game_objects['capsules']:
             self.game_objects['capsules'].remove(x)
-        
+    
+    def is_pacman_in_ghost(self):
+        return self.game_objects['pacman'][0] in self.game_objects['ghosts']
 
     def is_wall(self, screen_coordinates: tuple[int, int]):
         """Returns if a given screen location is a wall based on tile size"""
