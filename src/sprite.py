@@ -72,6 +72,7 @@ class AnimatedSprite(Sprite):
 
         self.animation_time_prev = pygame.time.get_ticks()
         self.animation_trigger = False
+        self.pause_animation = False
 
         self.current_sprite = 0
         self.current_animation = name
@@ -81,7 +82,7 @@ class AnimatedSprite(Sprite):
         self.animate()
 
     def animate(self):
-        if not self.animation_trigger:
+        if not self.animation_trigger or self.pause_animation:
             return
 
         self.current_sprite = (self.current_sprite + 1) % self.NUM_IMAGES
@@ -90,6 +91,8 @@ class AnimatedSprite(Sprite):
         self.image = self.images[self.current_sprite]
 
     def check_animation_speed(self):
+        if self.pause_animation:
+            return
         self.animation_trigger = False
         time_now = pygame.time.get_ticks()
         if time_now - self.animation_time_prev > self.animation_speed:
