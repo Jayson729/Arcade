@@ -187,4 +187,5 @@ class AnimatedSprite(Sprite):
         self.current_sprite = 0
         self.current_animation = name
         self.images = self.animations[name]
+        self.animation_speed = self.animation_speeds[name]
         self.NUM_IMAGES = len(self.images)
