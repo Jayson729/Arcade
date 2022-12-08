@@ -4,6 +4,7 @@ but there needs to be a map class to draw and create the map
 https://github.com/StanislavPetrovV/DOOM-style-Game/blob/main/map.py
 for example
 """
+from copy import deepcopy
 from settings import Settings
 from pacman_sprite import PacmanSprite
 from ghost import Ghost
@@ -43,6 +44,8 @@ class Map:
         self.height = len(layout_text)
         self.tile_width = Settings.window_width // self.width
         self.tile_height = Settings.window_height // self.height
+        self.original_pacman_position = []
+        self.original_ghost_positions = []
 
         self.game_objects = self.find_game_objects(layout_text)
 
@@ -63,8 +66,10 @@ class Map:
                     game_objects['food'].append((y, x))
                 elif c == 'P':
                     game_objects['pacman'].append((y, x))
+                    self.original_pacman_position.append((y, x))
                 elif c == 'G':
                     game_objects['ghosts'].append((y, x))
+                    self.original_ghost_positions.append((y, x))
                 elif c == 'o':
                     game_objects['capsules'].append((y, x))
                 else:
@@ -135,3 +140,7 @@ class Map:
     def is_wall(self, screen_coordinates: tuple[int, int]):
         """Returns if a given screen location is a wall based on tile size"""
         return (screen_coordinates[0]//self.tile_width, screen_coordinates[1]//self.tile_height) in self.game_objects['walls']
+
+    def reset_positions(self):
+        self.game_objects['ghosts'] = deepcopy(self.original_ghost_positions)
+        self.game_objects['pacman'] = deepcopy(self.original_pacman_position)
