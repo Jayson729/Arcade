@@ -10,12 +10,18 @@ from player import AnimatedPlayer
 
 class Ghost(AnimatedPlayer):
     def __init__(self, x: int, y: int,
-                 base_path: str,
+                 base_path: str, scared_blue_path='images/pacman/scared_ghost_blue/',
+                 scared_white_path='images/pacman/scared_ghost_white/',
                  move_speed: float = 2.0, animation_speed: float = 150,
                  color=None) -> None:
         # first, calls super with all animations and sets instance variables
         super().__init__(x, y, base_path, move_speed, animation_speed, color)
         self.split_add_animations()
+        self.add_animation('scared_blue', scared_blue_path, animation_speed)
+        self.add_animation('scared_white', scared_white_path, animation_speed)
+        self.scared = False
+        self.scared_timer = 0
+        self.current_direction = None
 
         # this is only for random movements
         # get rid of this later
@@ -36,14 +42,14 @@ class Ghost(AnimatedPlayer):
             'right': (self.move_speed, 0),
         }
         direction = self.get_direction(movements)
+        self.current_direction = direction
         self.movement = movements[direction]
         self.set_animation(direction)
 
     def get_direction(self, movements):
         # for now, random movements
         # in the future, I want to implement DFS toward pacman
-        direction = (self.current_animation
-                     if self.current_animation != 'base' else random.choice(list(movements.keys())))
+        direction = self.current_direction if self.current_direction is not None else random.choice(list(movements.keys()))
         self.temp_timer += 1
         if self.temp_timer >= 25:
             direction = random.choice(list(movements.keys()))
@@ -52,7 +58,24 @@ class Ghost(AnimatedPlayer):
         return direction
 
     def update(self, map):
-        self.do_movement()
+        if not self.scared:
+            self.do_movement()
+        else:
+            self.do_scared()
         if map.is_wall((self.rect.centerx + self.movement[0], self.rect.centery + self.movement[1])):
             self.movement = (0, 0)
         super().update()
+
+    def do_scared(self):
+        self.do_scared_movement()
+        self.scared_timer += 1
+        if self.scared_timer < 150:
+            self.set_animation('scared_blue')
+        elif self.scared_timer < 250:
+            self.set_animation('scared_white')
+        else:
+            self.scared = False
+            self.scared_timer = 0
+
+    def do_scared_movement(self):
+        pass

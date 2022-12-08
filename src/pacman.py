@@ -90,8 +90,30 @@ class Pacman(State):
         self.music_player.load_play_music('music/pacman_chomp.wav')
         self.pacman.update(self.map)
         self.ghosts.update(self.map)
+        self.update_map()
+        self.check_object_collisions()
         # self.buttons.update()
-        self.map.update(self.pacman, self.ghosts)
+
+        # self.map.update(self.pacman, self.ghosts)
+    def check_object_collisions(self):
+        if self.map.is_colliding(self.pacman.rect.center, 'ghosts'):
+            self.pacman.set_animation('death')
+            self.pacman.allow_player_movement = False
+        elif self.map.is_colliding(self.pacman.rect.center, 'food'):
+            self.map.delete_object(self.pacman.rect.center, 'food')
+            # inc score
+        elif self.map.is_colliding(self.pacman.rect.center, 'capsules'):
+            self.map.delete_object(self.pacman.rect.center, 'capsules')
+            self.do_ghosts_scared()
+
+    def update_map(self):
+        self.map.set_object_location_from_list('pacman', [self.pacman.rect.center])
+        self.map.set_object_location_from_list('ghosts', [
+            ghost.rect.center for ghost in self.ghosts.sprites()])
+    
+    def do_ghosts_scared(self):
+        for ghost in self.ghosts:
+            ghost.scared = True
 
 
 def main() -> None:
