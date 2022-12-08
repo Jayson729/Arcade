@@ -5,6 +5,7 @@ Switch to pacman death when you touch a ghost
 """
 
 from player import AnimatedPlayer
+from settings import Settings
 # from map import Map
 
 
@@ -15,6 +16,17 @@ class PacmanSprite(AnimatedPlayer):
                  color=None) -> None:
         super().__init__(x, y, base_path, move_speed, animation_speed, color=color)
         self.add_animation('death', death_path, animation_speed*2)
+    
+    def check_out_of_bounds(self):
+        # use 1 because 0 can make clipping at the edge possible
+        if self.rect.centerx < 1:
+            self.rect.centerx = Settings.window_width
+        elif self.rect.centerx >= Settings.window_width:
+            self.rect.centerx = 1
+        elif self.rect.centery < 1:
+            self.rect.centery = Settings.window_height
+        elif self.rect.centery >= Settings.window_height:
+            self.rect.centery = 1
 
     # good I think
     def do_movement(self) -> None:

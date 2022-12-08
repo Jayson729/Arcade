@@ -56,8 +56,8 @@ class WinMenu(State):
 
         font = pygame.font.Font('fonts/Stardew_Valley.ttf', 50)
         buttons = ButtonGroup()
-        buttons.add(Button(640, 660, 'Arcade Menu', font, arcade))
-        buttons.add(Button(640, 700, 'Main Menu', font, quit_action))
+        buttons.add(Button(400, 410, 'Arcade Menu', font, arcade))
+        buttons.add(Button(400, 450, 'Main Menu', font, quit_action))
         return buttons
 
     def do_event(self, event):
