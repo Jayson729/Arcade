@@ -4,12 +4,13 @@ from cloud import Cloud
 from button import Button, ButtonGroup
 from sprite import Sprite, AnimatedSprite
 from settings import Settings
+from music_player import MusicPlayer
 
 
 class StartMenu(State):
     """Main class that calls everything else"""
 
-    def __init__(self) -> None:
+    def __init__(self, music_player: MusicPlayer) -> None:
         """Initializes StartMenu"""
         super().__init__()
 
@@ -22,6 +23,7 @@ class StartMenu(State):
         self.img_path = 'images/start_menu/'
         self.global_img_path = 'images/'
         self.clock = pygame.time.Clock()
+        self.music_player = music_player
         pygame.display.set_caption('Start Menu')
         pygame.display.set_icon(pygame.image.load(
             f'{self.global_img_path}main.png'))
@@ -33,14 +35,10 @@ class StartMenu(State):
         self.waterfall = self.get_waterfall()
         self.clouds = self.get_clouds()
         self.buttons = self.get_buttons()
+        self.music_player.load_play_music('music/runescape_dream.wav')
 
         self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
         self.menu_sound.set_volume(Settings.effects_volume/100)
-
-        pygame.mixer.music.load('music/runescape_dream.wav')
-        pygame.mixer.music.set_volume(Settings.music_volume/100)
-        # loops music
-        pygame.mixer.music.play(-1)
 
     def get_waterfall(self):
         """gets animated waterfall"""

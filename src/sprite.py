@@ -72,6 +72,7 @@ class AnimatedSprite(Sprite):
 
         self.animation_time_prev = pygame.time.get_ticks()
         self.animation_trigger = False
+        self.pause_animation = False
 
         self.current_sprite = 0
         self.current_animation = name
@@ -81,7 +82,7 @@ class AnimatedSprite(Sprite):
         self.animate()
 
     def animate(self):
-        if not self.animation_trigger:
+        if not self.animation_trigger or self.pause_animation:
             return
 
         self.current_sprite = (self.current_sprite + 1) % self.NUM_IMAGES
@@ -90,6 +91,8 @@ class AnimatedSprite(Sprite):
         self.image = self.images[self.current_sprite]
 
     def check_animation_speed(self):
+        if self.pause_animation:
+            return
         self.animation_trigger = False
         time_now = pygame.time.get_ticks()
         if time_now - self.animation_time_prev > self.animation_speed:
@@ -143,21 +146,12 @@ class AnimatedSprite(Sprite):
         return split_images
 
     def resize(self, new_width, new_height):
-        # for key, value in enumerate(self.images):
-        #     height = self.ORIGINAL_IMAGE.get_height() * multiplier
-        #     width = height * self.IMAGE_RATIO
-        #     self.images[key] = pygame.transform.scale(
-        #         self.ORIGINAL_IMAGE,
-        #         (width, height)
-        #     )
-        for key, _ in enumerate(self.images):
-            # scales image
-            self.images[key] = pygame.transform.scale(
-                self.original_animations[self.current_animation][key],
-                (new_width, new_height)
-            )
-            self.image = self.images[int(self.current_sprite)]
-            self.rect = self.images[0].get_rect(topleft=self.rect.topleft)
+        for animation_name, images in self.animations.items():
+            for i, _ in enumerate(images):
+                self.animations[animation_name][i] = pygame.transform.scale(
+                    self.original_animations[animation_name][i], (new_width, new_height)
+                )
+        self.set_animation(self.current_animation)
         self.image = self.images[int(self.current_sprite)]
         self.rect = self.image.get_rect(topleft=self.rect.topleft)
         return self
@@ -193,4 +187,5 @@ class AnimatedSprite(Sprite):
         self.current_sprite = 0
         self.current_animation = name
         self.images = self.animations[name]
+        self.animation_speed = self.animation_speeds[name]
         self.NUM_IMAGES = len(self.images)

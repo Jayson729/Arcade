@@ -2,13 +2,14 @@ import pygame
 from state import State
 from people import People
 from sprite import Sprite, AnimatedSprite
-from button import Button, ButtonGroup
+from button import Button, AnimatedButton, ButtonGroup
 from settings import Settings
+from music_player import MusicPlayer
 
 
 class ArcadeMenu(State):
 
-    def __init__(self) -> None:
+    def __init__(self, music_player: MusicPlayer) -> None:
 
         super().__init__()
 
@@ -20,6 +21,7 @@ class ArcadeMenu(State):
         self.img_path = 'images/arcade_menu/'
         self.global_img_path = 'images/'
         self.clock = pygame.time.Clock()
+        self.music_player = music_player
         pygame.display.set_caption('Select Game')
         pygame.display.set_icon(pygame.image.load(
             f'{self.global_img_path}main.png'))
@@ -27,20 +29,12 @@ class ArcadeMenu(State):
 
     def create_menu(self):
         self.background = self.get_background()
-        self.pong = self.get_pong()
-        self.anipong = self.get_anipong()
-        self.pac = self.get_pac()
-        self.anipac = self.get_anipac()
         self.buttons = self.get_buttons()
         self.people = self.get_people()
+        self.music_player.load_play_music('music/runescape_dream.wav')
 
         self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
         self.menu_sound.set_volume(Settings.effects_volume/100)
-
-        pygame.mixer.music.load('music/runescape_dream.wav')
-        pygame.mixer.music.set_volume(Settings.music_volume/100)
-        # loops music
-        pygame.mixer.music.play(-1)
 
     def get_screen(self) -> pygame.Surface:
         screen = pygame.display.set_mode(
@@ -49,37 +43,13 @@ class ArcadeMenu(State):
         )
         return screen
 
-    def get_pong(self):
-        pongimg = pygame.image.load(f"{self.img_path}pong.png")
-        pong = Sprite(225, 180, pongimg)
-        pong.resize(100, 100)
-        return pong
-
-    def get_anipong(self):
-        anipong = AnimatedSprite(
-            225, 180, f'{self.img_path}anipong/', animation_speed=150)
-        anipong.resize(100, 100)
-        return anipong
-
-    def get_pac(self):
-        pacimg = pygame.image.load(f"{self.img_path}pac.png")
-        pac = Sprite(450, -15, pacimg)
-        pac.resize(230, 230)
-        return pac
-
-    def get_anipac(self):
-        anipac = AnimatedSprite(
-            450, -15, f'{self.img_path}anipac/', animation_speed=150)
-        anipac.resize(230, 230)
-        return anipac
-
     def get_background(self) -> Sprite:
         bg_image = pygame.image.load(f"{self.img_path}backgroundArcade.png")
         background = Sprite(0, 0, bg_image)
         background.resize(800, 600)
         return background
 
-    def get_people(self, move_horif: float = 1, move_horib = 1.1,
+    def get_people(self, move_horif: float = 1, move_horib=1.1,
                    move_vert: float = 1) -> pygame.sprite.Group:
         # TO DO
         personf1Img = pygame.image.load(f"{self.img_path}peoplef1.png")
@@ -87,9 +57,9 @@ class ArcadeMenu(State):
         people = pygame.sprite.Group()
 
         people.add(People(personb1Img, -40, 760,
-                    move_horib, move_vert).resize(155, 291))
+                          move_horib, move_vert).resize(155, 291))
         people.add(People(personf1Img, 895, -55,
-                    move_horif, move_vert).resize(214, 430))
+                          move_horif, move_vert).resize(214, 430))
 
         return people
 
@@ -114,12 +84,10 @@ class ArcadeMenu(State):
         buttons.add(
             Button(50, 575, 'BACK', pygame.font.Font(
                 'fonts/Stardew_Valley.ttf', 40), back_action))
-        buttons.add(
-            Button(278, 200, 'PONG', pygame.font.Font(
-                'fonts/Stardew_Valley.ttf', 50), pong_action))
-        buttons.add(
-            Button(550, 110, 'PAC', pygame.font.Font(
-                'fonts/Stardew_Valley.ttf', 20), pacman_action))
+        buttons.add(AnimatedButton(
+            225, 180, f'{self.img_path}anipong/', animation_speed=150, action=pong_action, center=False).resize(100, 100))
+        buttons.add(AnimatedButton(
+            450, -15, f'{self.img_path}anipac/', animation_speed=150, action=pacman_action, center=False).resize(230, 230))
 
         return buttons
 
@@ -130,18 +98,8 @@ class ArcadeMenu(State):
         self.background.draw(screen)
         self.people.draw(screen)
         self.buttons.draw(screen)
-        self.anipong.draw(screen)
-        self.anipac.draw(screen)
-
-    def draw_anipong(self, screen):
-        self.anipong.draw(screen)
-    
-    def draw_anipac(self, screen):
-        self.anipac.draw(screen)
 
     def update(self):
-        self.anipac.update()
-        self.anipong.update()
         self.people.update()
         self.buttons.update()
 

@@ -1,8 +1,3 @@
-"""TODO: Make a general pause menu for every game
-Should be pretty simple, no fancy art just some buttons
-for settings/quit game (go to another menu)
-Code should be pretty similar to start menu for buttons
-"""
 import pygame
 from state import State
 from settings import Settings
@@ -10,8 +5,7 @@ from sprite import Sprite
 from button import Button, ButtonGroup
 from music_player import MusicPlayer
 
-
-class PauseMenu(State):
+class WinMenu(State):
     def __init__(self, music_player: MusicPlayer) -> None:
         """Initializes SettingsMenu"""
         super().__init__()
@@ -22,13 +16,13 @@ class PauseMenu(State):
         pygame.init()
 
         # create game objects
-        self.img_path = 'images/pause_menu/'
+        self.img_path = 'images/win_menu/'
         self.global_path = 'images/'
         self.default_color = Settings.pause_menu_text_color
         self.default_font = Settings.pause_menu_font
         self.clock = pygame.time.Clock()
         self.music_player = music_player
-        pygame.display.set_caption('Pause Menu')
+        pygame.display.set_caption('!!_Winner_!!')
         pygame.display.set_icon(pygame.image.load(
             f'{self.global_path}main.png'))
         self.create_game()
@@ -39,25 +33,21 @@ class PauseMenu(State):
 
         self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
         self.menu_sound.set_volume(Settings.effects_volume/100)
-        self.music_player.load_play_music('music/runescape_dream.wav')
+        self.music_player.load_play_music('music/celebration.mp3')
 
     def get_background(self):
         """Creates background as Sprite"""
         bg_image = pygame.image.load(
-            f"{self.img_path}Myproject-1.png")
+            f"{self.img_path}gameover.png")
         background = Sprite(0, 0, bg_image)
         background.resize(Settings.window_width, Settings.window_height)
         return background
 
     def get_buttons(self):
-        def resume_action():
-            print('resume')
-            self.next_state = 'PREVIOUS'
-            self.done = True
 
-        def settings_action():
-            print('settings')
-            self.next_state = 'SETTINGS'
+        def arcade():
+            print('arcade')
+            self.next_state = 'ARCADE'
             self.done = True
 
         def quit_action():
@@ -67,9 +57,8 @@ class PauseMenu(State):
 
         font = pygame.font.Font('fonts/Stardew_Valley.ttf', 50)
         buttons = ButtonGroup()
-        buttons.add(Button(410, 125, 'RESUME', font, resume_action))
-        buttons.add(Button(410, 165, 'SETTINGS', font, settings_action))
-        buttons.add(Button(410, 205, 'QUIT TO MENU', font, quit_action))
+        buttons.add(Button(640, 660, 'Arcade Menu', font, arcade))
+        buttons.add(Button(640, 700, 'Main Menu', font, quit_action))
         return buttons
 
     def do_event(self, event):
@@ -85,7 +74,7 @@ class PauseMenu(State):
 
 def main():
     from main import main
-    main('PAUSE')
+    main('WIN')
 
 
 if __name__ == '__main__':

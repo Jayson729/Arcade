@@ -1,5 +1,5 @@
 import pygame
-from sprite import Sprite
+from sprite import Sprite, AnimatedSprite
 from settings import Settings
 
 
@@ -76,10 +76,68 @@ class Button(Sprite):
             return True
         return False
 
+class AnimatedButton(AnimatedSprite):
+    def __init__(self, x: int, y: int, path, animation_speed, action,
+                center=True) -> None:
+        """Initializes Button"""
+
+        # set instance variables
+        self.currently_hovered = False
+        self.currently_keyboard_hovered = False
+        self.currently_mouse_hovered = False
+        self.action = action
+
+        # render font
+
+        # call super with rendered font
+        super().__init__(x, y, path, animation_speed)
+
+        # don't do animation
+        self.pause_animation = True
+
+        # center button
+        if center:
+            self.rect.center = (x, y)
+
+    def check_mouse_hover(self, mouse: tuple) -> bool:
+        """Checks if the mouse is hovering
+        return True if colliding, False if not
+        """
+        collision = self.rect.collidepoint(mouse[0], mouse[1])
+        self.currently_mouse_hovered = collision
+        return self.currently_mouse_hovered
+
+    def set_keyboard_hover(self, val: bool) -> None:
+        """Sets keyboard hover to val"""
+        self.currently_keyboard_hovered = val
+
+    def update(self) -> None:
+        """Updates button"""
+        self.currently_hovered = (self.currently_keyboard_hovered
+                                  or self.currently_mouse_hovered)
+
+        if self.currently_hovered:
+            self.pause_animation = False
+        else:
+            self.current_sprite = 0
+            self.image = self.images[0]
+            self.pause_animation = True
+        super().update()
+
+    def do_action(self) -> None:
+        """Another way to call b.action()"""
+        self.action()
+
+    def do_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            self.do_action()
+            return True
+        return False
+
 
 class ButtonGroup:
     def __init__(self):
-        self.button_list: list[Button] = []
+        self.button_list: list[Button | AnimatedButton] = []
         self.num_buttons = 0
         self.current_button_index = 0
         self.enable_keyboard = True
