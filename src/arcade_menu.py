@@ -1,7 +1,8 @@
 import pygame
 from state import State
-from people import People
+from player import AnimatedPlayer
 from sprite import Sprite, AnimatedSprite
+from person import Person
 from button import Button, AnimatedButton, ButtonGroup
 from settings import Settings
 from music_player import MusicPlayer
@@ -49,20 +50,14 @@ class ArcadeMenu(State):
         background.resize(800, 600)
         return background
 
-    def get_people(self, move_horif: float = 1, move_horib=1.1,
-                   move_vert: float = 1) -> pygame.sprite.Group:
-        # TO DO
-        personf1Img = pygame.image.load(f"{self.img_path}peoplef1.png")
-        personb1Img = pygame.image.load(f"{self.img_path}peopleb1.png")
+    def get_people(self) -> pygame.sprite.Group:
         people = pygame.sprite.Group()
 
-        people.add(People(personb1Img, -40, 760,
-                          move_horib, move_vert).resize(155, 291))
-        people.add(People(personf1Img, 895, -55,
-                          move_horif, move_vert).resize(214, 430))
+        people.add(Person(895, 80, f'{self.img_path}omori/', 1, 150).resize(114, 166))
+        people.add(Person(835, 80, f'{self.img_path}aubrey/', 1, 150).resize(130, 150))
 
         return people
-
+    
     def get_buttons(self) -> ButtonGroup:
         def back_action():
             print('back')
@@ -100,6 +95,8 @@ class ArcadeMenu(State):
         self.buttons.draw(screen)
 
     def update(self):
+        # self.do_movement(self.people)
+        # self.check_out_of_bounds(self.people)
         self.people.update()
         self.buttons.update()
 

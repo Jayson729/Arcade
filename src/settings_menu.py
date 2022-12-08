@@ -94,7 +94,7 @@ class SettingsMenu(State):
 
         def back_action():
             print('back')
-            self.next_state = 'PREVIOUS'
+            self.next_state = 'START'
             self.done = True
 
         buttons = ButtonGroup()

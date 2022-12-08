@@ -11,6 +11,7 @@ from settings_menu import SettingsMenu
 from settings import Settings
 from pause_menu import PauseMenu
 from music_player import MusicPlayer
+from credits import CreditsMenu
 
 
 def main(state):
@@ -19,13 +20,10 @@ def main(state):
     music_player = MusicPlayer()
 
     states = {
-        # "START": StartMenu,
         "START": StartMenu,
         "ARCADE" : ArcadeMenu,
-        # "SETTINGS" : SettingsMenu(),
-        # "CREDITS" : Credits(),
         "SETTINGS": SettingsMenu,
-        'CREDITS': Pacman,
+        'CREDITS': CreditsMenu,
         'PACMAN': Pacman,
         'PAUSE': PauseMenu,
         'PONG': Pong,
