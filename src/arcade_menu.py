@@ -130,8 +130,8 @@ class ArcadeMenu(State):
         self.background.draw(screen)
         self.people.draw(screen)
         self.buttons.draw(screen)
-        self.pong.draw(screen)
-        self.pac.draw(screen)
+        self.anipong.draw(screen)
+        self.anipac.draw(screen)
 
     def draw_anipong(self, screen):
         self.anipong.draw(screen)
