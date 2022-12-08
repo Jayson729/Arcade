@@ -98,6 +98,7 @@ class Pacman(State):
     def check_object_collisions(self):
         if self.map.is_colliding(self.pacman.rect.center, 'ghosts'):
             self.pacman.set_animation('death')
+            self.pacman.movement = (0, 0)
             self.pacman.allow_player_movement = False
         elif self.map.is_colliding(self.pacman.rect.center, 'food'):
             self.map.delete_object(self.pacman.rect.center, 'food')
