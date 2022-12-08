@@ -30,6 +30,7 @@ class Settings:
     window_size = resolutions[0]
     window_width = window_size[0]
     window_height = window_size[1]
+    default_bindings = True
     main_keybinding = Keybinding(
         pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_ESCAPE, pygame.K_RETURN
     )
