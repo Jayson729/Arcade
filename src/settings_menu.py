@@ -35,7 +35,6 @@ class SettingsMenu(State):
         self.background = self.get_background()
         self.buttons = self.get_buttons()
         self.menu_items = self.get_menu_items()
-        self.music_player.load_play_music('music/runescape_dream.wav')
 
         self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
         self.menu_sound.set_volume(Settings.effects_volume/100)
@@ -147,6 +146,7 @@ class SettingsMenu(State):
         self.draw_volumes(screen)
 
     def update(self):
+        self.music_player.load_play_music('music/runescape_dream.wav')
         self.buttons.update()
 
 

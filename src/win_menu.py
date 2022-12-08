@@ -33,7 +33,6 @@ class WinMenu(State):
 
         self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
         self.menu_sound.set_volume(Settings.effects_volume/100)
-        self.music_player.load_play_music('music/celebration.mp3')
 
     def get_background(self):
         """Creates background as Sprite"""
@@ -69,6 +68,7 @@ class WinMenu(State):
         self.buttons.draw(screen)
 
     def update(self):
+        self.music_player.load_play_music('music/celebration.mp3')
         self.buttons.update()
 
 

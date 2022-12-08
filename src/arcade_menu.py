@@ -32,7 +32,6 @@ class ArcadeMenu(State):
         self.background = self.get_background()
         self.buttons = self.get_buttons()
         self.people = self.get_people()
-        self.music_player.load_play_music('music/runescape_dream.wav')
 
         self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
         self.menu_sound.set_volume(Settings.effects_volume/100)
@@ -95,6 +94,7 @@ class ArcadeMenu(State):
         self.buttons.draw(screen)
 
     def update(self):
+        self.music_player.load_play_music('music/runescape_dream.wav')
         # self.do_movement(self.people)
         # self.check_out_of_bounds(self.people)
         self.people.update()

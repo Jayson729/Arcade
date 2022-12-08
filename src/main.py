@@ -12,6 +12,7 @@ from settings import Settings
 from pause_menu import PauseMenu
 from music_player import MusicPlayer
 from credits import CreditsMenu
+from win_menu import WinMenu
 
 
 def main(state):
@@ -27,6 +28,7 @@ def main(state):
         'PACMAN': Pacman,
         'PAUSE': PauseMenu,
         'PONG': Pong,
+        'WIN': WinMenu,
     }
 
     game = StateManager(screen, states, state, music_player)

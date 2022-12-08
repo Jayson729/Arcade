@@ -39,7 +39,6 @@ class PauseMenu(State):
 
         self.menu_sound = pygame.mixer.Sound('sounds/click.wav')
         self.menu_sound.set_volume(Settings.effects_volume/100)
-        self.music_player.load_play_music('music/runescape_dream.wav')
 
     def get_background(self):
         """Creates background as Sprite"""
@@ -80,6 +79,7 @@ class PauseMenu(State):
         self.buttons.draw(screen)
 
     def update(self):
+        self.music_player.load_play_music('music/runescape_dream.wav')
         self.buttons.update()
 
 
