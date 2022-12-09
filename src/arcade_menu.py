@@ -59,7 +59,7 @@ class ArcadeMenu(State):
     def get_buttons(self) -> ButtonGroup:
         def back_action():
             print('back')
-            self.next_state = 'START'
+            self.next_state = 'PREVIOUS'
             self.done = True
 
         def pong_action():

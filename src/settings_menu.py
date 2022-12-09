@@ -118,7 +118,7 @@ class SettingsMenu(State):
 
         def back_action():
             print('back')
-            self.next_state = 'START'
+            self.next_state = 'PREVIOUS'
             self.done = True
 
         def key_bind_default():

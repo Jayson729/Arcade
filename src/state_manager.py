@@ -33,27 +33,36 @@ class StateManager:
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key in (Settings.main_keybinding.escape, Settings.alternate_keybinding.escape):
-                    self.paused = not self.paused
-                    if self.paused:
-                        self.store_switch_state('PAUSE')
-                    else:
+                    # self.paused = not self.paused
+                    if len(self.state_history) > 0:
                         self.do_previous_state()
+                    else:
+                        self.store_switch_state('PAUSE')
+                    # else:
+                    #     self.do_previous_state()
             self.current_state.do_event(event)
     
     def play_state(self, state_name):
+        self.state_history.clear()
         self.current_state = self.states[state_name](music_player=self.music_player)
 
     def flip_state(self):
-        self.paused = False
+        # self.paused = False
         if self.current_state.next_state == 'PREVIOUS':
             self.do_previous_state()
         else:
+            self.store_switch_state(self.current_state.next_state)
             # self.store_switch_state(self.current_state.next_state)
-            self.state_history.clear()
-            self.play_state(self.current_state.next_state)
+            # self.state_history.clear()
+            # self.play_state(self.current_state.next_state)
 
     def store_switch_state(self, state_name):
-        self.state_history.append(self.current_state)
+        if self.current_state.next_state in ('START', 'PACMAN', 'PONG'):
+            self.state_history.clear()
+        else:
+            # self.paused = False
+            self.state_history.append(self.current_state)
+        self.current_state.done = False
         self.current_state = self.states[state_name](music_player=self.music_player)
             
     def do_previous_state(self):
