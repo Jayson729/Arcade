@@ -40,17 +40,24 @@ class CreditsMenu(State):
 
     def get_menu_items(self):
         font = pygame.font.Font(self.default_font, 30)
+        small_font = pygame.font.Font(self.default_font, 20)
         menu_items = pygame.sprite.Group()
-        menu_items.add(Sprite(330, 165, font.render(
+        menu_items.add(Sprite(330, 160, font.render(
             'TEAM ARCADE', True, self.text_color)))
-        menu_items.add(Sprite(280, 230, font.render(
+        menu_items.add(Sprite(280, 205, font.render(
             'Travis Johnson', True, self.text_color)))
-        menu_items.add(Sprite(280, 280, font.render(
+        menu_items.add(Sprite(280, 255, font.render(
             'Brendan Kinder', True, self.text_color)))
-        menu_items.add(Sprite(280, 330, font.render(
+        menu_items.add(Sprite(280, 305, font.render(
             'Ben Saunders', True, self.text_color)))
-        menu_items.add(Sprite(280, 380, font.render(
+        menu_items.add(Sprite(280, 355, font.render(
             'Jayson Willey', True, self.text_color)))
+
+        menu_items.add(Sprite(280, 410, small_font.render(
+            'Font and Music: Stardew Valley', True, self.text_color)))
+        menu_items.add(Sprite(280, 435, small_font.render(
+            'Arcade Sprites:  OMORI', True, self.text_color)))
+
         return menu_items
 
     def get_background(self) -> Sprite:
