@@ -17,11 +17,12 @@ class Ball(StaticPlayer):
                  paddles: pygame.sprite.Group = None) -> None:
         """Initializes Ball"""
         super().__init__(x, y, img, move_speed, color)
-        self.movement = (0, 0)
+        # self.movement = (0, 0)
         self.paddles = paddles
-        self.score_timer = pygame.time.get_ticks()
-        self.score_sound = None
-        self.active = False
+        self.reset_ball()
+        # self.score_timer = pygame.time.get_ticks()
+        # self.score_sound = None
+        # self.active = False
 
     def do_movement(self) -> None:
         collision = self.get_collision()
@@ -207,7 +208,10 @@ class Pong(State):
                 Settings.window_width//2,
                 Settings.window_height//2,
                 ball_img, color=(255, 255, 255), paddles=self.paddles
-            ).resize(40, 40))
+            ).resize(35, 35))
+        
+        # fixes resize glitch... not a great fix exactly
+        balls.sprites()[0].rect.center = (Settings.window_width//2, Settings.window_height//2)
         return balls
 
     def draw_scores(self, screen) -> None:

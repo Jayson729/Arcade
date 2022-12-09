@@ -66,9 +66,9 @@ class PauseMenu(State):
 
         font = pygame.font.Font('fonts/Stardew_Valley.ttf', 50)
         buttons = ButtonGroup()
-        buttons.add(Button(410, 125, 'RESUME', font, resume_action))
-        buttons.add(Button(410, 165, 'SETTINGS', font, settings_action))
-        buttons.add(Button(410, 205, 'QUIT TO MENU', font, quit_action))
+        buttons.add(Button(410, 125, 'RESUME', font, resume_action, color=(0, 0, 0), hover_color=(100, 100, 100)))
+        buttons.add(Button(410, 165, 'SETTINGS', font, settings_action, color=(0, 0, 0), hover_color=(100, 100, 100)))
+        buttons.add(Button(410, 205, 'QUIT TO MENU', font, quit_action, color=(0, 0, 0), hover_color=(100, 100, 100)))
         return buttons
 
     def do_event(self, event):

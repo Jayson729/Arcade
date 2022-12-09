@@ -70,7 +70,7 @@ class SettingsMenu(State):
         bg_image = pygame.image.load(
             f"{self.img_path}settings_menu_background.png")
         background = Sprite(0, 0, bg_image)
-        background.resize(800, 600)
+        background.resize(Settings.window_width, Settings.window_height)
         return background
 
     def get_buttons(self) -> ButtonGroup:
