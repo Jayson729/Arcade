@@ -11,7 +11,7 @@ from settings_menu import SettingsMenu
 from settings import Settings
 from pause_menu import PauseMenu
 from music_player import MusicPlayer
-from credits import CreditsMenu
+from credits_menu import CreditsMenu
 from win_menu import WinMenu
 
 

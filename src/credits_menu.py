@@ -20,8 +20,8 @@ class CreditsMenu(State):
         # create game objects
         self.img_path = 'images/credits_menu/'
         self.global_path = 'images/'
-        self.default_color = Settings.settings_menu_text_color
-        self.default_font = Settings.settings_menu_font
+        self.text_color = Settings.credits_menu_text_color
+        self.default_font = Settings.credits_menu_font
         self.music_player = music_player
         self.clock = pygame.time.Clock()
 
@@ -41,16 +41,16 @@ class CreditsMenu(State):
     def get_menu_items(self):
         font = pygame.font.Font(self.default_font, 30)
         menu_items = pygame.sprite.Group()
-        menu_items.add(Sprite(360, 150, font.render(
-            'FONTS', True, self.default_color)))
-        menu_items.add(Sprite(360, 230, font.render(
-            'MUSIC', True, self.default_color)))
-        menu_items.add(Sprite(355, 320, font.render(
-            'IMAGES', True, self.default_color)))
+        menu_items.add(Sprite(330, 165, font.render(
+            'TEAM ARCADE', True, self.text_color)))
+        menu_items.add(Sprite(280, 230, font.render(
+            'Travis Johnson', True, self.text_color)))
+        menu_items.add(Sprite(280, 280, font.render(
+            'Brendan Kinder', True, self.text_color)))
         menu_items.add(Sprite(280, 330, font.render(
-            '', True, self.default_color)))
+            'Ben Saunders', True, self.text_color)))
         menu_items.add(Sprite(280, 380, font.render(
-            '', True, self.default_color)))
+            'Jayson Willey', True, self.text_color)))
         return menu_items
 
     def get_background(self) -> Sprite:
