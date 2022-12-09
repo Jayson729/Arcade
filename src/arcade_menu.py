@@ -1,7 +1,6 @@
 import pygame
 from state import State
-from player import AnimatedPlayer
-from sprite import Sprite, AnimatedSprite
+from sprite import Sprite
 from person import Person
 from button import Button, AnimatedButton, ButtonGroup
 from settings import Settings
@@ -52,8 +51,8 @@ class ArcadeMenu(State):
     def get_people(self) -> pygame.sprite.Group:
         people = pygame.sprite.Group()
 
-        people.add(Person(895, 80, f'{self.img_path}omori/', 1, 150).resize(114, 166))
-        people.add(Person(835, 80, f'{self.img_path}aubrey/', 1, 150).resize(130, 150))
+        people.add(Person(815, 80, f'{self.img_path}aubrey/', 1, 150).resize(130, 150))
+        people.add(Person(905, 80, f'{self.img_path}omori/', 1, 150).resize(114, 166))
 
         return people
     
@@ -77,7 +76,7 @@ class ArcadeMenu(State):
 
         buttons.add(
             Button(50, 575, 'BACK', pygame.font.Font(
-                'fonts/Stardew_Valley.ttf', 40), back_action))
+                'fonts/Stardew_Valley.ttf', 40), back_action, '#6B3710'))
         buttons.add(AnimatedButton(
             225, 180, f'{self.img_path}anipong/', animation_speed=150, action=pong_action, center=False).resize(100, 100))
         buttons.add(AnimatedButton(
@@ -95,8 +94,6 @@ class ArcadeMenu(State):
 
     def update(self):
         self.music_player.load_play_music('music/runescape_dream.wav')
-        # self.do_movement(self.people)
-        # self.check_out_of_bounds(self.people)
         self.people.update()
         self.buttons.update()
 

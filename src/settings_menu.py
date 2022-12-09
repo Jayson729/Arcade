@@ -22,6 +22,7 @@ class SettingsMenu(State):
         self.img_path = 'images/settings_menu/'
         self.global_path = 'images/'
         self.default_color = Settings.settings_menu_text_color
+        self.key_color = Settings.settings_menu_key_color
         self.default_font = Settings.settings_menu_font
         self.clock = pygame.time.Clock()
         self.music_player = music_player
@@ -153,11 +154,11 @@ class SettingsMenu(State):
         )
         buttons.add(
             Button(520, 290, 'DEFAULT', pygame.font.Font('fonts/Stardew_Valley.ttf', 15),
-                   key_bind_default)
+                   key_bind_default, '#ac8269')
         )
         buttons.add(
             Button(520, 305, 'ALTERNATE', pygame.font.Font('fonts/Stardew_Valley.ttf', 15),
-                   key_bind_alternate)
+                   key_bind_alternate, '#ac8269')
         )
         buttons.add(
             Button(50, 575, 'BACK', pygame.font.Font('fonts/Stardew_Valley.ttf', 40),
@@ -178,17 +179,17 @@ class SettingsMenu(State):
         effects_vol_render = font.render(
             str(Settings.effects_volume), True, self.default_color)
         up_bind = kfont.render(
-            self.binds_list[0], True, self.default_color)
+            self.binds_list[0], True, self.key_color)
         down_bind = kfont.render(
-            self.binds_list[1], True, self.default_color)
+            self.binds_list[1], True, self.key_color)
         left_bind = kfont.render(
-            self.binds_list[2], True, self.default_color)
+            self.binds_list[2], True, self.key_color)
         right_bind = kfont.render(
-            self.binds_list[3], True, self.default_color)
+            self.binds_list[3], True, self.key_color)
         esc_bind = kfont.render(
-            self.binds_list[4], True, self.default_color)
+            self.binds_list[4], True, self.key_color)
         ret_bind = kfont.render(
-            self.binds_list[5], True, self.default_color)
+            self.binds_list[5], True, self.key_color)
 
 
         # get rects for blitting

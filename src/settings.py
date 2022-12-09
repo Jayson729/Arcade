@@ -52,7 +52,8 @@ class Settings:
 
     # settings menu
     settings_menu_font = 'fonts/Stardew_Valley.ttf'
-    settings_menu_text_color = '#6B3710'
+    settings_menu_text_color = '#A66343'
+    settings_menu_key_color = '#AC8269'
     settings_menu_hover_text_color = '#FFD921'
 
     # pause menu
