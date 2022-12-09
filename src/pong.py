@@ -12,14 +12,16 @@ class Ball(StaticPlayer):
     """Handles all ball movements and scoring"""
 
     def __init__(self, x: int, y: int, img: pygame.Surface,
-                 move_speed: int = 15,
+                 move_speed: int = 8,
                  color: pygame.Color = pygame.Color(0, 0, 0),
                  paddles: pygame.sprite.Group = None) -> None:
         """Initializes Ball"""
         super().__init__(x, y, img, move_speed, color)
-        self.movement = (self.move_speed * random.choice((-1, 1)),
-                         self.move_speed * random.choice((-1, 1)))
+        self.movement = (0, 0)
         self.paddles = paddles
+        self.score_timer = pygame.time.get_ticks()
+        self.score_sound = None
+        self.active = False
 
     def do_movement(self) -> None:
         collision = self.get_collision()
@@ -44,12 +46,12 @@ class Ball(StaticPlayer):
             # hit bottom of player
             if (self.rect.bottom >= p.rect.top
                     and self.rect.bottom <= p.rect.bottom
-                    and self.movement[0] > 0):
+                    and self.movement[1] > 0):
                 return True
             # hit top of player
             if (self.rect.top <= p.rect.bottom
                     and self.rect.top >= p.rect.top
-                    and self.movement[0] < 0):
+                    and self.movement[1] < 0):
                 return True
         return False
 
@@ -71,10 +73,37 @@ class Ball(StaticPlayer):
 
     def reset_ball(self) -> None:
         """Moves ball back to center and sends to random side"""
+        self.score_timer = pygame.time.get_ticks()
         self.rect.center = (Settings.window_width//2,
                             Settings.window_height//2)
-        self.movement = (self.move_speed * random.choice((-1, 1)),
+        self.movement = (0, 0)
+        self.active = False
+        # pygame.mixer.Sound.play(self.score_sound)
+    
+    def restart_counter(self):
+        current_time = pygame.time.get_ticks()
+        countdown_number = 3
+        if not self.active:
+            if current_time - self.score_timer <= 700:
+                countdown_number = 3
+
+            elif current_time - self.score_timer <= 1400:
+                countdown_number = 2
+            
+            elif current_time - self.score_timer <= 2100:
+                countdown_number = 1
+            
+            elif current_time - self.score_timer >= 2100:
+                self.movement = (self.move_speed * random.choice((-1, 1)),
                          self.move_speed * random.choice((-1, 1)))
+                self.active = True
+        
+            font = pygame.font.Font('fonts/pacman_font.ttf', 20)
+            time_counter_render = font.render(f'{countdown_number}', True, (255, 255, 255))
+            time_counter_rect = time_counter_render.get_rect(center = (self.rect.centerx, self.rect.centery - 50))
+            return time_counter_render, time_counter_rect
+        return None, None
+        
 
     def update_score(self) -> None:
         """updates player score and resets ball to middle"""
@@ -92,7 +121,7 @@ class Paddle(StaticPlayer):
     """Controls all player movements"""
 
     def __init__(self, x: int, y: int, img: pygame.Surface, side: str,
-                 move_speed: int = 10,
+                 move_speed: int = 5,
                  color: pygame.Color = pygame.Color(0, 0, 0)) -> None:
         """Initializes Player"""
         super().__init__(x, y, img, move_speed, color)
@@ -125,7 +154,7 @@ class Opponent(Paddle):
     """AI for pong"""
 
     def __init__(self, x: int, y: int, img: pygame.Surface, side: str,
-                 move_speed: int = 10, color: pygame.Color = pygame.Color(0, 0, 0)) -> None:
+                 move_speed: int = 5, color: pygame.Color = pygame.Color(0, 0, 0)) -> None:
         super().__init__(x, y, img, side, move_speed, color)
 
     def get_direction(self, balls) -> str:
@@ -165,9 +194,9 @@ class Pong(State):
         paddle_img = pygame.image.load(f'{self.img_path}paddle.png')
         paddles = pygame.sprite.Group()
         paddles.add(Paddle(40, Settings.window_height//2,
-                    paddle_img, 'left', color=(255, 255, 255)).resize(20, 160))
+                    paddle_img, 'left', color=(255, 255, 255)).resize(20, 120))
         paddles.add(Opponent(Settings.window_width - 40,
-                    Settings.window_height//2, paddle_img, 'right', color=(255, 255, 255)).resize(20, 160))
+                    Settings.window_height//2, paddle_img, 'right', color=(255, 255, 255)).resize(20, 120))
         return paddles
 
     def get_balls(self) -> pygame.sprite.Group:
@@ -225,6 +254,14 @@ class Pong(State):
         self.balls.draw(screen)
         self.draw_scores(screen)
         self.update_scores(screen)
+        self.draw_timer(screen)
+    
+    def draw_timer(self, screen):
+        for b in self.balls:
+            timer_render, timer_rect = b.restart_counter()
+            if timer_render is None or timer_rect is None:
+                continue
+            screen.blit(timer_render, timer_rect)
 
     def draw_line(self, screen):
         pygame.draw.aaline(
@@ -239,6 +276,15 @@ class Pong(State):
         self.paddles.update(self.balls)
         self.balls.update()
         self.check_win()
+    
+    # def reset_ball(self):
+    #     self.current_time = self.clock.tick()
+    #     for b in self.balls:
+    #         b.reset_ball()
+        
+    #     if 
+    #         self.movement = (self.move_speed * random.choice((-1, 1)),
+    #                      self.move_speed * random.choice((-1, 1)))
 
 
 def main() -> None:
