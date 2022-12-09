@@ -124,8 +124,8 @@ class SettingsMenu(State):
         def key_bind_default():
             Settings.default_bindings = True
             self.binds_list[0] = 'W'
-            self.binds_list[1] = 'A'
-            self.binds_list[2] = 'S'
+            self.binds_list[1] = 'S'
+            self.binds_list[2] = 'A'
             self.binds_list[3] = 'D'
 
         def key_bind_alternate():
