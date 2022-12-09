@@ -63,4 +63,4 @@ class Settings:
 
     # credits menu
     credits_menu_font = 'fonts/Stardew_Valley.ttf'
-    credits_menu_text_color = '#6B3710'
+    credits_menu_text_color = '#A66343'
