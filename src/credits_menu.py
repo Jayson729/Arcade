@@ -54,8 +54,10 @@ class CreditsMenu(State):
             'Jayson Willey', True, self.text_color)))
 
         menu_items.add(Sprite(280, 410, small_font.render(
-            'Font and Music: Stardew Valley', True, self.text_color)))
-        menu_items.add(Sprite(280, 435, small_font.render(
+            'Music: Runescape', True, self.text_color)))
+        menu_items.add(Sprite(280, 425, small_font.render(
+            'Font: Stardew Valley', True, self.text_color)))
+        menu_items.add(Sprite(280, 440, small_font.render(
             'Arcade Sprites:  OMORI', True, self.text_color)))
 
         return menu_items
