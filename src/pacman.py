@@ -83,10 +83,10 @@ class Pacman(State):
             map.game_objects['ghosts'][3][1]*map.tile_width,
             f'{self.img_path}pink_ghost/')
 
-        ghosts.add(blue_ghost.resize(map.tile_width, map.tile_height))
-        ghosts.add(red_ghost.resize(map.tile_width, map.tile_height))
-        ghosts.add(orange_ghost.resize(map.tile_width, map.tile_height))
-        ghosts.add(pink_ghost.resize(map.tile_width, map.tile_height))
+        ghosts.add(blue_ghost.resize(map.tile_width-3, map.tile_height-3))
+        ghosts.add(red_ghost.resize(map.tile_width-3, map.tile_height-3))
+        ghosts.add(orange_ghost.resize(map.tile_width-3, map.tile_height-3))
+        ghosts.add(pink_ghost.resize(map.tile_width-3, map.tile_height-3))
 
         return ghosts
 
@@ -140,7 +140,7 @@ class Pacman(State):
 
         # self.map.update(self.pacman, self.ghosts)
     def check_object_collisions(self):
-        if self.map.is_colliding(self.pacman.rect.center, 'ghosts'):
+        if self.map.is_colliding(self.pacman.rect.center, 'ghosts') and not self.ghosts.sprites()[0].scared:
             self.pacman.set_animation('death')
             self.pacman.movement = (0, 0)
             self.pacman.allow_player_movement = False

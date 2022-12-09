@@ -48,7 +48,7 @@ class Map:
         self.game_objects = self.find_game_objects(layout_text)
 
     def find_game_objects(self, layout_text):
-        game_objects = {
+        game_objects: dict[str, list[tuple[int, int]]] = {
             'walls': [],
             'pacman': [],
             'ghosts': [],
@@ -130,6 +130,7 @@ class Map:
     def delete_object(self, screen_coords, name):
         x, y = screen_coords
         self.game_objects[name].remove((x//self.tile_width, y//self.tile_height))
+        self.game_objects['empty'].append((x//self.tile_width, y//self.tile_height))
     
     def is_colliding(self, screen_coords, name):
         x, y = screen_coords
@@ -142,3 +143,9 @@ class Map:
     def reset_positions(self):
         self.game_objects['ghosts'] = deepcopy(self.original_ghost_positions)
         self.game_objects['pacman'] = deepcopy(self.original_pacman_position)
+    
+    def tile_location_from_screen(self, screen_x: int, screen_y: int) -> tuple[int, int]:
+        return (screen_x//self.tile_width, screen_y//self.tile_height)
+
+    def get_pacman_location(self):
+        return self.game_objects['pacman'][0]

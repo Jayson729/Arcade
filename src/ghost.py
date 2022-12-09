@@ -7,6 +7,7 @@ go in different directions toward the player
 import random
 from player import AnimatedPlayer
 from settings import Settings
+from map import Map
 
 
 class Ghost(AnimatedPlayer):
@@ -23,6 +24,7 @@ class Ghost(AnimatedPlayer):
         self.scared = False
         self.scared_timer = 0
         self.current_direction = 'left'
+        self.distance_through_tile = 0
 
         # this is only for random movements
         # get rid of this later
@@ -34,7 +36,7 @@ class Ghost(AnimatedPlayer):
         self.add_animation_w_images('down', down)
         self.add_animation_w_images('left', left)
         self.add_animation_w_images('up', up)
-    
+
     def check_out_of_bounds(self):
         # use 1 because 0 can make clipping at the edge possible
         if self.rect.centerx < 1:
@@ -46,10 +48,10 @@ class Ghost(AnimatedPlayer):
         elif self.rect.centery >= Settings.window_height:
             self.rect.centery = 1
 
-    def do_movement(self, game_map) -> None:
-        if self.scared:
-            self.do_scared()
-            return
+    def do_movement(self, game_map: Map) -> None:
+        # if self.scared:
+        #     self.do_scared()
+        #     return
         movements = {
             'up': (0, -self.move_speed),
             'down': (0, self.move_speed),
@@ -58,25 +60,109 @@ class Ghost(AnimatedPlayer):
         }
         if self.wall_in_direction(self.current_direction, game_map, movements[self.current_direction]):
             self.movement = (0, 0)
-        
-        direction = self.get_direction(movements)
+
+        if self.distance_through_tile <= game_map.tile_height:
+            direction = self.current_direction
+            self.distance_through_tile += self.move_speed
+        else:
+            self.distance_through_tile = 0
+
+            # this doesn't work right, meant to clip the ghost into the correct tile
+            self.rect.topleft = (round(self.rect.topleft[0]/game_map.tile_height) * game_map.tile_height, round(self.rect.topleft[1]/game_map.tile_height) * game_map.tile_height)
+            if self.scared:
+                direction = self.get_scared_direction(movements, game_map)
+            else:
+                direction = self.get_direction(movements, game_map)
         if self.wall_in_direction(direction, game_map, movements[direction]):
             return
         self.current_direction = direction
         self.movement = movements[direction]
         self.set_animation(direction)
 
-    def get_direction(self, movements):
-        # for now, random movements
-        # in the future, I want to implement BFS toward pacman
-        direction = self.current_direction if self.current_direction is not None else random.choice(list(movements.keys()))
-        self.temp_timer += 1
-        if self.temp_timer >= 25:
-            direction = random.choice(list(movements.keys()))
-            self.temp_timer = 0
+    def get_direction(self, movements, game_map: Map):
+        start = game_map.tile_location_from_screen(self.rect.centerx, self.rect.centery)
+        search = game_map.get_pacman_location()
+        path_toward_pacman = self.BFS(start, search, game_map)
+        if path_toward_pacman is None:
+            return random.choice(list(movements.keys()))
+        x1, y1 = start
+        x2, y2 = path_toward_pacman[1]
+        if x1 > x2:
+            return 'left'
+        if x1 < x2:
+            return 'right'
+        if y1 > y2:
+            return 'up'
+        return 'down'
+        # self.temp_timer += 1
+        # if self.temp_timer >= 25:
+        #     direction = random.choice(list(movements.keys()))
+        #     self.temp_timer = 0
 
-        return direction
+        # return direction
     
+    def get_scared_direction(self, movements, game_map):
+        start = game_map.tile_location_from_screen(self.rect.centerx, self.rect.centery)
+        search = (game_map.width//2, game_map.height//2)
+        path_toward_pacman = self.BFS(start, search, game_map)
+        if path_toward_pacman is None:
+            return random.choice(list(movements.keys()))
+        x1, y1 = start
+        x2, y2 = path_toward_pacman[1]
+        if x1 > x2:
+            return 'left'
+        if x1 < x2:
+            return 'right'
+        if y1 > y2:
+            return 'up'
+        return 'down'
+
+    def BFS(self, start: tuple[int, int], search: tuple[int, int], game_map: Map):
+        """inspired by 
+        https://www.geeksforgeeks.org/ford-fulkerson-algorithm-for-maximum-flow-problem/
+        and work I've done in another class
+        """
+        # combined free spaces list
+        empty = game_map.game_objects['empty']
+        food = game_map.game_objects['food']
+        capsules = game_map.game_objects['capsules']
+        pacman = game_map.game_objects['pacman']
+        ghosts = game_map.game_objects['ghosts']
+        all_explorable_tiles = list(set(empty + food + capsules + pacman + ghosts))
+        
+
+        # creates a dictionary that makes each vertex have a False value (unvisited)
+        visited: dict[tuple[int, int], bool] = {key: False for key in all_explorable_tiles}
+
+        queue: list[tuple[int, int]] = []
+        discovered: dict[tuple[int, int], tuple[int, int]] = {}
+
+        queue.append(start)
+        visited[start] = True
+        while queue:
+            (x1, y1) = queue.pop(0)
+
+            # check all adjacent nodes
+            for coordinate in ((x1 + 1, y1), (x1 - 1, y1), (x1, y1 + 1), (x1, y1 - 1)):
+                if coordinate not in all_explorable_tiles:
+                    continue
+
+                # if the vertex is not visited and the weight is not 0
+                if visited[coordinate] is False:
+                    queue.append(coordinate)
+                    visited[coordinate] = True
+                    discovered[coordinate] = (x1, y1)
+
+                    # if we've found what we're searching
+                    # for find path and return it
+                    if coordinate == search:
+                        path = [search]
+                        while path[-1] != start:
+                            path.append(discovered[path[-1]])
+                        path.reverse()
+                        return path
+        return None
+
     def wall_in_direction(self, direction, game_map, movements):
         x, y = movements
         if direction == 'up':
@@ -90,10 +176,11 @@ class Ghost(AnimatedPlayer):
 
     def update(self, game_map):
         self.do_movement(game_map)
+        if self.scared:
+            self.do_scared()
         super().update()
 
     def do_scared(self):
-        self.do_scared_movement()
         self.scared_timer += 1
         if self.scared_timer < 150:
             self.set_animation('scared_blue')
