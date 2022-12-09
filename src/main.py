@@ -13,12 +13,17 @@ from pause_menu import PauseMenu
 from music_player import MusicPlayer
 from credits_menu import CreditsMenu
 from win_menu import WinMenu
+from pong_intro import PongIntro
 
 
 def main(state):
     pygame.init()
     screen = pygame.display.set_mode(Settings.window_size)
     music_player = MusicPlayer()
+
+    pygame.display.set_caption('ARCADE!')
+    pygame.display.set_icon(pygame.image.load(
+        f'images/main.png'))
 
     states = {
         "START": StartMenu,
@@ -29,6 +34,7 @@ def main(state):
         'PAUSE': PauseMenu,
         'PONG': Pong,
         'WIN': WinMenu,
+        'PONG_INTRO': PongIntro
     }
 
     game = StateManager(screen, states, state, music_player)

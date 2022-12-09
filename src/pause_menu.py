@@ -28,9 +28,9 @@ class PauseMenu(State):
         self.default_font = Settings.pause_menu_font
         self.clock = pygame.time.Clock()
         self.music_player = music_player
-        pygame.display.set_caption('Pause Menu')
-        pygame.display.set_icon(pygame.image.load(
-            f'{self.global_path}main.png'))
+        # pygame.display.set_caption('Pause Menu')
+        # pygame.display.set_icon(pygame.image.load(
+        #     f'{self.global_path}main.png'))
         self.create_game()
 
     def create_game(self):
@@ -50,17 +50,14 @@ class PauseMenu(State):
 
     def get_buttons(self):
         def resume_action():
-            print('resume')
             self.next_state = 'PREVIOUS'
             self.done = True
 
         def settings_action():
-            print('settings')
             self.next_state = 'SETTINGS'
             self.done = True
 
         def quit_action():
-            print('quit')
             self.next_state = 'START'
             self.done = True
 

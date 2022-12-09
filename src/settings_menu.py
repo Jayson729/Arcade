@@ -26,11 +26,11 @@ class SettingsMenu(State):
         self.default_font = Settings.settings_menu_font
         self.clock = pygame.time.Clock()
         self.music_player = music_player
-        self.binds_list = ['W', 'S', 'A', 'D', 'ESC', 'RET']
+        self.binds_list = ['W', 'S', 'A', 'D', 'ESC', 'SPACE']
 
-        pygame.display.set_caption('Settings')
-        pygame.display.set_icon(pygame.image.load(
-            f'{self.global_path}main.png'))
+        # pygame.display.set_caption('Settings')
+        # pygame.display.set_icon(pygame.image.load(
+        #     f'{self.global_path}main.png'))
         self.create_game()
 
     def create_game(self):
@@ -57,11 +57,11 @@ class SettingsMenu(State):
             'ENTER KEY:', True, self.default_color)))
         menu_items.add(Sprite(250, 380, kfont.render(
             'UP KEY:', True, self.default_color)))
-        menu_items.add(Sprite(400, 320, kfont.render(
+        menu_items.add(Sprite(420, 320, kfont.render(
             'DOWN KEY:', True, self.default_color)))
-        menu_items.add(Sprite(400, 350, kfont.render(
+        menu_items.add(Sprite(420, 350, kfont.render(
             'LEFT KEY:', True, self.default_color)))
-        menu_items.add(Sprite(400, 380, kfont.render(
+        menu_items.add(Sprite(420, 380, kfont.render(
             'RIGHT KEY:', True, self.default_color)))
         return menu_items
 
@@ -76,40 +76,32 @@ class SettingsMenu(State):
     def get_buttons(self) -> ButtonGroup:
         """Creates a group of buttons"""
 
-        """Action for left arrow for music volume"""
-
+        # Action for left arrow for music volume
         def music_action_down():
-            print('music down')
             if Settings.music_volume > 0:
                 Settings.music_volume -= 5
                 # self.music_int -= 1
                 pygame.mixer.music.set_volume(Settings.music_volume / 100)
                 self.menu_sound.play()
 
-        """Action for right arrow for music volume"""
-
+        # Action for right arrow for music volume
         def music_action_up():
-            print('music up')
             if Settings.music_volume < 100:
                 Settings.music_volume += 5
                 # self.music_int += 1
                 pygame.mixer.music.set_volume(Settings.music_volume / 100)
                 self.menu_sound.play()
 
-        """Action for left arrow for effects volume"""
-
+        # Action for left arrow for effects volume
         def effects_action_down():
-            print('effects down')
             if Settings.effects_volume > 0:
                 Settings.effects_volume -= 5
                 # self.effects_int -= 1
                 self.menu_sound.set_volume(Settings.effects_volume / 100)
                 self.menu_sound.play()
 
-        """Action for right arrow for effects volume"""
-
+        # Action for right arrow for effects volume
         def effects_action_up():
-            print('effects up')
             if Settings.effects_volume < 100:
                 Settings.effects_volume += 5
                 # self.effects_int += 1
@@ -117,7 +109,6 @@ class SettingsMenu(State):
                 self.menu_sound.play()
 
         def back_action():
-            print('back')
             self.next_state = 'PREVIOUS'
             self.done = True
 
@@ -127,6 +118,7 @@ class SettingsMenu(State):
             self.binds_list[1] = 'S'
             self.binds_list[2] = 'A'
             self.binds_list[3] = 'D'
+            self.binds_list[5] = 'SPACE'
 
         def key_bind_alternate():
             Settings.default_bindings = False
@@ -134,6 +126,7 @@ class SettingsMenu(State):
             self.binds_list[1] = 'DOWN'
             self.binds_list[2] = 'LEFT'
             self.binds_list[3] = 'RIGHT'
+            self.binds_list[5] = 'RETURN'
 
         buttons = ButtonGroup()
         buttons.add(
@@ -196,9 +189,9 @@ class SettingsMenu(State):
         music_vol_rect = music_vol_render.get_rect(center=(520, 205))
         effects_vol_rect = effects_vol_render.get_rect(center=(520, 250))
         up_bind_rect = up_bind.get_rect(center=(375, 390))
-        down_bind_rect = down_bind.get_rect(center=(525, 330))
-        left_bind_rect = left_bind.get_rect(center=(525, 360))
-        right_bind_rect = right_bind.get_rect(center=(525, 390))
+        down_bind_rect = down_bind.get_rect(center=(545, 330))
+        left_bind_rect = left_bind.get_rect(center=(545, 360))
+        right_bind_rect = right_bind.get_rect(center=(545, 390))
         esc_bind_rect = esc_bind.get_rect(center=(375, 330))
         ret_bind_rect = ret_bind.get_rect(center=(375, 360))
 

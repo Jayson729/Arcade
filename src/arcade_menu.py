@@ -22,9 +22,9 @@ class ArcadeMenu(State):
         self.global_img_path = 'images/'
         self.clock = pygame.time.Clock()
         self.music_player = music_player
-        pygame.display.set_caption('Select Game')
-        pygame.display.set_icon(pygame.image.load(
-            f'{self.global_img_path}main.png'))
+        # pygame.display.set_caption('Select Game')
+        # pygame.display.set_icon(pygame.image.load(
+        #     f'{self.global_img_path}main.png'))
         self.create_menu()
 
     def create_menu(self):
@@ -58,17 +58,14 @@ class ArcadeMenu(State):
     
     def get_buttons(self) -> ButtonGroup:
         def back_action():
-            print('back')
             self.next_state = 'PREVIOUS'
             self.done = True
 
         def pong_action():
-            print('pong')
             self.next_state = 'PONG'
             self.done = True
 
         def pacman_action():
-            print('pacman')
             self.next_state = 'PACMAN'
             self.done = True
 

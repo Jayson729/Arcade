@@ -35,6 +35,11 @@ class MusicPlayer:
     def resume():
         pygame.mixer_music.play(-1)
     
+    def stop(self):
+        if self.currently_playing:
+            self.currently_playing = None
+            pygame.mixer_music.stop()
+    
     # @staticmethod
     # def get_end_event():
     #     return pygame.mixer_music.get_endevent()

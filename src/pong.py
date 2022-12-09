@@ -64,6 +64,10 @@ class Ball(StaticPlayer):
         y = -1 if self.check_y_collision(players_hit) else 1
         if x == -1:
             y = 1
+        if x == -1 or y == -1:
+            temp = pygame.mixer.Sound('sounds/pong_blip.wav')
+            temp.set_volume(Settings.effects_volume/100)
+            pygame.mixer.Channel(0).play(temp)
         return (x, y)
 
     def update(self) -> None:
@@ -181,9 +185,9 @@ class Pong(State):
         self.global_img_path = 'images/'
         self.clock = pygame.time.Clock()
         self.music_player = music_player
-        pygame.display.set_caption('Pong')
-        pygame.display.set_icon(pygame.image.load(
-            f'{self.global_img_path}main.png'))
+        # pygame.display.set_caption('Pong')
+        # pygame.display.set_icon(pygame.image.load(
+        #     f'{self.global_img_path}main.png'))
         self.create_game()
 
     def create_game(self):
@@ -196,7 +200,7 @@ class Pong(State):
         paddles = pygame.sprite.Group()
         paddles.add(Paddle(40, Settings.window_height//2,
                     paddle_img, 'left', color=(255, 255, 255)).resize(20, 120))
-        paddles.add(Opponent(Settings.window_width - 40,
+        paddles.add(Opponent(Settings.window_width - 60,
                     Settings.window_height//2, paddle_img, 'right', color=(255, 255, 255)).resize(20, 120))
         return paddles
 
@@ -276,7 +280,8 @@ class Pong(State):
         )
 
     def update(self) -> None:
-        self.music_player.load_play_music('music/runescape_dream.wav')
+        # self.music_player.load_play_music('music/runescape_dream.wav')
+        self.music_player.stop()
         self.paddles.update(self.balls)
         self.balls.update()
         self.check_win()

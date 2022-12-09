@@ -6,8 +6,6 @@ for example
 """
 from copy import deepcopy
 from settings import Settings
-from pacman_sprite import PacmanSprite
-from ghost import Ghost
 import pygame
 # 28 x 30
 minimap = [
@@ -119,11 +117,11 @@ class Map:
         self.draw_capsules(screen)
 
         # draw 'dev balls'
-        pygame.draw.circle(screen, (100, 20, 20), (
-            self.game_objects['pacman'][0][0] * self.tile_width, self.game_objects['pacman'][0][1] * self.tile_height), 5)
-        for i, _ in enumerate(self.game_objects['ghosts']):
-            pygame.draw.circle(screen, (100, 20, 20), (
-                self.game_objects['ghosts'][i][0] * self.tile_width, self.game_objects['ghosts'][i][1] * self.tile_height), 5)
+        # pygame.draw.circle(screen, (100, 20, 20), (
+        #     self.game_objects['pacman'][0][0] * self.tile_width, self.game_objects['pacman'][0][1] * self.tile_height), 5)
+        # for i, _ in enumerate(self.game_objects['ghosts']):
+        #     pygame.draw.circle(screen, (100, 20, 20), (
+        #         self.game_objects['ghosts'][i][0] * self.tile_width, self.game_objects['ghosts'][i][1] * self.tile_height), 5)
     
     def set_object_location_from_list(self, name, coordinate_list: list[tuple[int, int]]):
         for i, (x, y) in enumerate(coordinate_list):

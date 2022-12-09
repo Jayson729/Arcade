@@ -30,7 +30,7 @@ class Pacman(State):
         self.clock = pygame.time.Clock()
         self.music_player = music_player
         # self.screen = self.get_screen()
-        pygame.display.set_caption('Pacman')
+        # pygame.display.set_caption('Pacman')
         self.score = 0
         self.create_game()
 

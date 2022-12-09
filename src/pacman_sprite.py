@@ -16,6 +16,7 @@ class PacmanSprite(AnimatedPlayer):
                  color=None) -> None:
         super().__init__(x, y, base_path, move_speed, animation_speed, color=color)
         self.add_animation('death', death_path, animation_speed*2)
+        self.current_direction = 'left'
     
     def check_out_of_bounds(self):
         # use 1 because 0 can make clipping at the edge possible
@@ -29,7 +30,7 @@ class PacmanSprite(AnimatedPlayer):
             self.rect.centery = 1
 
     # good I think
-    def do_movement(self) -> None:
+    def do_movement(self, game_map) -> None:
         # movement, rotation
         # x, y, '-' is up/left
         # rotation in degrees from facing right
@@ -43,15 +44,29 @@ class PacmanSprite(AnimatedPlayer):
 
         # find direction based on keys pressed
         # sets movement and rotates pacman
+        if self.wall_in_direction(self.current_direction, game_map, movements[self.current_direction][0]):
+            self.movement = (0, 0)
         if (direction := self.get_direction()) is not None:
-            self.set_animation('base')
+            if self.wall_in_direction(direction, game_map, movements[direction][0]):
+                return
+            self.current_direction = direction
+            # self.set_animation('base')
             self.rotate(movements[direction][1])
             self.movement = movements[direction][0]
+    
+    def wall_in_direction(self, direction, game_map, movements):
+        x, y = movements
+        if direction == 'up':
+            return game_map.is_wall((self.rect.left + 2, self.rect.top + y)) or game_map.is_wall((self.rect.right - 2, self.rect.top + y))
+        elif direction == 'down':
+            return game_map.is_wall((self.rect.left + 2, self.rect.bottom + y)) or game_map.is_wall((self.rect.right - 2, self.rect.bottom + y))
+        elif direction == 'left':
+            return game_map.is_wall((self.rect.left + x, self.rect.top + 2)) or game_map.is_wall((self.rect.left + x, self.rect.bottom - 2))
+        elif direction == 'right':
+            return game_map.is_wall((self.rect.right + x, self.rect.top + 2)) or game_map.is_wall((self.rect.right + x, self.rect.bottom - 2))
+        # if game_map.is_wall((self.rect.centerx + self.movement[0], self.rect.centery + self.movement[1])):
+        #     self.movement = (0, 0)
 
-    def update(self, map):
-        self.old_movement = self.movement
-        self.do_movement()
-
-        if map.is_wall((self.rect.centerx + self.movement[0], self.rect.centery + self.movement[1])):
-            self.movement = (0, 0)
+    def update(self, game_map):
+        self.do_movement(game_map)
         super().update()

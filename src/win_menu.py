@@ -22,9 +22,9 @@ class WinMenu(State):
         self.default_font = Settings.pause_menu_font
         self.clock = pygame.time.Clock()
         self.music_player = music_player
-        pygame.display.set_caption('!!_Winner_!!')
-        pygame.display.set_icon(pygame.image.load(
-            f'{self.global_path}main.png'))
+        # pygame.display.set_caption('!!_Winner_!!')
+        # pygame.display.set_icon(pygame.image.load(
+        #     f'{self.global_path}main.png'))
         self.create_game()
 
     def create_game(self):
@@ -45,12 +45,10 @@ class WinMenu(State):
     def get_buttons(self):
 
         def arcade():
-            print('arcade')
             self.next_state = 'ARCADE'
             self.done = True
 
         def quit_action():
-            print('quit')
             self.next_state = 'START'
             self.done = True
 

@@ -24,9 +24,9 @@ class StartMenu(State):
         self.global_img_path = 'images/'
         self.clock = pygame.time.Clock()
         self.music_player = music_player
-        pygame.display.set_caption('Start Menu')
-        pygame.display.set_icon(pygame.image.load(
-            f'{self.global_img_path}main.png'))
+        # pygame.display.set_caption('Start Menu')
+        # pygame.display.set_icon(pygame.image.load(
+        #     f'{self.global_img_path}main.png'))
         self.create_game()
 
     def create_game(self):
@@ -83,7 +83,6 @@ class StartMenu(State):
     def get_buttons(self) -> ButtonGroup:
         """Creates a group of buttons"""
         def arcade_action():
-            print('arcade')
             pygame.mixer.Channel(0).play(
                 pygame.mixer.Sound('sounds/arcade_door.wav')
             )
@@ -91,12 +90,10 @@ class StartMenu(State):
             self.done = True
 
         def settings_action():
-            print('settings')
             self.next_state = 'SETTINGS'
             self.done = True
 
         def credits_action():
-            print('credits')
             self.next_state = 'CREDITS'
             self.done = True
 

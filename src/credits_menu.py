@@ -25,9 +25,9 @@ class CreditsMenu(State):
         self.music_player = music_player
         self.clock = pygame.time.Clock()
 
-        pygame.display.set_caption('Credits')
-        pygame.display.set_icon(pygame.image.load(
-            f'{self.global_path}main.png'))
+        # pygame.display.set_caption('Credits')
+        # pygame.display.set_icon(pygame.image.load(
+        #     f'{self.global_path}main.png'))
         self.create_game()
 
     def create_game(self):
@@ -74,7 +74,6 @@ class CreditsMenu(State):
         """Creates a group of buttons"""
 
         def back_action():
-            print('back')
             self.next_state = 'PREVIOUS'
             self.done = True
 
