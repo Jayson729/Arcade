@@ -216,26 +216,26 @@ class ButtonGroup:
             return
 
         # handle changing buttons and doing actions
-        # if event.type == pygame.KEYDOWN:
-        #     if Settings.default_bindings:
-        #         if event.key == Settings.main_keybinding.up:
-        #             self.change_button('up', sound)
-        #         elif event.key == Settings.main_keybinding.down:
-        #             self.change_button('down', sound)
-        #         elif event.key == Settings.main_keybinding.enter:
-        #             self.do_action()
-        #     else:
-        #         if event.key == Settings.alternate_keybinding.up:
-        #             self.change_button('up', sound)
-        #         elif event.key == Settings.alternate_keybinding.down:
-        #             self.change_button('down', sound)
-        #         elif event.key == Settings.alternate_keybinding.enter:
-        #             self.do_action()
-
         if event.type == pygame.KEYDOWN:
-            if event.key in (Settings.main_keybinding.up, Settings.alternate_keybinding.up):
-                self.change_button('up', sound)
-            elif event.key in (Settings.main_keybinding.down, Settings.alternate_keybinding.down):
-                self.change_button('down', sound)
-            elif event.key == Settings.main_keybinding.enter:
-                self.do_action()
+            if Settings.default_bindings:
+                if event.key == Settings.main_keybinding.up:
+                    self.change_button('up', sound)
+                elif event.key == Settings.main_keybinding.down:
+                    self.change_button('down', sound)
+                elif event.key == Settings.main_keybinding.enter:
+                    self.do_action()
+            else:
+                if event.key == Settings.alternate_keybinding.up:
+                    self.change_button('up', sound)
+                elif event.key == Settings.alternate_keybinding.down:
+                    self.change_button('down', sound)
+                elif event.key == Settings.alternate_keybinding.enter:
+                    self.do_action()
+
+        # if event.type == pygame.KEYDOWN:
+        #     if event.key in (Settings.main_keybinding.up, Settings.alternate_keybinding.up):
+        #         self.change_button('up', sound)
+        #     elif event.key in (Settings.main_keybinding.down, Settings.alternate_keybinding.down):
+        #         self.change_button('down', sound)
+        #     elif event.key == Settings.main_keybinding.enter:
+        #         self.do_action()

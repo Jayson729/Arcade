@@ -18,14 +18,24 @@ class AnimatedPlayer(AnimatedSprite):
             return
         direction = None
         keys = pygame.key.get_pressed()
-        if keys[Settings.main_keybinding.up] or keys[Settings.alternate_keybinding.up]:
-            direction = 'up'
-        elif keys[Settings.main_keybinding.down] or keys[Settings.alternate_keybinding.down]:
-            direction = 'down'
-        elif keys[Settings.main_keybinding.left] or keys[Settings.alternate_keybinding.left]:
-            direction = 'left'
-        elif keys[Settings.main_keybinding.right] or keys[Settings.alternate_keybinding.right]:
-            direction = 'right'
+        if Settings.default_bindings:
+            if keys[Settings.main_keybinding.up]:
+                direction = 'up'
+            elif keys[Settings.main_keybinding.down]:
+                direction = 'down'
+            elif keys[Settings.main_keybinding.left]:
+                direction = 'left'
+            elif keys[Settings.main_keybinding.right]:
+                direction = 'right'
+        else:
+            if keys[Settings.alternate_keybinding.up]:
+                direction = 'up'
+            elif keys[Settings.alternate_keybinding.down]:
+                direction = 'down'
+            elif keys[Settings.alternate_keybinding.left]:
+                direction = 'left'
+            elif keys[Settings.alternate_keybinding.right]:
+                direction = 'right'
         return direction
 
     def check_out_of_bounds(self):
@@ -65,14 +75,24 @@ class StaticPlayer(Sprite):
             return
         direction = None
         keys = pygame.key.get_pressed()
-        if keys[Settings.main_keybinding.up] or keys[Settings.alternate_keybinding.up]:
-            direction = 'up'
-        elif keys[Settings.main_keybinding.down] or keys[Settings.alternate_keybinding.down]:
-            direction = 'down'
-        elif keys[Settings.main_keybinding.left] or keys[Settings.alternate_keybinding.left]:
-            direction = 'left'
-        elif keys[Settings.main_keybinding.right] or keys[Settings.alternate_keybinding.right]:
-            direction = 'right'
+        if Settings.default_bindings:
+            if keys[Settings.main_keybinding.up]:
+                direction = 'up'
+            elif keys[Settings.main_keybinding.down]:
+                direction = 'down'
+            elif keys[Settings.main_keybinding.left]:
+                direction = 'left'
+            elif keys[Settings.main_keybinding.right]:
+                direction = 'right'
+        else:
+            if keys[Settings.alternate_keybinding.up]:
+                direction = 'up'
+            elif keys[Settings.alternate_keybinding.down]:
+                direction = 'down'
+            elif keys[Settings.alternate_keybinding.left]:
+                direction = 'left'
+            elif keys[Settings.alternate_keybinding.right]:
+                direction = 'right'
         return direction
 
     def check_out_of_bounds(self):
