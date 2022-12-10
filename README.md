@@ -28,3 +28,4 @@ This is a class project for CIS 350 (Introduction to Software Engineering). This
 ## Sources
 
 * [Pacman sprites](https://www.kindpng.com/imgv/xJxbJh_pacman-sprite-png-pacman-sprite-sheet-png-transparent/)
+* [Pacman sounds](https://www.classicgaming.cc/classics/pac-man/sounds)
