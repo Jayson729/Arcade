@@ -24,3 +24,7 @@ This is a class project for CIS 350 (Introduction to Software Engineering). This
 
 * If you are getting a seg fault, you may have to install the most recent dev version of pygame [here](https://github.com/pygame/pygame/releases)
 * If you are on WSL, you have to get audio and GUI set up, [here](https://www.carette.xyz/posts/setup_sound_video_wsl2/) is a nice blog post explaining how
+
+## Sources
+
+* [Pacman sprites](https://www.kindpng.com/imgv/xJxbJh_pacman-sprite-png-pacman-sprite-sheet-png-transparent/)
