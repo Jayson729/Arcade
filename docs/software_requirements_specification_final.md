@@ -48,7 +48,7 @@ Other Menus
 | :-------------: | :----------: |
 | FR11 | The main menu shall have buttons to navigate to other menus |
 | FR12 | The Arcade Menu shall open a game when selected by a user. |
-| FR813 | The keyboard inputs shall properly control the player character and not tamper with anything outside of the window. |
+| FR13 | The keyboard inputs shall properly control the player character and not tamper with anything outside of the window. |
 | FR14 | The settings menu shall allow user to switch between preset key bindings |
 | FR15 | The settings menu shall allow the user to increase and decrease game effects and music |
   
