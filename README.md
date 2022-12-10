@@ -30,9 +30,11 @@ This is a class project for CIS 350 (Introduction to Software Engineering). This
 Main menu
 * [Main Menu](https://www.pixilart.com/art/floating-island-7c40a7fbda173c5)
 * [Runescape Music](https://oldschool.runescape.wiki/w/Dream_(music_track))
-* [Arcade Menu Stuff](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.deviantart.com%2Foverlypawsitive%2Fart%2FStardew-Valley-Custom-Blank-OC-Portrait-F2U-805649420&psig=AOvVaw0d0SYXJGMLRPEkxuDjL_fs&ust=1670788863144000&source=images&cd=vfe&ved=0CBAQjhxqFwoTCPCW2Nfr7_sCFQAAAAAdAAAAABAD)
 * [Clouds](https://www.nicepng.com/maxp/u2e6e6u2u2q8r5t4/)
-* [Arcade Menu Characters](https://www.dropbox.com/sh/g1law0qmnf6pjwr/AACummg5fZJ5JIF4ReeRDxJia?dl=0&preview=Stardew_Valley.ttf/)
+* [Stardew valley font](https://www.dropbox.com/sh/g1law0qmnf6pjwr/AACummg5fZJ5JIF4ReeRDxJia?dl=0&preview=Stardew_Valley.ttf/)
+
+Settings/Credits
+* [Menu square](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.deviantart.com%2Foverlypawsitive%2Fart%2FStardew-Valley-Custom-Blank-OC-Portrait-F2U-805649420&psig=AOvVaw0d0SYXJGMLRPEkxuDjL_fs&ust=1670788863144000&source=images&cd=vfe&ved=0CBAQjhxqFwoTCPCW2Nfr7_sCFQAAAAAdAAAAABAD)
 
 Pacman
 * [Pacman sprites](https://www.kindpng.com/imgv/xJxbJh_pacman-sprite-png-pacman-sprite-sheet-png-transparent/)
@@ -47,9 +49,9 @@ Win Menu
 * [Game Over Menu](https://www.pinterest.com/pin/333899759864465668/)
 
 Pause Menu
-* [Bridge](https://www.google.com/search?tbs=sbi:AMhZZiv75o4XlxHMebGbs3B_1zdgFRcGSIkAuGhRk7mVT3KGEZc1-lpyxRqOHOXqhpy_1CvJR016d4PalKcdkwmxfD6fefnhSQ5pV7YcxMFWU5T3S0Js4fwj183cjsy6Ve50p0rEf3lil2jaK30Ax0LIkGANMnLv6cOw)
-* [grass](https://www.google.com/search?tbs=sbi:AMhZZiuUCZvul16XKz9oHVUAW05GtvJz69SSehJNZgp35Y2xY2fIuS6w2nNchhM2MJZxlIOIqt7eFtFcUVRS4ju-i0Wm9cwQUQZnpJNJ_18HESWQfKTekczkMgPKdaE3mgfAUhe3fPdRmCx_1Ld-sUt2GrrpPvAFdE9Q)
-* [River](https://www.google.com/search?tbs=sbi:AMhZZivQTHJ4OD1TEIKqMSjMDESVt06GQGgXeZBwmGJxY4sgNiturky7cf9By2Mqqy6weSPiBgEKpZ0T2_1BvdhhhV-5FmEA4Nn-JjpgQfcT026VS8spy5j3Ts9cZ4kbtFCTeEE3dapj5MQUQjrEHbgJQEHyGMO1I8w)
+* [Bridge](http://clipart-library.com/clipart/gieA7Gr5T.htm)
+* [grass](https://pngimage.net/grama-safari-png-1/)
+* [River](https://in.pinterest.com/pin/832743787326604584/)
 * [Ghosts](https://www.google.com/search?tbs=sbi:AMhZZisURPDYsM0cEz4_1NlkFq2BYjquWkJecVaSeHm-wl5e5qSUrJIppsSAQtZku8yqmM1S3grlxE5IyxhXhKjGVS3L42PQB0DKNRizRTgZL_1E7ugcL01aItNzuJXhfjkKCfB-cSOk31llYq-f0ZHgw2bVB1pD69og)
-* [Frogger](https://www.google.com/search?tbs=sbi:AMhZZivlOA2DW_15E1K8ZRo_1g7Acgy104hlvUChnFMuBCtfFLAjs8vz-f4TKS1XXMmH8O7LPdRM5fgWufD50TeT7QsE5Gf8cDSND8BEhFH-b9h82jNqChVnM4w47AXIY6boNQI7fDiX7aolIkzR0SJZqh1DPFQO-ZjA)
-* [Pacman](https://www.google.com/search?tbs=sbi:AMhZZivROCTBu-tvDx2TQgYZf-um9stKbOEr6fauolYHTsOkCZx_1fWV4aCJCgCupNgzo7Vj5uOOVzvrQl6za7TY0zAidA55VrDlmFgkdtFezZDNaMMoxlfICS0z4v4dNiPNy3vIhD5o03aMGA8gyxdX1sSJtxoDYsw)
+* [Frogger](https://pnghut.com/png/ZnTQPYM0kj/tree-frog-jumping-contest-frogger-clip-art-vertebrate-transparent-png)
+* [Pacman](https://snipstock.com/image/pacman-pac-man-png-images-3-87758)
