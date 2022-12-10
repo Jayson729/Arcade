@@ -28,13 +28,21 @@ This is a class project for CIS 350 (Introduction to Software Engineering). This
 ## Sources
 
 Main menu
-* [Main Menu](https://www.pixilart.com/art/floating-island-7c40a7fbda173c5)
-* [Runescape Music](https://oldschool.runescape.wiki/w/Dream_(music_track))
+* [Background](https://www.pixilart.com/art/floating-island-7c40a7fbda173c5)
+* [Runescape music](https://oldschool.runescape.wiki/w/Dream_(music_track))
 * [Clouds](https://www.nicepng.com/maxp/u2e6e6u2u2q8r5t4/)
 * [Stardew valley font](https://www.dropbox.com/sh/g1law0qmnf6pjwr/AACummg5fZJ5JIF4ReeRDxJia?dl=0&preview=Stardew_Valley.ttf/)
 
 Settings/Credits
 * [Menu square](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.deviantart.com%2Foverlypawsitive%2Fart%2FStardew-Valley-Custom-Blank-OC-Portrait-F2U-805649420&psig=AOvVaw0d0SYXJGMLRPEkxuDjL_fs&ust=1670788863144000&source=images&cd=vfe&ved=0CBAQjhxqFwoTCPCW2Nfr7_sCFQAAAAAdAAAAABAD)
+
+Arcade menu
+* [Tiled background](https://img.freepik.com/premium-vector/brick-surface-pixels-game_313905-866.jpg)
+* [Carpet](https://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/98410cb05cb7661.png)
+* [Arcade machines](https://www.pngegg.com/en/png-mubmr)
+* [Animated Pacman](https://art.pixilart.com/e1c701520b06f3f.gif)
+* [Walking boy](https://tenor.com/view/omori-sprite-walking-gif-21454303)
+* [Walking girl](https://tenor.com/view/aubrey-omori-pixel-sprite-walking-gif-21826954)
 
 Pacman
 * [Pacman sprites](https://www.kindpng.com/imgv/xJxbJh_pacman-sprite-png-pacman-sprite-sheet-png-transparent/)
@@ -50,7 +58,7 @@ Win Menu
 
 Pause Menu
 * [Bridge](http://clipart-library.com/clipart/gieA7Gr5T.htm)
-* [grass](https://pngimage.net/grama-safari-png-1/)
+* [Grass](https://pngimage.net/grama-safari-png-1/)
 * [River](https://in.pinterest.com/pin/832743787326604584/)
 * [Ghosts](https://www.google.com/search?tbs=sbi:AMhZZisURPDYsM0cEz4_1NlkFq2BYjquWkJecVaSeHm-wl5e5qSUrJIppsSAQtZku8yqmM1S3grlxE5IyxhXhKjGVS3L42PQB0DKNRizRTgZL_1E7ugcL01aItNzuJXhfjkKCfB-cSOk31llYq-f0ZHgw2bVB1pD69og)
 * [Frogger](https://pnghut.com/png/ZnTQPYM0kj/tree-frog-jumping-contest-frogger-clip-art-vertebrate-transparent-png)
