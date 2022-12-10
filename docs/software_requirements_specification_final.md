@@ -1,11 +1,10 @@
 # Overview
 
-<Describe the purpose of this document in 1 paragraph of less ... hint: it is
-your SRS>
+This document holds all of our software requirements and software artifacts.
 
 # Software Requirements
 
-<Describe the structure of this section>
+This is a list of all of our software requirements. This is split into two sections: functional requirements and non-functional requirements. In each section, we have three subsections for each group of requirements. Each requirement has an ID and then a description of that requirement.
   
 ## Functional Requirements
   
@@ -74,6 +73,11 @@ Other Menus
   
 # Software Artifacts
   
-<Describe the purpose of this section>
-* [I am a link](to_some_file.pdf)
- 
+Here is a list of previous documents used in this project. All of these are in the docs/ folder in this repository.
+
+* [Final presentation](https://github.com/Jayson729/GVSU-CIS350-Team-Arcade/blob/master/docs/CIS350%20Team%20Arcade%20Final%20Presentation.pdf)
+* [Midterm presentation](https://github.com/Jayson729/GVSU-CIS350-Team-Arcade/blob/master/docs/CIS%20350%2001%20Team%20Arcade%20Presentation.pdf)
+* [Gantt chart](https://github.com/Jayson729/GVSU-CIS350-Team-Arcade/blob/master/docs/CIS%20350%20HW%204%20Gantt%20Chart.pdf)
+* [Proposal](https://github.com/Jayson729/GVSU-CIS350-Team-Arcade/blob/master/docs/proposal-template.md)
+* [Old requirements](https://github.com/Jayson729/GVSU-CIS350-Team-Arcade/blob/master/docs/software_requirements_specification.md)
+* [Tasks](https://github.com/Jayson729/GVSU-CIS350-Team-Arcade/blob/master/docs/tasks.md)
