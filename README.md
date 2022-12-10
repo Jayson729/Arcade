@@ -27,17 +27,26 @@ This is a class project for CIS 350 (Introduction to Software Engineering). This
 
 ## Sources
 
-* [Pacman sprites](https://www.kindpng.com/imgv/xJxbJh_pacman-sprite-png-pacman-sprite-sheet-png-transparent/)
-* [Pacman sounds](https://www.classicgaming.cc/classics/pac-man/sounds)
+Main menu
 * [Main Menu](https://www.pixilart.com/art/floating-island-7c40a7fbda173c5)
-* [Runescape Musid](https://oldschool.runescape.wiki/w/Dream_(music_track))
-* [Pong Music](https://freesound.org/people/NoiseCollector/sounds/4379/)
-* [Arcade Menu Characters](https://www.dropbox.com/sh/g1law0qmnf6pjwr/AACummg5fZJ5JIF4ReeRDxJia?dl=0&preview=Stardew_Valley.ttf/)
-* [Pong Ball](https://www.freeiconspng.com/img/44654)
+* [Runescape Music](https://oldschool.runescape.wiki/w/Dream_(music_track))
 * [Arcade Menu Stuff](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.deviantart.com%2Foverlypawsitive%2Fart%2FStardew-Valley-Custom-Blank-OC-Portrait-F2U-805649420&psig=AOvVaw0d0SYXJGMLRPEkxuDjL_fs&ust=1670788863144000&source=images&cd=vfe&ved=0CBAQjhxqFwoTCPCW2Nfr7_sCFQAAAAAdAAAAABAD)
 * [Clouds](https://www.nicepng.com/maxp/u2e6e6u2u2q8r5t4/)
+* [Arcade Menu Characters](https://www.dropbox.com/sh/g1law0qmnf6pjwr/AACummg5fZJ5JIF4ReeRDxJia?dl=0&preview=Stardew_Valley.ttf/)
+
+Pacman
+* [Pacman sprites](https://www.kindpng.com/imgv/xJxbJh_pacman-sprite-png-pacman-sprite-sheet-png-transparent/)
+* [Pacman sounds](https://www.classicgaming.cc/classics/pac-man/sounds)
+* [Pellets](https://www.freeiconspng.com/img/44654)
+
+Pong
+* [Pong bounce sound](https://freesound.org/people/NoiseCollector/sounds/4379/)
+
+Win Menu
 * [Game Over Sounds](https://freesoundhub.com/en/show/6901)
 * [Game Over Menu](https://www.pinterest.com/pin/333899759864465668/)
+
+Pause Menu
 * [Bridge](https://www.google.com/search?tbs=sbi:AMhZZiv75o4XlxHMebGbs3B_1zdgFRcGSIkAuGhRk7mVT3KGEZc1-lpyxRqOHOXqhpy_1CvJR016d4PalKcdkwmxfD6fefnhSQ5pV7YcxMFWU5T3S0Js4fwj183cjsy6Ve50p0rEf3lil2jaK30Ax0LIkGANMnLv6cOw)
 * [grass](https://www.google.com/search?tbs=sbi:AMhZZiuUCZvul16XKz9oHVUAW05GtvJz69SSehJNZgp35Y2xY2fIuS6w2nNchhM2MJZxlIOIqt7eFtFcUVRS4ju-i0Wm9cwQUQZnpJNJ_18HESWQfKTekczkMgPKdaE3mgfAUhe3fPdRmCx_1Ld-sUt2GrrpPvAFdE9Q)
 * [River](https://www.google.com/search?tbs=sbi:AMhZZivQTHJ4OD1TEIKqMSjMDESVt06GQGgXeZBwmGJxY4sgNiturky7cf9By2Mqqy6weSPiBgEKpZ0T2_1BvdhhhV-5FmEA4Nn-JjpgQfcT026VS8spy5j3Ts9cZ4kbtFCTeEE3dapj5MQUQjrEHbgJQEHyGMO1I8w)
